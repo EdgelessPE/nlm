@@ -2,13 +2,19 @@ package main
 
 import (
 	"net/http"
+	"nlm/db"
 	"nlm/handler"
+	"nlm/model"
 	"nlm/vo"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	// 初始化数据库
+	db.DB.AutoMigrate(&model.Nep{}, &model.Release{})
+
+	// 启动服务器
 	server := gin.Default()
 	r := server.Group("/api")
 	r.GET("/ping", func(c *gin.Context) {
