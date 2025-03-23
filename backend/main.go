@@ -5,7 +5,9 @@ import (
 	"nlm/db"
 	"nlm/handler"
 	"nlm/model"
+	"nlm/service"
 	"nlm/vo"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,6 +15,8 @@ import (
 func main() {
 	// 初始化数据库
 	db.DB.AutoMigrate(&model.Nep{}, &model.Release{})
+
+	service.AddRelease("Google", "Chrome", "139.0.0.0", []string{"I"}, time.Now(), "114514")
 
 	// 启动服务器
 	server := gin.Default()
