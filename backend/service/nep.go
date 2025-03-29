@@ -33,13 +33,12 @@ func GetNep(scope string, name string) (model.Nep, error) {
 	return nep, nil
 }
 
-func AddRelease(scope string, name string, version string, flags []string, putawayAt time.Time, pipelineId string) (model.Release, error) {
+func AddRelease(scope string, name string, version string, flags string, putawayAt time.Time, pipelineId string) (model.Release, error) {
 	n, err := GetNep(scope, name)
 	if err != nil {
 		return model.Release{}, err
 	}
-	r := model.Release{Version: version, Flags: flags, PutawayAt: putawayAt, PipelineId: pipelineId}
-	n.Releases = append(n.Releases, r)
-	db.DB.Save(&n)
+	r := model.Release{Version: version, Flags: flags, PutawayAt: putawayAt, PipelineId: pipelineId, NepId: n.ID.String()}
+	db.DB.Create(&r)
 	return r, nil
 }
