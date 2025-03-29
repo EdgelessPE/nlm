@@ -5,9 +5,7 @@ import (
 	"nlm/db"
 	"nlm/handler"
 	"nlm/model"
-	"nlm/service"
 	"nlm/vo"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,8 +13,6 @@ import (
 func main() {
 	// 初始化数据库
 	db.DB.AutoMigrate(&model.Nep{}, &model.Release{})
-
-	service.AddRelease("Google", "Chrome", "139.0.0.0", "I", time.Now(), "114514")
 
 	// 启动服务器
 	server := gin.Default()
@@ -29,6 +25,6 @@ func main() {
 		})
 	})
 
-	handler.RegisterWebhookRoutes(r)
+	handler.RegisterRoutes(r)
 	server.Run("0.0.0.0:3001") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
