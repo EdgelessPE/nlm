@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"nlm/db"
+	"nlm/domain"
 	"nlm/handler"
 	"nlm/model"
 	"nlm/vo"
@@ -13,6 +14,9 @@ import (
 func main() {
 	// 初始化数据库
 	db.DB.AutoMigrate(&model.Nep{}, &model.Release{})
+
+	// 初始化 nep
+	domain.InitNepsWithBotTask()
 
 	// 启动服务器
 	server := gin.Default()
