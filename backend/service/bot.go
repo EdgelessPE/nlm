@@ -21,8 +21,7 @@ func init() {
 func BotGenerateDatabase() ([]model.Nep, error) {
 	var neps []model.Nep
 
-	err := db.DB.Preload("LatestRelease").
-		Find(&neps).Error
+	err := db.DB.Find(&neps).Error
 
 	if err != nil {
 		return nil, err
