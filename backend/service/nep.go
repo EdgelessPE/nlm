@@ -4,7 +4,6 @@ import (
 	"errors"
 	"nlm/db"
 	"nlm/model"
-	"time"
 
 	"github.com/google/uuid"
 )
@@ -39,13 +38,16 @@ func GetNeps() ([]model.Nep, error) {
 	return neps, nil
 }
 
-func AddRelease(scope string, name string, version string, flags string, putawayAt time.Time, pipelineId string) (model.Release, error) {
+// 默认添加的 release 版本号是最高的
+func AddRelease(scope string, name string, version string, flags string, fileName string, pipelineId string) (model.Release, error) {
 	n, err := GetNep(scope, name)
 	if err != nil {
 		return model.Release{}, err
 	}
-	r := model.Release{Version: version, Flags: flags, PutawayAt: putawayAt, PipelineId: pipelineId, NepId: n.ID.String()}
+	r := model.Release{Version: version, Flags: flags, FileName: fileName, PipelineId: pipelineId, NepId: n.ID.String()}
 	db.DB.Create(&r)
+	n.LatestReleaseId = r.ID.String()
+	db.DB.Save(&n)
 	return r, nil
 }
 

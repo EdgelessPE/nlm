@@ -1,21 +1,21 @@
 package model
 
-import (
-	"time"
-)
-
 type Nep struct {
 	Base
-	Scope string
-	Name  string
+	Scope           string
+	Name            string
+	LatestReleaseId string
+	LatestRelease   *Release `gorm:"foreignKey:LatestReleaseId;references:ID"`
 }
 
 type Release struct {
 	Base
-	NepId   string
-	Version string
-	Flags   string
+	Version  string
+	Flags    string
+	FileName string
 
-	PutawayAt  time.Time
+	NepId string
+	Nep   *Nep `gorm:"foreignKey:NepId;references:ID"`
+
 	PipelineId string
 }

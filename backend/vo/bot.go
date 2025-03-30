@@ -6,14 +6,16 @@ type BotBuildStatus struct {
 	FileNames []string `json:"fileNames"`
 }
 
+type BotDatabaseNodeRecent struct {
+	Health        int              `json:"health"` // 健康度，0-3
+	LatestVersion string           `json:"latestVersion"`
+	ErrorMessage  string           `json:"errorMessage"`
+	Builds        []BotBuildStatus `json:"builds"`
+}
+
 type BotDatabaseNode struct {
 	// TaskName string `json:"taskName"`
-	Recent struct {
-		Health        int              `json:"health"` // 健康度，0-3
-		LatestVersion string           `json:"latestVersion"`
-		ErrorMessage  string           `json:"errorMessage"`
-		Builds        []BotBuildStatus `json:"builds"`
-	} `json:"recent"`
+	Recent BotDatabaseNodeRecent `json:"recent"`
 }
 
 type BotResultSuccess struct {
