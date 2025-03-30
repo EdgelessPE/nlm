@@ -3,10 +3,13 @@ package service
 import (
 	"encoding/json"
 	"log"
+	"nlm/context"
 	"nlm/db"
 	"nlm/model"
 	"nlm/vo"
 	"os"
+	"os/exec"
+	"strings"
 
 	"github.com/joho/godotenv"
 )
@@ -50,4 +53,31 @@ func BotGenerateDatabase() ([]model.Nep, error) {
 	}
 	os.WriteFile(os.Getenv("BOT_DATABASE_FILE"), text, 0644)
 	return neps, nil
+}
+
+func BotRun(ctx context.PipelineContext) (vo.BotResult, error) {
+	// 运行 bot
+	cmdSplit := strings.Split(os.Getenv("BOT_RUN_CMD"), " ")
+	cmd := exec.Command(cmdSplit[0], cmdSplit[1:]...)
+	cmd.Dir = os.Getenv("BOT_DIR")
+	output, err := cmd.Output()
+	if err != nil {
+		return vo.BotResult{}, err
+	}
+
+	// 将日志写入 context
+	ctx.BotLog = string(output)
+
+	// 读取 result.json
+	result, err := os.ReadFile(os.Getenv("BOT_RESULT_FILE"))
+	if err != nil {
+		return vo.BotResult{}, err
+	}
+	var botResult vo.BotResult
+	err = json.Unmarshal(result, &botResult)
+	if err != nil {
+		return vo.BotResult{}, err
+	}
+
+	return botResult, nil
 }
