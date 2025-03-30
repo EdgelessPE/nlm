@@ -32,9 +32,9 @@ func GetNep(scope string, name string) (model.Nep, error) {
 	return nep, nil
 }
 
-func GetNeps() ([]model.Nep, error) {
+func GetNeps(offset int, limit int) ([]model.Nep, error) {
 	var neps []model.Nep
-	db.DB.Find(&neps)
+	db.DB.Offset(offset).Limit(limit).Find(&neps)
 	return neps, nil
 }
 

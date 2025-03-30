@@ -15,7 +15,16 @@ func RegisterNepRoutes(r *gin.RouterGroup) {
 }
 
 func GetNeps(c *gin.Context) {
-	neps, err := service.GetNeps()
+	offset, limit, err := GetOffsetAndLimit(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, vo.BaseResponse[any]{
+			Code: 400,
+			Msg:  "Failed to get offset and limit : " + err.Error(),
+			Data: nil,
+		})
+		return
+	}
+	neps, err := service.GetNeps(offset, limit)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, vo.BaseResponse[any]{
 			Code: 500,
