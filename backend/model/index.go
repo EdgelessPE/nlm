@@ -2,20 +2,20 @@ package model
 
 type Nep struct {
 	Base
-	Scope           string
-	Name            string
-	LatestReleaseId string
-	LatestRelease   *Release `gorm:"foreignKey:LatestReleaseId;references:ID"`
+	Scope string `gorm:"index"`
+	Name  string `gorm:"index"`
+
+	LatestReleaseVersion string
 }
 
 type Release struct {
 	Base
-	Version  string
+	Version  string `gorm:"index"`
 	Flags    string
 	FileName string
 
-	NepId string
-	Nep   *Nep `gorm:"foreignKey:NepId;references:ID"`
+	NepId string `gorm:"index;not null"`
+	Nep   *Nep   `gorm:"foreignKey:NepId;references:ID;constraint:OnDelete:CASCADE"`
 
-	PipelineId string
+	PipelineId string `gorm:"index"`
 }

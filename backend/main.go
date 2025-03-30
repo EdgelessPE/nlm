@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"nlm/db"
 	"nlm/domain"
@@ -13,7 +14,10 @@ import (
 
 func main() {
 	// 初始化数据库
-	db.DB.AutoMigrate(&model.Nep{}, &model.Release{})
+	err := db.DB.AutoMigrate(&model.Nep{}, &model.Release{})
+	if err != nil {
+		log.Fatalf("Failed to migrate nep table: %v", err)
+	}
 
 	// 初始化 nep
 	domain.InitNepsWithBotTask()

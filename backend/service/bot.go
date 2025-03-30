@@ -30,18 +30,16 @@ func BotGenerateDatabase() ([]model.Nep, error) {
 
 	record := make(map[string]vo.BotDatabaseNode)
 	for _, nep := range neps {
+		// 如果没有构建记录可以直接跳过
+		if nep.LatestReleaseVersion == "" {
+			continue
+		}
 		record[nep.Scope+"_"+nep.Name] = vo.BotDatabaseNode{
 			Recent: vo.BotDatabaseNodeRecent{
 				Health:        3,
-				LatestVersion: nep.LatestRelease.Version,
+				LatestVersion: nep.LatestReleaseVersion,
 				ErrorMessage:  "",
-				Builds: []vo.BotBuildStatus{
-					{
-						Version:   nep.LatestRelease.Version,
-						Timestamp: nep.LatestRelease.CreatedAt.Format("2000-01-01 00:00:00"),
-						FileNames: []string{nep.LatestRelease.FileName},
-					},
-				},
+				Builds:        []vo.BotBuildStatus{},
 			},
 		}
 	}

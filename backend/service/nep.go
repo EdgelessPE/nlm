@@ -46,7 +46,7 @@ func AddRelease(scope string, name string, version string, flags string, fileNam
 	}
 	r := model.Release{Version: version, Flags: flags, FileName: fileName, PipelineId: pipelineId, NepId: n.ID.String()}
 	db.DB.Create(&r)
-	n.LatestReleaseId = r.ID.String()
+	n.LatestReleaseVersion = version
 	db.DB.Save(&n)
 	return r, nil
 }
