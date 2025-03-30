@@ -58,7 +58,7 @@ func BotGenerateDatabase() ([]model.Nep, error) {
 func BotRun(ctx context.PipelineContext) (vo.BotResult, error) {
 	// 运行 bot
 	cmdSplit := strings.Split(os.Getenv("BOT_RUN_CMD"), " ")
-	cmd := exec.Command(cmdSplit[0], cmdSplit[1:]...)
+	cmd := exec.CommandContext(ctx.Context, cmdSplit[0], cmdSplit[1:]...)
 	cmd.Dir = os.Getenv("BOT_DIR")
 	output, err := cmd.Output()
 	if err != nil {
