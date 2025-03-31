@@ -1,21 +1,24 @@
 package model
 
-type Nep struct {
-	Base
-	Scope string `gorm:"index"`
-	Name  string `gorm:"index"`
+import (
+	"time"
 
-	LatestReleaseVersion string
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
+
+// Base 基础模型
+type Base struct {
+	ID        uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
-type Release struct {
-	Base
-	Version  string `gorm:"index"`
-	Flags    string
-	FileName string
-
-	NepId string `gorm:"index;not null"`
-	Nep   *Nep   `gorm:"foreignKey:NepId;references:ID;constraint:OnDelete:CASCADE"`
-
-	PipelineId string `gorm:"index"`
+// BeforeCreate 在创建记录前生成 UUID
+func (b *Base) BeforeCreate(tx *gorm.DB) error {
+	if b.ID == uuid.Nil {
+		b.ID = uuid.New()
+	}
+	return nil
 }
