@@ -56,17 +56,23 @@ func BotGenerateDatabase() ([]model.Nep, error) {
 }
 
 func BotRun(ctx context.PipelineContext) (vo.BotResult, error) {
-	// 运行 bot
-	cmdSplit := strings.Split(os.Getenv("BOT_RUN_CMD"), " ")
-	cmd := exec.CommandContext(ctx.Context, cmdSplit[0], cmdSplit[1:]...)
-	cmd.Dir = os.Getenv("BOT_DIR")
-	output, err := cmd.Output()
+	// 创建日志
+	logFile, err := CreateLog(ctx, "bot")
 	if err != nil {
 		return vo.BotResult{}, err
 	}
+	defer logFile.Close()
 
-	// 将日志写入 context
-	ctx.BotLog = string(output)
+	// 运行 bot
+	cmdSplit := strings.Split(os.Getenv("BOT_RUN_CMD"), " ")
+	cmd := exec.CommandContext(ctx.Context, cmdSplit[0], cmdSplit[1:]...)
+	cmd.Stdout = logFile
+	cmd.Stderr = logFile
+	cmd.Dir = os.Getenv("BOT_DIR")
+	err = cmd.Run()
+	if err != nil {
+		return vo.BotResult{}, err
+	}
 
 	// 读取 result.json
 	result, err := os.ReadFile(os.Getenv("BOT_RESULT_FILE"))

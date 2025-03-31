@@ -2,16 +2,18 @@ package context
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 )
 
 type PipelineContext struct {
 	context.Context
-	BotLog string
+	Id string
 }
 
 func NewPipelineContext() PipelineContext {
 	return PipelineContext{
 		Context: context.Background(),
-		BotLog:  "",
+		Id:      uuid.New().String(),
 	}
 }

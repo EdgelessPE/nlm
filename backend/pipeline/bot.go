@@ -18,8 +18,8 @@ func RunBotPipeline() error {
 
 	// 运行 bot
 	println("Running bot...")
-	_, e := service.BotRun(ctx)
-	if e != nil {
+	_, err = service.BotRun(ctx)
+	if err != nil {
 		return err
 	}
 	println("Bot run successfully")
