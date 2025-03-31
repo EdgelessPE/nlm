@@ -7,6 +7,7 @@ import (
 	"nlm/domain"
 	"nlm/handler"
 	"nlm/model"
+	"nlm/service"
 	"nlm/vo"
 
 	"github.com/gin-gonic/gin"
@@ -21,6 +22,9 @@ func main() {
 
 	// 初始化 nep
 	domain.InitNepsWithBotTask()
+
+	// 启动定时任务
+	service.InitCron()
 
 	// 启动服务器
 	server := gin.Default()
