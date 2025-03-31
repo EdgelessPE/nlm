@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"nlm/context"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -16,8 +17,8 @@ var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 	CheckOrigin: func(r *http.Request) bool {
-		// 允许来自 localhost:5321 的请求
-		return r.Host == "localhost:5321"
+		// 允许来自 localhost 的请求
+		return strings.Contains(r.Host, "localhost")
 	},
 }
 
@@ -56,17 +57,12 @@ func StreamLog(c *gin.Context, pipelineId, moduleName string) {
 	}
 	defer logFile.Close()
 
-	// 获取文件大小
-	fileInfo, err := logFile.Stat()
-	if err != nil {
-		fmt.Printf("Failed to get file info: %v\n", err)
-		return
-	}
-	fileSize := fileInfo.Size()
+	fileSize := int64(0)
 
 	// 创建缓冲区
 	buffer := make([]byte, 1024)
 	for {
+		println("Checking log file...")
 		// 检查文件是否有新内容
 		newFileInfo, err := logFile.Stat()
 		if err != nil {
@@ -102,16 +98,20 @@ func StreamLog(c *gin.Context, pipelineId, moduleName string) {
 		}
 
 		// 检查 WebSocket 连接是否关闭
-		_, _, err = ws.ReadMessage()
+		_, p, err := ws.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				fmt.Printf("WebSocket error: %v\n", err)
+				fmt.Printf("WebSocket connection closed: %v\n", err)
 			}
+			break
+		}
+		if string(p) != "pong" {
+			fmt.Printf("WebSocket connection closed: invalid heartbeat message: %s\n", string(p))
 			break
 		}
 
 		// 短暂休眠，避免过于频繁的检查
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(1 * time.Second)
 	}
 }
 
