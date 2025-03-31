@@ -97,7 +97,7 @@ func StreamLog(c *gin.Context, pipelineId, moduleName string) {
 			fileSize = newFileInfo.Size()
 		}
 
-		// 检查 WebSocket 连接是否关闭
+		// 检查 WebSocket 心跳
 		_, p, err := ws.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
