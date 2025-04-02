@@ -1,12 +1,12 @@
 package domain
 
 import (
+	"github.com/pelletier/go-toml/v2"
 	"log"
 	"nlm/service"
 	"os"
 	"path/filepath"
 
-	"github.com/BurntSushi/toml"
 	"github.com/joho/godotenv"
 )
 
@@ -25,14 +25,21 @@ func InitNepsWithBotTask() {
 	}
 
 	for _, scope_dir := range scope_dirs {
+		if !scope_dir.IsDir() {
+			continue
+		}
 		name_dirs, err := os.ReadDir(filepath.Join(tasks_dir, scope_dir.Name()))
 		if err != nil {
 			log.Fatal("Error reading bot tasks directory: " + err.Error())
 		}
 		for _, name_dir := range name_dirs {
 			if name_dir.IsDir() {
+				config_path := filepath.Join(tasks_dir, scope_dir.Name(), name_dir.Name(), "config.toml")
+				if _, err := os.Stat(config_path); os.IsNotExist(err) {
+					continue
+				}
 				// 读取 config.toml 文件
-				text, err := os.ReadFile(filepath.Join(tasks_dir, scope_dir.Name(), name_dir.Name(), "config.toml"))
+				text, err := os.ReadFile(config_path)
 				if err != nil {
 					log.Fatal("Error reading config file: " + err.Error())
 				}
