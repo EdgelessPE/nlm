@@ -1,8 +1,6 @@
 package model
 
-import "gorm.io/gorm"
-
 type Storage struct {
-	gorm.Model
+	Base
 	SourceFilePath string `gorm:"not null"`
 }
