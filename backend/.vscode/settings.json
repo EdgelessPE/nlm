@@ -3,6 +3,7 @@
     "godotenv",
     "gonic",
     "gorm",
+    "Kanuo",
     "Neps",
     "Putaway",
     "upgrader"
