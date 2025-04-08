@@ -2,7 +2,7 @@ package service
 
 import (
 	"encoding/json"
-	"log"
+	"nlm/config"
 	"nlm/context"
 	"nlm/db"
 	"nlm/model"
@@ -10,16 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
-
-	"github.com/joho/godotenv"
 )
-
-func init() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-}
 
 func BotGenerateDatabase() ([]model.Nep, error) {
 	var neps []model.Nep
@@ -51,7 +42,7 @@ func BotGenerateDatabase() ([]model.Nep, error) {
 	if err != nil {
 		return nil, err
 	}
-	os.WriteFile(os.Getenv("BOT_DATABASE_FILE"), text, 0644)
+	os.WriteFile(config.ENV.BOT_DATABASE_FILE, text, 0644)
 	return neps, nil
 }
 
@@ -64,18 +55,18 @@ func BotRun(ctx context.PipelineContext) (vo.BotResult, error) {
 	defer logFile.Close()
 
 	// 运行 bot
-	cmdSplit := strings.Split(os.Getenv("BOT_RUN_CMD"), " ")
+	cmdSplit := strings.Split(config.ENV.BOT_RUN_CMD, " ")
 	cmd := exec.CommandContext(ctx.Context, cmdSplit[0], cmdSplit[1:]...)
 	cmd.Stdout = logFile
 	cmd.Stderr = logFile
-	cmd.Dir = os.Getenv("BOT_DIR")
+	cmd.Dir = config.ENV.BOT_DIR
 	err = cmd.Run()
 	if err != nil {
 		return vo.BotResult{}, err
 	}
 
 	// 读取 result.json
-	result, err := os.ReadFile(os.Getenv("BOT_RESULT_FILE"))
+	result, err := os.ReadFile(config.ENV.BOT_RESULT_FILE)
 	if err != nil {
 		return vo.BotResult{}, err
 	}

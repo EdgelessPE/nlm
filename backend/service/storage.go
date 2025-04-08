@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"nlm/config"
 	"nlm/db"
 	"nlm/model"
 	"nlm/vo"
@@ -20,7 +21,7 @@ func AddStorage(sourceFilePath string, syncLocation []vo.SyncLocation) (string, 
 	uuid := fmt.Sprint(s.ID)
 
 	// 移动到临时目录
-	tempDir := os.Getenv("STORAGE_TEMP_DIR")
+	tempDir := config.ENV.STORAGE_TEMP_DIR
 	if err := os.MkdirAll(tempDir, 0755); err != nil {
 		return "", err
 	}

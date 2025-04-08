@@ -1,24 +1,17 @@
 package domain
 
 import (
-	"github.com/pelletier/go-toml/v2"
 	"log"
+	"nlm/config"
 	"nlm/service"
 	"os"
 	"path/filepath"
 
-	"github.com/joho/godotenv"
+	"github.com/pelletier/go-toml/v2"
 )
 
-func init() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-}
-
 func InitNepsWithBotTask() {
-	tasks_dir := os.Getenv("BOT_TASKS_DIR")
+	tasks_dir := config.ENV.BOT_TASKS_DIR
 	scope_dirs, err := os.ReadDir(tasks_dir)
 	if err != nil {
 		log.Fatal("Error reading bot tasks directory: " + err.Error())

@@ -1,5 +1,6 @@
 /.air.toml
 /tmp
 /.env
+.env.toml
 /logs
 /.idea
