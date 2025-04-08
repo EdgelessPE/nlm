@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"nlm/vo"
 	"os"
 
 	"github.com/pelletier/go-toml/v2"
@@ -21,6 +22,7 @@ type Env struct {
 	BOT_RESULT_FILE   string
 
 	STORAGE_TEMP_DIR string
+	STORAGE_CONFIG   []vo.StorageConfig
 }
 
 var ENV Env

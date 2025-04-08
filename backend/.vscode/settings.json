@@ -3,6 +3,7 @@
     "godotenv",
     "gonic",
     "gorm",
+    "homeserver",
     "Kanuo",
     "Neps",
     "Putaway",
