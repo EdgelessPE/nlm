@@ -1,6 +1,9 @@
 package model
 
+import "time"
+
 type Storage struct {
 	Base
-	SourceFilePath string `gorm:"not null"`
+	FileName       string `gorm:"not null"`
+	SyncFinishedAt time.Time
 }
