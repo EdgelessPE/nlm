@@ -10,6 +10,8 @@ import (
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/cespare/cp"
 )
 
 func syncFile(key string, syncToExpensiveStorage bool) error {
@@ -68,4 +70,31 @@ func AddStorage(sourceFilePath string, syncToExpensiveStorage bool) (string, err
 	}()
 
 	return uuid, nil
+}
+
+func FetchStorage(uuid string, toDir string) (string, error) {
+	// 查询文件名
+	var s model.Storage
+	db.DB.Where("id = ?", uuid).First(&s)
+	if s.FileName == "" {
+		return "", fmt.Errorf("can't found storage for uuid: %s", uuid)
+	}
+
+	// 从临时存储中获取文件
+	tempDir := config.ENV.STORAGE_TEMP_DIR
+	tempFilePath := filepath.Join(tempDir, uuid)
+	if _, err := os.Stat(tempFilePath); os.IsNotExist(err) {
+		return "", fmt.Errorf("can't found temp file for uuid: %s", uuid)
+	}
+
+	// 复制文件到目标位置
+	targetFilePath := filepath.Join(toDir, s.FileName)
+	if err := os.MkdirAll(toDir, 0755); err != nil {
+		return "", err
+	}
+	if err := cp.CopyFile(tempFilePath, targetFilePath); err != nil {
+		return "", err
+	}
+
+	return targetFilePath, nil
 }
