@@ -57,12 +57,14 @@ func AddStorage(sourceFilePath string, syncToExpensiveStorage bool) (string, err
 
 	// 调度文件同步任务
 	go func() {
+		fmt.Println("start syncing file", uuid)
 		err := syncFile(uuid, syncToExpensiveStorage)
 		if err != nil {
 			fmt.Println("sync error: ", err)
 		}
 		// 更新同步状态
 		db.DB.Model(&s).Update("sync_finished_at", time.Now())
+		fmt.Println("sync finished", uuid)
 	}()
 
 	return uuid, nil

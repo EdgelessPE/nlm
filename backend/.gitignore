@@ -4,3 +4,4 @@
 .env.toml
 /logs
 /.idea
+/storage-temp
