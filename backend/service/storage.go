@@ -6,6 +6,7 @@ import (
 	"nlm/db"
 	"nlm/model"
 	storage_drivers "nlm/service/storage-drivers"
+	"nlm/utils"
 	"os"
 	"path/filepath"
 	"time"
@@ -118,4 +119,9 @@ func GetStorageUrl(uuid string) (string, error) {
 		}
 	}
 	return "", fmt.Errorf("can't found storage for uuid: %s", uuid)
+}
+
+// 清理 30天前的临时存储文件
+func CleanTempStorage() error {
+	return utils.CleanOutdatedFiles(config.ENV.STORAGE_TEMP_DIR)
 }

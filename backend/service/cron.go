@@ -12,5 +12,10 @@ func InitCron() {
 		CleanLogs()
 	})
 
+	// 每天 0 点清理临时存储
+	c.AddFunc("0 0 * * *", func() {
+		CleanTempStorage()
+	})
+
 	c.Start()
 }

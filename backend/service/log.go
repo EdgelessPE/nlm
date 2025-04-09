@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"nlm/context"
+	"nlm/utils"
 	"os"
 	"strings"
 	"time"
@@ -117,20 +118,5 @@ func StreamLog(c *gin.Context, pipelineId, moduleName string) {
 
 // CleanLogs 清理 30 天前的日志
 func CleanLogs() error {
-	println("Start cleaning outdated log files...")
-	files, err := os.ReadDir("logs")
-	if err != nil {
-		return err
-	}
-	for _, file := range files {
-		info, err := file.Info()
-		if err != nil {
-			return err
-		}
-		if info.ModTime().Before(time.Now().AddDate(0, 0, -30)) {
-			println("Cleaning outdated log file:", file.Name())
-			os.Remove(fmt.Sprintf("logs/%s", file.Name()))
-		}
-	}
-	return nil
+	return utils.CleanOutdatedFiles("logs")
 }
