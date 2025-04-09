@@ -13,8 +13,8 @@ import (
 	"github.com/cespare/cp"
 )
 
-func syncFile(key string, syncToExpensiveStorage bool) error {
-	sourceFilePath := filepath.Join(config.ENV.STORAGE_TEMP_DIR, key)
+func syncFile(uuid string, syncToExpensiveStorage bool) error {
+	sourceFilePath := filepath.Join(config.ENV.STORAGE_TEMP_DIR, uuid)
 	if _, err := os.Stat(sourceFilePath); os.IsNotExist(err) {
 		return fmt.Errorf("sync error: source file not found: %s", sourceFilePath)
 	}
@@ -31,7 +31,7 @@ func syncFile(key string, syncToExpensiveStorage bool) error {
 			return err
 		}
 
-		err = driver.Upload(key, sourceFilePath)
+		err = driver.Upload(uuid, sourceFilePath)
 		if err != nil {
 			return err
 		}
@@ -100,4 +100,22 @@ func FetchStorage(uuid string, toDir string) (string, error) {
 	}
 
 	return targetFilePath, nil
+}
+
+func GetStorageUrl(uuid string) (string, error) {
+	storageConfig := config.ENV.STORAGE_CONFIG
+	for _, config := range storageConfig {
+		if config.PublicUrlBase == "" {
+			continue
+		}
+		driver := storage_drivers.Registry[config.Driver]
+		exists, err := driver.Exists(uuid)
+		if err != nil {
+			return "", err
+		}
+		if exists {
+			return filepath.Join(config.PublicUrlBase, uuid), nil
+		}
+	}
+	return "", fmt.Errorf("can't found storage for uuid: %s", uuid)
 }

@@ -27,8 +27,8 @@ func (d *RcloneDriver) Init(targetStorageName string, targetDir string) error {
 
 func (d *RcloneDriver) Upload(uuid string, sourceFilePath string) error {
 	// 执行 rclone 命令
-	fmt.Println("Running rclone copy", sourceFilePath, d.targetStorageName+":"+filepath.Join(d.targetDir, uuid))
-	cmd := exec.Command("rclone", "copy", sourceFilePath, d.targetStorageName+":"+filepath.Join(d.targetDir, uuid))
+	fmt.Println("Running rclone copyto", sourceFilePath, d.targetStorageName+":"+filepath.Join(d.targetDir, uuid))
+	cmd := exec.Command("rclone", "copyto", sourceFilePath, d.targetStorageName+":"+filepath.Join(d.targetDir, uuid))
 	return cmd.Run()
 }
 
