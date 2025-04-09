@@ -7,13 +7,11 @@ import (
 func InitCron() {
 	c := cron.New()
 
-	// 每天 0 点清理日志
+	// 每天 0 点清理
 	c.AddFunc("0 0 * * *", func() {
+		// 清理过期日志
 		CleanLogs()
-	})
-
-	// 每天 0 点清理临时存储
-	c.AddFunc("0 0 * * *", func() {
+		// 清理过期临时存储
 		CleanTempStorage()
 	})
 
