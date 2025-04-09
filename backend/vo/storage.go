@@ -1,13 +1,6 @@
 package vo
 
-// 存储驱动枚举（rclone、本地）
-type StorageDriver int
-
-const (
-	StorageDriverRclone StorageDriver = iota + 1
-	// 软件官方客户端，使用同步功能
-	StorageDriverOfficialClient
-)
+import storage_drivers "nlm/service/storage-drivers"
 
 // 存储配置
 type StorageConfig struct {
@@ -16,7 +9,7 @@ type StorageConfig struct {
 	// 昂贵存储
 	Expensive bool
 	// 存储驱动
-	Driver StorageDriver
+	Driver storage_drivers.StorageDriverEnum
 	// 存储名称
 	StorageName string
 	// 存储根目录

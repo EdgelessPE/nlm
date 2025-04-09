@@ -5,8 +5,7 @@ import (
 	"nlm/config"
 	"nlm/db"
 	"nlm/model"
-	"nlm/utils"
-	"nlm/vo"
+	storage_drivers "nlm/service/storage-drivers"
 	"os"
 	"path/filepath"
 	"time"
@@ -26,11 +25,15 @@ func syncFile(key string, syncToExpensiveStorage bool) error {
 			continue
 		}
 
-		switch config.Driver {
-		case vo.StorageDriverRclone:
-			utils.RcloneCp(sourceFilePath, config.StorageName, config.BaseDir)
-		case vo.StorageDriverOfficialClient:
-			// DO NOTHING
+		driver := storage_drivers.Registry[config.Driver]
+		err := driver.Init(config.StorageName, config.BaseDir)
+		if err != nil {
+			return err
+		}
+
+		err = driver.Upload(key, sourceFilePath)
+		if err != nil {
+			return err
 		}
 	}
 
