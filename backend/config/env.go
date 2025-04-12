@@ -20,9 +20,9 @@ type Env struct {
 	BOT_DATABASE_FILE string
 	BOT_RUN_CMD       string
 	BOT_RESULT_FILE   string
-
-	STORAGE_TEMP_DIR string
-	STORAGE_CONFIG   []vo.StorageConfig
+	BOT_BUILDS_DIR    string
+	STORAGE_TEMP_DIR  string
+	STORAGE_CONFIG    []vo.StorageConfig
 }
 
 var ENV Env

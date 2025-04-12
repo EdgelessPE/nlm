@@ -6,9 +6,11 @@ import (
 	"nlm/context"
 	"nlm/db"
 	"nlm/model"
+	"nlm/utils"
 	"nlm/vo"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 )
 
@@ -46,6 +48,44 @@ func BotGenerateDatabase() ([]model.Nep, error) {
 	return neps, nil
 }
 
+func storeBuilds(scope string, name string, fileNames []string) ([]vo.BotBuild, error) {
+	filesDir := filepath.Join(config.ENV.BOT_BUILDS_DIR, scope, name)
+
+	// 检查 builds 目录中是否存在这些文件
+	for _, fileName := range fileNames {
+		if _, err := os.Stat(filepath.Join(filesDir, fileName)); os.IsNotExist(err) {
+			return nil, err
+		}
+		if _, err := os.Stat(filepath.Join(filesDir, fileName+".meta")); os.IsNotExist(err) {
+			return nil, err
+		}
+	}
+	// 依次保存并生成结果
+	var builds []vo.BotBuild
+	for _, fileName := range fileNames {
+		parsed, err := utils.ParseNepFileName(fileName)
+		if err != nil {
+			return nil, err
+		}
+		storageKey, err := AddStorage(filepath.Join(filesDir, fileName), false)
+		if err != nil {
+			return nil, err
+		}
+		metaStorageKey, err := AddStorage(filepath.Join(filesDir, fileName+".meta"), true)
+		if err != nil {
+			return nil, err
+		}
+		builds = append(builds, vo.BotBuild{
+			Version:        parsed.Version,
+			Flags:          parsed.Flags,
+			FileName:       fileName,
+			StorageKey:     storageKey,
+			MetaStorageKey: metaStorageKey,
+		})
+	}
+	return builds, nil
+}
+
 func BotRun(ctx context.PipelineContext) (vo.BotResult, error) {
 	// 创建日志
 	logFile, err := CreateLog(ctx, "bot")
@@ -53,6 +93,9 @@ func BotRun(ctx context.PipelineContext) (vo.BotResult, error) {
 		return vo.BotResult{}, err
 	}
 	defer logFile.Close()
+
+	// 删除 builds 目录
+	os.RemoveAll(config.ENV.BOT_BUILDS_DIR)
 
 	// 运行 bot
 	cmdSplit := strings.Split(config.ENV.BOT_RUN_CMD, " ")
@@ -74,6 +117,33 @@ func BotRun(ctx context.PipelineContext) (vo.BotResult, error) {
 	err = json.Unmarshal(result, &botResult)
 	if err != nil {
 		return vo.BotResult{}, err
+	}
+
+	for _, node := range botResult.Success {
+		// 保存 builds
+		b, err := storeBuilds(node.Scope, node.TaskName, node.FileNames)
+		if err != nil {
+			return vo.BotResult{}, err
+		}
+
+		// 获取 NepId
+		nep, err := GetNep(node.Scope, node.TaskName)
+		if err != nil {
+			return vo.BotResult{}, err
+		}
+
+		// 保存 builds 到数据库
+		for _, build := range b {
+			db.DB.Create(&model.Release{
+				Version:        build.Version,
+				Flags:          build.Flags,
+				FileName:       build.FileName,
+				StorageKey:     build.StorageKey,
+				MetaStorageKey: build.MetaStorageKey,
+				NepId:          nep.ID.String(),
+				PipelineId:     ctx.Id,
+			})
+		}
 	}
 
 	return botResult, nil
