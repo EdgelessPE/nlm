@@ -19,6 +19,7 @@ type BotDatabaseNode struct {
 }
 
 type BotResultSuccess struct {
+	Scope     string   `json:"scope"`
 	TaskName  string   `json:"taskName"`
 	From      string   `json:"from"`
 	To        string   `json:"to"`
@@ -26,6 +27,7 @@ type BotResultSuccess struct {
 }
 
 type BotResultError struct {
+	Scope        string `json:"scope"`
 	TaskName     string `json:"taskName"`
 	ErrorMessage string `json:"errorMessage"`
 }
