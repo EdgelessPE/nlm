@@ -5,7 +5,7 @@ import (
 	"nlm/service"
 )
 
-func RunBotPipeline() error {
+func RunBotPipeline(tasks []string, force bool) error {
 	ctx := context.NewPipelineContext()
 
 	// 生成 bot 数据库
@@ -18,7 +18,7 @@ func RunBotPipeline() error {
 
 	// 运行 bot
 	println("Running bot...")
-	_, err = service.BotRun(ctx)
+	_, err = service.BotRun(ctx, tasks, force)
 	if err != nil {
 		return err
 	}
