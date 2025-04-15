@@ -128,6 +128,14 @@ func BotRun(ctx context.PipelineContext, tasks []string, force bool) (vo.BotResu
 	}
 
 	for _, node := range botResult.Success {
+		// 确认文件名都可以被解析
+		for _, fileName := range node.FileNames {
+			_, err := utils.ParseNepFileName(fileName)
+			if err != nil {
+				return vo.BotResult{}, fmt.Errorf("failed to parse build's file name '%s' : %s", fileName, err.Error())
+			}
+		}
+
 		// 保存 builds
 		b, err := storeBuilds(node.Scope, node.TaskName, node.FileNames)
 		if err != nil {

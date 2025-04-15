@@ -38,5 +38,5 @@ func main() {
 	})
 
 	handler.RegisterRoutes(r)
-	server.Run("0.0.0.0:3001") // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	server.Run("0.0.0.0:3001")
 }
