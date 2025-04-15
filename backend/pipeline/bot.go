@@ -20,6 +20,7 @@ func RunBotPipeline(tasks []string, force bool) error {
 	println("Running bot...")
 	_, err = service.BotRun(ctx, tasks, force)
 	if err != nil {
+		println("Bot run failed: ", err.Error())
 		return err
 	}
 	println("Bot run successfully")
