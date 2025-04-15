@@ -14,22 +14,29 @@ type NepNameParsed struct {
 }
 
 func ParseNepFileName(fileName string) (NepNameParsed, error) {
-	// 第一次分割，去掉拓展名并尝试获取 flags
-	sp1 := strings.Split(fileName, ".")
-	steamName := sp1[0]
+	// 去掉 .nep 后缀
+	if !strings.HasSuffix(fileName, ".nep") {
+		return NepNameParsed{}, errors.New("invalid nep extension name: " + fileName)
+	}
+	fileName = strings.TrimSuffix(fileName, ".nep")
+
+	// 检查 flags 位是否存在
+	// 检查文件名是否为 .跟随大写字母
 	var flags string
-	if len(sp1) > 1 && regexp.MustCompile(`^[A-Z]+$`).MatchString(sp1[1]) {
-		flags = sp1[1]
+	regex := regexp.MustCompile(`\.([A-Z]+)$`)
+	if regex.MatchString(fileName) {
+		flags = regex.FindStringSubmatch(fileName)[1]
+		fileName = strings.TrimSuffix(fileName, "."+flags)
 	}
 
-	// 第二次分割
-	sp2 := strings.Split(steamName, "_")
-	if len(sp2) != 3 {
+	// 分割
+	sp := strings.Split(fileName, "_")
+	if len(sp) != 3 {
 		return NepNameParsed{}, errors.New("invalid nep stem name: " + fileName)
 	}
-	name := sp2[0]
-	version := sp2[1]
-	author := sp2[1]
+	name := sp[0]
+	version := sp[1]
+	author := sp[2]
 
 	return NepNameParsed{
 		Name:    name,
