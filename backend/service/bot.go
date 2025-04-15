@@ -86,7 +86,7 @@ func storeBuilds(scope string, name string, fileNames []string) ([]vo.BotBuild, 
 	return builds, nil
 }
 
-func BotRun(ctx context.PipelineContext) (vo.BotResult, error) {
+func BotRun(ctx context.PipelineContext, tasks []string, force bool) (vo.BotResult, error) {
 	// 创建日志
 	logFile, err := CreateLog(ctx, "bot")
 	if err != nil {
@@ -99,6 +99,12 @@ func BotRun(ctx context.PipelineContext) (vo.BotResult, error) {
 
 	// 运行 bot
 	cmdSplit := strings.Split(config.ENV.BOT_RUN_CMD, " ")
+	if len(tasks) > 0 {
+		cmdSplit = append(cmdSplit, "-t", strings.Join(tasks, ","))
+	}
+	if force {
+		cmdSplit = append(cmdSplit, "-f")
+	}
 	cmd := exec.CommandContext(ctx.Context, cmdSplit[0], cmdSplit[1:]...)
 	cmd.Stdout = logFile
 	cmd.Stderr = logFile
