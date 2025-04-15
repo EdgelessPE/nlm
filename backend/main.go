@@ -26,6 +26,8 @@ func main() {
 	// 启动定时任务
 	service.InitCron()
 
+	// pipeline.RunBotPipeline([]string{"scoop/curl", "RustDesk/RustDesk"}, true)
+
 	// 启动服务器
 	server := gin.Default()
 	r := server.Group("/api")

@@ -38,6 +38,9 @@ type BotResult struct {
 }
 
 type BotBuild struct {
+	Scope    string `json:"scope"`
+	TaskName string `json:"taskName"`
+
 	Version        string `json:"version"`
 	Flags          string `json:"flags"`
 	FileName       string `json:"fileName"`

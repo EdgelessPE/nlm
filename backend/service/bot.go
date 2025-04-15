@@ -77,6 +77,8 @@ func storeBuilds(scope string, name string, fileNames []string) ([]vo.BotBuild, 
 			return nil, err
 		}
 		builds = append(builds, vo.BotBuild{
+			Scope:          scope,
+			TaskName:       name,
 			Version:        parsed.Version,
 			Flags:          parsed.Flags,
 			FileName:       fileName,
@@ -87,11 +89,11 @@ func storeBuilds(scope string, name string, fileNames []string) ([]vo.BotBuild, 
 	return builds, nil
 }
 
-func BotRun(ctx context.PipelineContext, tasks []string, force bool) (vo.BotResult, error) {
+func BotRun(ctx context.PipelineContext, tasks []string, force bool) ([]vo.BotBuild, error) {
 	// 创建日志
 	logFile, err := CreateLog(ctx, "bot")
 	if err != nil {
-		return vo.BotResult{}, err
+		return nil, err
 	}
 	defer logFile.Close()
 
@@ -112,40 +114,41 @@ func BotRun(ctx context.PipelineContext, tasks []string, force bool) (vo.BotResu
 	cmd.Dir = config.ENV.BOT_DIR
 	err = cmd.Run()
 	if err != nil {
-		return vo.BotResult{}, err
+		return nil, err
 	}
 
 	// 读取 result.json
 	result, err := os.ReadFile(config.ENV.BOT_RESULT_FILE)
 	if err != nil {
-		return vo.BotResult{}, err
+		return nil, err
 	}
 	fmt.Println(string(result))
 	var botResult vo.BotResult
 	err = json.Unmarshal(result, &botResult)
 	if err != nil {
-		return vo.BotResult{}, err
+		return nil, err
 	}
 
+	botBuilds := make([]vo.BotBuild, 0)
 	for _, node := range botResult.Success {
 		// 确认文件名都可以被解析
 		for _, fileName := range node.FileNames {
 			_, err := utils.ParseNepFileName(fileName)
 			if err != nil {
-				return vo.BotResult{}, fmt.Errorf("failed to parse build's file name '%s' : %s", fileName, err.Error())
+				return nil, fmt.Errorf("failed to parse build's file name '%s' : %s", fileName, err.Error())
 			}
 		}
 
 		// 保存 builds
 		b, err := storeBuilds(node.Scope, node.TaskName, node.FileNames)
 		if err != nil {
-			return vo.BotResult{}, err
+			return nil, err
 		}
 
 		// 获取 NepId
 		nep, err := GetNep(node.Scope, node.TaskName)
 		if err != nil {
-			return vo.BotResult{}, err
+			return nil, err
 		}
 
 		// 保存 builds 到数据库
@@ -159,8 +162,9 @@ func BotRun(ctx context.PipelineContext, tasks []string, force bool) (vo.BotResu
 				NepId:          nep.ID.String(),
 				PipelineId:     ctx.Id,
 			})
+			botBuilds = append(botBuilds, build)
 		}
 	}
 
-	return botResult, nil
+	return botBuilds, nil
 }
