@@ -23,6 +23,11 @@ type Env struct {
 	BOT_BUILDS_DIR    string
 	STORAGE_TEMP_DIR  string
 	STORAGE_CONFIG    []vo.StorageConfig
+
+	QA_DIR         string
+	QA_STORAGE_DIR string
+	QA_REPORTS_DIR string
+	QA_RUN_CMD     string
 }
 
 var ENV Env
