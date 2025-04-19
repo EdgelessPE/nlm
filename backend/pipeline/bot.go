@@ -31,5 +31,21 @@ func RunBotPipeline(tasks []string, force bool) error {
 	}
 	println("Bot builds: ", string(botBuildsJson))
 
+	// 准备 qa
+	println("Preparing qa...")
+	err = service.QaPreparePackages(botBuilds)
+	if err != nil {
+		return err
+	}
+	println("Qa prepared successfully with", len(botBuilds), "packages")
+
+	// 运行 qa
+	println("Running qa...")
+	_, err = service.QaRun(ctx, botBuilds)
+	if err != nil {
+		return err
+	}
+	println("Qa run successfully")
+
 	return nil
 }
