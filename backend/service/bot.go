@@ -68,11 +68,11 @@ func storeBuilds(scope string, name string, fileNames []string) ([]vo.BotBuild, 
 		if err != nil {
 			return nil, err
 		}
-		storageKey, err := AddStorage(filepath.Join(filesDir, fileName), false)
+		storageKey, err := AddStorage(filepath.Join(filesDir, fileName), false,false)
 		if err != nil {
 			return nil, err
 		}
-		metaStorageKey, err := AddStorage(filepath.Join(filesDir, fileName+".meta"), true)
+		metaStorageKey, err := AddStorage(filepath.Join(filesDir, fileName+".meta"), true,false)
 		if err != nil {
 			return nil, err
 		}

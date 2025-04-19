@@ -41,7 +41,7 @@ func syncFile(uuid string, syncToExpensiveStorage bool) error {
 	return nil
 }
 
-func AddStorage(sourceFilePath string, syncToExpensiveStorage bool) (string, error) {
+func AddStorage(sourceFilePath string, syncToExpensiveStorage bool,compressWithZstd bool) (string, error) {
 	// 存库并分配 UUID
 	var s model.Storage
 	s.FileName = filepath.Base(sourceFilePath)
@@ -56,9 +56,17 @@ func AddStorage(sourceFilePath string, syncToExpensiveStorage bool) (string, err
 		return "", err
 	}
 	tempFilePath := filepath.Join(tempDir, uuid)
-	err := os.Rename(sourceFilePath, tempFilePath)
+	if compressWithZstd {
+		// 使用 zstd 压缩
+		err := utils.CompressFileWithZstd(sourceFilePath, tempFilePath)
+		if err != nil {
+			return "", err
+		}
+	}else{
+		err := os.Rename(sourceFilePath, tempFilePath)
 	if err != nil {
 		return "", err
+	}
 	}
 
 	// 调度文件同步任务
@@ -96,8 +104,15 @@ func FetchStorage(uuid string, toDir string) (string, error) {
 	if err := os.MkdirAll(toDir, 0755); err != nil {
 		return "", err
 	}
-	if err := cp.CopyFile(tempFilePath, targetFilePath); err != nil {
-		return "", err
+	if s.Compressed{
+		err := utils.DecompressFileWithZstd(tempFilePath, targetFilePath)
+		if err != nil {
+			return "", err
+		}
+	}else{
+		if err := cp.CopyFile(tempFilePath, targetFilePath); err != nil {
+			return "", err
+		}
 	}
 
 	return targetFilePath, nil

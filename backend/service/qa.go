@@ -79,7 +79,7 @@ func QaRun(ctx context.PipelineContext) ([]vo.QaResult,error) {
 				// 检查目录下的文件
 				failedFile := filepath.Join(taskDir, packageName, "Error.txt")
 				if stat, _ := os.Stat(failedFile); stat != nil {
-					key, err := AddStorage(failedFile, false)
+					key, err := AddStorage(failedFile, false,true)
 					if err != nil {
 						return nil, 	err
 					}
@@ -93,7 +93,7 @@ func QaRun(ctx context.PipelineContext) ([]vo.QaResult,error) {
 				}
 				readmeFile := filepath.Join(taskDir, packageName, "README.md")
 				if stat, _ := os.Stat(readmeFile); stat != nil {
-					key, err := AddStorage(readmeFile, false)
+					key, err := AddStorage(readmeFile, false,true)
 					if err != nil {
 						return nil, err
 					}
