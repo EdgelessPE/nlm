@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 )
 
 func QaPreparePackages(builds []model.Release) error {
@@ -50,7 +51,8 @@ func QaRun(ctx context.PipelineContext, builds []model.Release) ([]model.Release
 	}
 
 	// 运行 qa
-	cmd := exec.CommandContext(ctx.Context, config.ENV.QA_RUN_CMD, config.ENV.QA_STORAGE_DIR)
+	cmdSplit := strings.Split(config.ENV.QA_RUN_CMD, " ")
+	cmd := exec.CommandContext(ctx.Context, cmdSplit[0], cmdSplit[1:]...)
 	cmd.Stdout = logFile
 	cmd.Stderr = logFile
 	cmd.Dir = config.ENV.QA_DIR

@@ -68,15 +68,15 @@ func storeBuilds(ctx context.PipelineContext, nep model.Nep, fileNames []string)
 		if err != nil {
 			return nil, err
 		}
-		storageKey, err := AddStorage(filepath.Join(filesDir, fileName), false,false)
+		storageKey, err := AddStorage(filepath.Join(filesDir, fileName), false, false)
 		if err != nil {
 			return nil, err
 		}
-		metaStorageKey, err := AddStorage(filepath.Join(filesDir, fileName+".meta"), true,false)
+		metaStorageKey, err := AddStorage(filepath.Join(filesDir, fileName+".meta"), true, false)
 		if err != nil {
 			return nil, err
 		}
-		b:=model.Release{
+		b := model.Release{
 			NepId:          nep.ID.String(),
 			Version:        parsed.Version,
 			Flags:          parsed.Flags,
@@ -86,6 +86,8 @@ func storeBuilds(ctx context.PipelineContext, nep model.Nep, fileNames []string)
 			PipelineId:     ctx.Id,
 		}
 		db.DB.Create(&b)
+		// 加载 Nep 外键
+		db.DB.Model(&b).Association("Nep").Find(&b.Nep)
 		builds = append(builds, b)
 	}
 	return builds, nil

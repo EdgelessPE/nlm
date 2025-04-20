@@ -26,7 +26,10 @@ func main() {
 	// 启动定时任务
 	service.InitCron()
 
-	// pipeline.RunBotPipeline([]string{"scoop/curl", "RustDesk/RustDesk"}, true)
+	// err = pipeline.RunBotPipeline([]string{"scoop/curl"}, true)
+	// if err != nil {
+	// 	log.Fatalf("Failed to run bot pipeline: %v", err)
+	// }
 
 	// 启动服务器
 	server := gin.Default()
