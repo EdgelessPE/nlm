@@ -49,8 +49,8 @@ func BotGenerateDatabase() ([]model.Nep, error) {
 	return neps, nil
 }
 
-func storeBuilds(scope string, name string, fileNames []string) ([]vo.BotBuild, error) {
-	filesDir := filepath.Join(config.ENV.BOT_BUILDS_DIR, scope, name)
+func storeBuilds(nep model.Nep, fileNames []string) ([]model.Release, error) {
+	filesDir := filepath.Join(config.ENV.BOT_BUILDS_DIR, nep.Scope, nep.Name)
 
 	// 检查 builds 目录中是否存在这些文件
 	for _, fileName := range fileNames {
@@ -62,7 +62,7 @@ func storeBuilds(scope string, name string, fileNames []string) ([]vo.BotBuild, 
 		}
 	}
 	// 依次保存并生成结果
-	var builds []vo.BotBuild
+	var builds []model.Release
 	for _, fileName := range fileNames {
 		parsed, err := utils.ParseNepFileName(fileName)
 		if err != nil {
@@ -76,9 +76,8 @@ func storeBuilds(scope string, name string, fileNames []string) ([]vo.BotBuild, 
 		if err != nil {
 			return nil, err
 		}
-		builds = append(builds, vo.BotBuild{
-			Scope:          scope,
-			TaskName:       name,
+		builds = append(builds, model.Release{
+			NepId:          nep.ID.String(),
 			Version:        parsed.Version,
 			Flags:          parsed.Flags,
 			FileName:       fileName,
@@ -89,7 +88,7 @@ func storeBuilds(scope string, name string, fileNames []string) ([]vo.BotBuild, 
 	return builds, nil
 }
 
-func BotRun(ctx context.PipelineContext, tasks []string, force bool) ([]vo.BotBuild, error) {
+func BotRun(ctx context.PipelineContext, tasks []string, force bool) ([]model.Release, error) {
 	// 创建日志
 	logFile, err := CreateLog(ctx, "bot")
 	if err != nil {
@@ -129,7 +128,7 @@ func BotRun(ctx context.PipelineContext, tasks []string, force bool) ([]vo.BotBu
 		return nil, err
 	}
 
-	botBuilds := make([]vo.BotBuild, 0)
+	botBuilds := make([]model.Release, 0)
 	for _, node := range botResult.Success {
 		// 确认文件名都可以被解析
 		for _, fileName := range node.FileNames {
@@ -139,14 +138,14 @@ func BotRun(ctx context.PipelineContext, tasks []string, force bool) ([]vo.BotBu
 			}
 		}
 
-		// 保存 builds
-		b, err := storeBuilds(node.Scope, node.TaskName, node.FileNames)
+		// 获取 NepId
+		nep, err := GetNep(node.Scope, node.TaskName)
 		if err != nil {
 			return nil, err
 		}
 
-		// 获取 NepId
-		nep, err := GetNep(node.Scope, node.TaskName)
+		// 保存 builds
+		b, err := storeBuilds(nep, node.FileNames)
 		if err != nil {
 			return nil, err
 		}

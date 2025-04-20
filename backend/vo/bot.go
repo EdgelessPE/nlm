@@ -36,14 +36,3 @@ type BotResult struct {
 	Success []BotResultSuccess `json:"success"`
 	Failed  []BotResultError   `json:"failed"`
 }
-
-type BotBuild struct {
-	Scope    string `json:"scope"`
-	TaskName string `json:"taskName"`
-
-	Version        string `json:"version"`
-	Flags          string `json:"flags"`
-	FileName       string `json:"fileName"`
-	StorageKey     string `json:"storageKey"`
-	MetaStorageKey string `json:"metaStorageKey"`
-}

@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"nlm/config"
 	"nlm/context"
-	"nlm/vo"
+	"nlm/model"
 	"os"
 	"os/exec"
 	"path/filepath"
 )
 
-func QaPreparePackages(builds []vo.BotBuild) error {
+func QaPreparePackages(builds []model.Release) error {
 	// 清理存储和报告目录
 	if err := os.RemoveAll(config.ENV.QA_STORAGE_DIR); err != nil {
 		return err
@@ -21,7 +21,7 @@ func QaPreparePackages(builds []vo.BotBuild) error {
 
 	for _, build := range builds {
 		// 创建目录
-		dir := filepath.Join(config.ENV.QA_STORAGE_DIR, build.Scope, build.TaskName)
+		dir := filepath.Join(config.ENV.QA_STORAGE_DIR, build.Nep.Scope, build.Nep.Name)
 		if err := os.MkdirAll(dir, 0755); err != nil {
 			return err
 		}
@@ -35,7 +35,7 @@ func QaPreparePackages(builds []vo.BotBuild) error {
 	return nil
 }
 
-func QaRun(ctx context.PipelineContext,builds []vo.BotBuild) ([]vo.QaResult,error) {
+func QaRun(ctx context.PipelineContext,builds []model.Release) ([]model.QaResult,error) {
 	// 创建日志
 	logFile, err := CreateLog(ctx, "qa")
 	if err != nil {
@@ -59,12 +59,10 @@ func QaRun(ctx context.PipelineContext,builds []vo.BotBuild) ([]vo.QaResult,erro
 	}
 
 	// 读取报告
-	qaReports := make([]vo.QaResult, 0)
+	qaReports := make([]model.QaResult, 0)
 	for _, build := range builds {
-		scope := build.Scope
-		taskName := build.TaskName
 		fileName := build.FileName
-		reportDir := filepath.Join(config.ENV.QA_REPORTS_DIR, scope, taskName,fileName)
+		reportDir := filepath.Join(config.ENV.QA_REPORTS_DIR, build.Nep.Scope, build.Nep.Name,fileName)
 		// 检查目录下的文件
 		failedFile := filepath.Join(reportDir, "Error.txt")
 		if stat, _ := os.Stat(failedFile); stat != nil {
@@ -72,9 +70,8 @@ func QaRun(ctx context.PipelineContext,builds []vo.BotBuild) ([]vo.QaResult,erro
 			if err != nil {
 				return nil, 	err
 			}
-			qaReports = append(qaReports, vo.QaResult{
-				Scope:            scope,
-				TaskName:         taskName,
+			qaReports = append(qaReports, model.QaResult{
+				NepId:            build.Nep.ID.String(),
 				IsSuccess:        false,
 				ResultStorageKey: key,
 			})
@@ -86,9 +83,8 @@ func QaRun(ctx context.PipelineContext,builds []vo.BotBuild) ([]vo.QaResult,erro
 			if err != nil {
 				return nil, err
 			}
-			qaReports = append(qaReports, vo.QaResult{
-				Scope:            scope,
-				TaskName:         taskName,
+			qaReports = append(qaReports, model.QaResult{
+				NepId:            build.Nep.ID.String(),
 				IsSuccess:        true,
 				ResultStorageKey: key,
 			})
