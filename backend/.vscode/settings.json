@@ -1,14 +1,15 @@
 {
-  "cSpell.words": [
-    "copyto",
-    "godotenv",
-    "gonic",
-    "gorm",
-    "homeserver",
-    "Kanuo",
-    "Neps",
-    "Putaway",
-    "Rclone",
-    "upgrader"
-  ]
+	"cSpell.words": [
+		"copyto",
+		"godotenv",
+		"gonic",
+		"gorm",
+		"homeserver",
+		"Kanuo",
+		"Neps",
+		"Putaway",
+		"Rclone",
+		"upgrader"
+	],
+	"editor.formatOnSave": true
 }

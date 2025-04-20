@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"nlm/config"
 	"nlm/context"
+	"nlm/db"
 	"nlm/model"
 	"os"
 	"os/exec"
@@ -35,7 +36,7 @@ func QaPreparePackages(builds []model.Release) error {
 	return nil
 }
 
-func QaRun(ctx context.PipelineContext,builds []model.Release) ([]model.QaResult,error) {
+func QaRun(ctx context.PipelineContext, builds []model.Release) ([]model.Release, error) {
 	// 创建日志
 	logFile, err := CreateLog(ctx, "qa")
 	if err != nil {
@@ -55,39 +56,45 @@ func QaRun(ctx context.PipelineContext,builds []model.Release) ([]model.QaResult
 	cmd.Dir = config.ENV.QA_DIR
 	err = cmd.Run()
 	if err != nil {
-		return nil, 	err
+		return nil, err
 	}
 
 	// 读取报告
-	qaReports := make([]model.QaResult, 0)
+	qaReports := make([]model.Release, 0)
 	for _, build := range builds {
 		fileName := build.FileName
-		reportDir := filepath.Join(config.ENV.QA_REPORTS_DIR, build.Nep.Scope, build.Nep.Name,fileName)
+		reportDir := filepath.Join(config.ENV.QA_REPORTS_DIR, build.Nep.Scope, build.Nep.Name, fileName)
 		// 检查目录下的文件
 		failedFile := filepath.Join(reportDir, "Error.txt")
 		if stat, _ := os.Stat(failedFile); stat != nil {
-			key, err := AddStorage(failedFile, false,true)
+			key, err := AddStorage(failedFile, false, true)
 			if err != nil {
-				return nil, 	err
+				return nil, err
 			}
-			qaReports = append(qaReports, model.QaResult{
-				NepId:            build.Nep.ID.String(),
-				IsSuccess:        false,
-				ResultStorageKey: key,
+			buildWithQa := build
+			buildWithQa.QaResultStorageKey = key
+			buildWithQa.IsSuccess = false
+			db.DB.Model(&buildWithQa).Updates(map[string]interface{}{
+				"qa_result_storage_key": key,
+				"is_success":            false,
 			})
+			qaReports = append(qaReports, buildWithQa)
 			continue
 		}
 		readmeFile := filepath.Join(reportDir, "README.md")
 		if stat, _ := os.Stat(readmeFile); stat != nil {
-			key, err := AddStorage(readmeFile, false,true)
+			key, err := AddStorage(readmeFile, false, true)
 			if err != nil {
 				return nil, err
 			}
-			qaReports = append(qaReports, model.QaResult{
-				NepId:            build.Nep.ID.String(),
-				IsSuccess:        true,
-				ResultStorageKey: key,
+			buildWithQa := build
+			buildWithQa.QaResultStorageKey = key
+			buildWithQa.IsSuccess = true
+			db.DB.Model(&buildWithQa).Updates(map[string]interface{}{
+				"qa_result_storage_key": key,
+				"is_success":            true,
 			})
+			qaReports = append(qaReports, buildWithQa)
 			continue
 		}
 		return nil, fmt.Errorf("can't found report for build: %s", build.StorageKey)

@@ -20,4 +20,7 @@ type Release struct {
 	Nep   *Nep   `gorm:"foreignKey:NepId;references:ID;constraint:OnDelete:CASCADE"`
 
 	PipelineId string `gorm:"index"`
+
+	IsSuccess          bool
+	QaResultStorageKey string
 }
