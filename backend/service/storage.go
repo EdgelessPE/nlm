@@ -45,6 +45,7 @@ func AddStorage(sourceFilePath string, syncToExpensiveStorage bool, compressWith
 	// 存库并分配 UUID
 	var s model.Storage
 	s.FileName = filepath.Base(sourceFilePath)
+	s.Compressed = compressWithZstd
 	db.DB.Create(&s)
 
 	// 获取 UUID
