@@ -60,45 +60,40 @@ func QaRun(ctx context.PipelineContext, builds []model.Release) ([]model.Release
 	}
 
 	// 读取报告
-	qaReports := make([]model.Release, 0)
 	for _, build := range builds {
 		fileName := build.FileName
 		reportDir := filepath.Join(config.ENV.QA_REPORTS_DIR, build.Nep.Scope, build.Nep.Name, fileName)
+		// 更新闭包
+		updateBuild := func(filePath string, isSuccess bool) error {
+			key, err := AddStorage(filePath, false, true)
+			if err != nil {
+				return err
+			}
+			build.QaResultStorageKey = key
+			build.IsSuccess = isSuccess
+			db.DB.Model(&build).Updates(map[string]interface{}{
+				"qa_result_storage_key": key,
+				"is_success":            isSuccess,
+			})
+			return nil
+		}
 		// 检查目录下的文件
 		failedFile := filepath.Join(reportDir, "Error.txt")
 		if stat, _ := os.Stat(failedFile); stat != nil {
-			key, err := AddStorage(failedFile, false, true)
-			if err != nil {
+			if err := updateBuild(failedFile, false); err != nil {
 				return nil, err
 			}
-			buildWithQa := build
-			buildWithQa.QaResultStorageKey = key
-			buildWithQa.IsSuccess = false
-			db.DB.Model(&buildWithQa).Updates(map[string]interface{}{
-				"qa_result_storage_key": key,
-				"is_success":            false,
-			})
-			qaReports = append(qaReports, buildWithQa)
 			continue
 		}
 		readmeFile := filepath.Join(reportDir, "README.md")
 		if stat, _ := os.Stat(readmeFile); stat != nil {
-			key, err := AddStorage(readmeFile, false, true)
-			if err != nil {
+			if err := updateBuild(readmeFile, true); err != nil {
 				return nil, err
 			}
-			buildWithQa := build
-			buildWithQa.QaResultStorageKey = key
-			buildWithQa.IsSuccess = true
-			db.DB.Model(&buildWithQa).Updates(map[string]interface{}{
-				"qa_result_storage_key": key,
-				"is_success":            true,
-			})
-			qaReports = append(qaReports, buildWithQa)
 			continue
 		}
 		return nil, fmt.Errorf("can't found report for build: %s", build.StorageKey)
 	}
 
-	return qaReports, nil
+	return builds, nil
 }
