@@ -49,7 +49,7 @@ func BotGenerateDatabase() ([]model.Nep, error) {
 	return neps, nil
 }
 
-func storeBuilds(nep model.Nep, fileNames []string) ([]model.Release, error) {
+func storeBuilds(ctx context.PipelineContext, nep model.Nep, fileNames []string) ([]model.Release, error) {
 	filesDir := filepath.Join(config.ENV.BOT_BUILDS_DIR, nep.Scope, nep.Name)
 
 	// 检查 builds 目录中是否存在这些文件
@@ -76,14 +76,17 @@ func storeBuilds(nep model.Nep, fileNames []string) ([]model.Release, error) {
 		if err != nil {
 			return nil, err
 		}
-		builds = append(builds, model.Release{
+		b:=model.Release{
 			NepId:          nep.ID.String(),
 			Version:        parsed.Version,
 			Flags:          parsed.Flags,
 			FileName:       fileName,
 			StorageKey:     storageKey,
 			MetaStorageKey: metaStorageKey,
-		})
+			PipelineId:     ctx.Id,
+		}
+		db.DB.Create(&b)
+		builds = append(builds, b)
 	}
 	return builds, nil
 }
@@ -145,25 +148,11 @@ func BotRun(ctx context.PipelineContext, tasks []string, force bool) ([]model.Re
 		}
 
 		// 保存 builds
-		b, err := storeBuilds(nep, node.FileNames)
+		b, err := storeBuilds(ctx, nep, node.FileNames)
 		if err != nil {
 			return nil, err
 		}
-
-		// 保存 builds 到数据库
-		for _, build := range b {
-			db.DB.Create(&model.Release{
-				Version:        build.Version,
-				Flags:          build.Flags,
-				FileName:       build.FileName,
-				StorageKey:     build.StorageKey,
-				MetaStorageKey: build.MetaStorageKey,
-				NepId:          nep.ID.String(),
-				PipelineId:     ctx.Id,
-			})
-			botBuilds = append(botBuilds, build)
-		}
+		botBuilds = append(botBuilds, b...)
 	}
-
 	return botBuilds, nil
 }
