@@ -13,6 +13,7 @@ type Release struct {
 	Version        string `gorm:"index"`
 	Flags          string
 	FileName       string
+	FileSize       int64
 	StorageKey     string
 	MetaStorageKey string
 

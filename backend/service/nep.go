@@ -32,7 +32,13 @@ func GetNep(scope string, name string) (model.Nep, error) {
 	return nep, nil
 }
 
-func GetNeps(offset int, limit int) ([]model.Nep, error) {
+func GetNeps() ([]model.Nep, error) {
+	var neps []model.Nep
+	db.DB.Find(&neps)
+	return neps, nil
+}
+
+func GetNepsWithPagination(offset int, limit int) ([]model.Nep, error) {
 	var neps []model.Nep
 	db.DB.Offset(offset).Limit(limit).Find(&neps)
 	return neps, nil

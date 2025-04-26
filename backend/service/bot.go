@@ -64,14 +64,22 @@ func storeBuilds(ctx context.PipelineContext, nep model.Nep, fileNames []string)
 	// 依次保存并生成结果
 	var builds []model.Release
 	for _, fileName := range fileNames {
+		// 解析文件名
 		parsed, err := utils.ParseNepFileName(fileName)
 		if err != nil {
 			return nil, err
 		}
+		// 获取文件大小
+		fileStat, err := os.Stat(filepath.Join(filesDir, fileName))
+		if err != nil {
+			return nil, err
+		}
+		// 添加到 storage
 		storageKey, err := AddStorage(filepath.Join(filesDir, fileName), false, false)
 		if err != nil {
 			return nil, err
 		}
+		// 添加 meta 到 storage
 		metaStorageKey, err := AddStorage(filepath.Join(filesDir, fileName+".meta"), true, false)
 		if err != nil {
 			return nil, err
@@ -81,6 +89,7 @@ func storeBuilds(ctx context.PipelineContext, nep model.Nep, fileNames []string)
 			Version:        parsed.Version,
 			Flags:          parsed.Flags,
 			FileName:       fileName,
+			FileSize:       fileStat.Size(),
 			StorageKey:     storageKey,
 			MetaStorageKey: metaStorageKey,
 			PipelineId:     ctx.Id,
