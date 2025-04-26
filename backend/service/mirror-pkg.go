@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/json"
 	"nlm/config"
 	"nlm/constant"
 	"nlm/vo"
@@ -27,12 +28,17 @@ func generateMirrorPkgSoftware() (vo.MirrorPkgSoftware, error) {
 		// 转换 release 类型
 		r := make([]vo.MirrorPkgSoftwareRelease, 0)
 		for _, release := range releases {
+			var meta interface{}
+			err = json.Unmarshal(release.Meta, &meta)
+			if err != nil {
+				return vo.MirrorPkgSoftware{}, err
+			}
 			r = append(r, vo.MirrorPkgSoftwareRelease{
 				FileName:  release.FileName,
 				Size:      release.FileSize,
 				Timestamp: release.CreatedAt.UnixMilli(),
 				Version:   release.Version,
-				Meta:      release.Meta,
+				Meta:      meta,
 			})
 		}
 
