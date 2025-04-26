@@ -86,8 +86,12 @@ func storeBuilds(ctx context.PipelineContext, nep model.Nep, fileNames []string)
 		if err != nil {
 			return nil, err
 		}
-		var metaToml db.JSON
+		var metaToml interface{}
 		err = toml.NewDecoder(metaHandler).Decode(&metaToml)
+		if err != nil {
+			return nil, err
+		}
+		metaJson, err := json.Marshal(metaToml)
 		if err != nil {
 			return nil, err
 		}
@@ -99,7 +103,7 @@ func storeBuilds(ctx context.PipelineContext, nep model.Nep, fileNames []string)
 			FileName:   fileName,
 			FileSize:   fileStat.Size(),
 			StorageKey: storageKey,
-			Meta:       metaToml,
+			Meta:       metaJson,
 			PipelineId: ctx.Id,
 		}
 		db.DB.Create(&b)
