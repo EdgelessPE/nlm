@@ -7,7 +7,9 @@ import (
 	"time"
 )
 
-func GenerateMirrorPkgSoftware() (vo.MirrorPkgSoftware, error) {
+var mirrorPkgSoftwareCache vo.MirrorPkgSoftware
+
+func generateMirrorPkgSoftware() (vo.MirrorPkgSoftware, error) {
 	tree := make(map[string][]vo.MirrorPkgSoftwareTreeItem)
 
 	neps, err := GetNeps()
@@ -46,4 +48,21 @@ func GenerateMirrorPkgSoftware() (vo.MirrorPkgSoftware, error) {
 		URLTemplate: config.ENV.ROOT_URL + constant.API_PREFIX + constant.ServicePathRedirectTemplate,
 		Tree:        tree,
 	}, nil
+}
+
+func RefreshMirrorPkgSoftware(async bool) {
+	closure := func() {
+		println("Start refreshing mirror pkg software")
+		r, err := generateMirrorPkgSoftware()
+		if err != nil {
+			println("Failed to generate mirror pkg software", err)
+		}
+		mirrorPkgSoftwareCache = r
+		println("Refreshed mirror pkg software")
+	}
+	if async {
+		go closure()
+	} else {
+		closure()
+	}
 }

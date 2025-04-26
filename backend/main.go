@@ -24,6 +24,9 @@ func main() {
 	// 初始化 nep
 	domain.InitNepsWithBotTask()
 
+	// 更新包信息
+	service.RefreshMirrorPkgSoftware(false)
+
 	// 启动定时任务
 	service.InitCron()
 

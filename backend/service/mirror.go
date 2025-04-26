@@ -4,7 +4,6 @@ import (
 	"nlm/config"
 	"nlm/constant"
 	"nlm/vo"
-	"time"
 )
 
 func MirrorHello() vo.MirrorHello {
@@ -34,9 +33,5 @@ func MirrorHello() vo.MirrorHello {
 }
 
 func MirrorPkgSoftware() vo.MirrorPkgSoftware {
-	return vo.MirrorPkgSoftware{
-		Timestamp:   time.Now().UnixMilli(),
-		URLTemplate: config.ENV.ROOT_URL + constant.API_PREFIX + constant.ServicePathRedirectTemplate,
-		Tree:        make(map[string][]vo.MirrorPkgSoftwareTreeItem),
-	}
+	return mirrorPkgSoftwareCache
 }
