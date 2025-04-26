@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"nlm/constant"
 	"nlm/db"
 	"nlm/domain"
 	"nlm/handler"
@@ -33,7 +34,7 @@ func main() {
 
 	// 启动服务器
 	server := gin.Default()
-	r := server.Group("/api")
+	r := server.Group(constant.API_PREFIX)
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, vo.BaseResponse[string]{
 			Code: 0,

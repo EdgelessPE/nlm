@@ -6,4 +6,5 @@ func RegisterRoutes(r *gin.RouterGroup) {
 	RegisterWebhookRoutes(r)
 	RegisterNepRoutes(r)
 	RegisterLogRoutes(r)
+	RegisterMirrorRoutes(r)
 }

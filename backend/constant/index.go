@@ -1,5 +1,7 @@
 package constant
 
+const API_PREFIX = "/api"
+
 type ServiceKeys string
 
 const (
@@ -9,7 +11,7 @@ const (
 )
 
 const (
-	ServicePathHello        = "/api/hello"
-	ServicePathEptToolchain = "/api/ept/toolchain"
-	ServicePathPkgSoftware  = "/api/pkg/software"
+	ServicePathHello        = "/hello"
+	ServicePathEptToolchain = "/ept/toolchain"
+	ServicePathPkgSoftware  = "/pkg/software"
 )

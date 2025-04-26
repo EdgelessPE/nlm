@@ -18,15 +18,15 @@ func MirrorHello() vo.MirrorHello {
 		Service: []vo.MirrorHelloService{
 			{
 				Key:  constant.ServiceKeyHello,
-				Path: constant.ServicePathHello,
+				Path: constant.API_PREFIX + constant.ServicePathHello,
 			},
 			{
 				Key:  constant.ServiceKeyEptToolchain,
-				Path: constant.ServicePathEptToolchain,
+				Path: constant.API_PREFIX + constant.ServicePathEptToolchain,
 			},
 			{
 				Key:  constant.ServiceKeyPkgSoftware,
-				Path: constant.ServicePathPkgSoftware,
+				Path: constant.API_PREFIX + constant.ServicePathPkgSoftware,
 			},
 		},
 	}
