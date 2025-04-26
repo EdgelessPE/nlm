@@ -35,8 +35,8 @@ func MirrorHello() vo.MirrorHello {
 
 func MirrorPkgSoftware() vo.MirrorPkgSoftware {
 	return vo.MirrorPkgSoftware{
-		Timestamp:   time.Now().Unix(),
-		URLTemplate: config.ENV.ROOT_URL + constant.API_PREFIX + constant.ServicePathRedirect + "/{scope}/{software}/{file_name}",
+		Timestamp:   time.Now().UnixMilli(),
+		URLTemplate: config.ENV.ROOT_URL + constant.API_PREFIX + constant.ServicePathRedirectTemplate,
 		Tree:        make(map[string][]vo.MirrorPkgSoftwareTreeItem),
 	}
 }

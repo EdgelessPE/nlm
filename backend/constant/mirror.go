@@ -12,8 +12,9 @@ const (
 )
 
 const (
-	ServicePathHello        = "/hello"
-	ServicePathEptToolchain = "/ept/toolchain"
-	ServicePathPkgSoftware  = "/pkg/software"
-	ServicePathRedirect     = "/redirect/{scope}/{software}/{file_name}"
+	ServicePathHello            = "/hello"
+	ServicePathEptToolchain     = "/ept/toolchain"
+	ServicePathPkgSoftware      = "/pkg/software"
+	ServicePathRedirect         = "/pkg/redirect/:scope/:software/:file_name"
+	ServicePathRedirectTemplate = "/pkg/redirect/{scope}/{software}/{file_name}"
 )
