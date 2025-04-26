@@ -42,9 +42,16 @@ func syncFile(uuid string, syncToExpensiveStorage bool) error {
 }
 
 func AddStorage(sourceFilePath string, syncToExpensiveStorage bool, compressWithZstd bool) (string, error) {
+	// 获取文件大小
+	fileStat, err := os.Stat(sourceFilePath)
+	if err != nil {
+		return "", err
+	}
+
 	// 存库并分配 UUID
 	var s model.Storage
 	s.FileName = filepath.Base(sourceFilePath)
+	s.FileSize = fileStat.Size()
 	s.Compressed = compressWithZstd
 	db.DB.Create(&s)
 
