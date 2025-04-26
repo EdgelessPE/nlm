@@ -38,9 +38,13 @@ func GetNeps() ([]model.Nep, error) {
 	return neps, nil
 }
 
-func GetNepsWithPagination(offset int, limit int) ([]model.Nep, error) {
+func GetNepsWithPagination(offset int, limit int, q string) ([]model.Nep, error) {
 	var neps []model.Nep
-	db.DB.Offset(offset).Limit(limit).Find(&neps)
+	tx := db.DB.Offset(offset).Limit(limit)
+	if q != "" {
+		tx = tx.Where("scope LIKE ? OR name LIKE ?", "%"+q+"%", "%"+q+"%")
+	}
+	tx.Find(&neps)
 	return neps, nil
 }
 
