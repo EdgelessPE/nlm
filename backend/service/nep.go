@@ -38,19 +38,6 @@ func GetNeps(offset int, limit int) ([]model.Nep, error) {
 	return neps, nil
 }
 
-// 默认添加的 release 版本号是最高的
-func AddRelease(scope string, name string, version string, flags string, fileName string, pipelineId string) (model.Release, error) {
-	n, err := GetNep(scope, name)
-	if err != nil {
-		return model.Release{}, err
-	}
-	r := model.Release{Version: version, Flags: flags, FileName: fileName, PipelineId: pipelineId, NepId: n.ID.String()}
-	db.DB.Create(&r)
-	n.LatestReleaseVersion = version
-	db.DB.Save(&n)
-	return r, nil
-}
-
 func GetReleases(scope string, name string) ([]model.Release, error) {
 	// 获取 Nep
 	n, err := GetNep(scope, name)
@@ -62,4 +49,17 @@ func GetReleases(scope string, name string) ([]model.Release, error) {
 	var releases []model.Release
 	db.DB.Where("nep_id = ?", n.ID.String()).Find(&releases)
 	return releases, nil
+}
+
+func GetRelease(scope string, name string, fileName string) (model.Release, error) {
+	n, err := GetNep(scope, name)
+	if err != nil {
+		return model.Release{}, err
+	}
+	var release model.Release
+	db.DB.Where("nep_id = ? AND file_name = ?", n.ID.String(), fileName).First(&release)
+	if release.ID == uuid.Nil {
+		return release, errors.New("release not found")
+	}
+	return release, nil
 }

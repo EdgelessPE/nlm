@@ -77,6 +77,8 @@ func QaRun(ctx context.PipelineContext, builds []model.Release) ([]model.Release
 				"qa_result_storage_key": key,
 				"is_success":            isSuccess,
 			})
+			build.Nep.LatestReleaseVersion = build.Version
+			db.DB.Save(&build.Nep)
 			return nil
 		}
 		// 检查目录下的文件
