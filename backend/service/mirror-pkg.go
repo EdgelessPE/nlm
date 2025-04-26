@@ -30,7 +30,7 @@ func GenerateMirrorPkgSoftware() (vo.MirrorPkgSoftware, error) {
 				Size:      release.FileSize,
 				Timestamp: release.CreatedAt.UnixMilli(),
 				Version:   release.Version,
-				Meta:      release.MetaStorageKey,
+				Meta:      release.Meta,
 			})
 		}
 

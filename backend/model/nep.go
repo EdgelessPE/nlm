@@ -1,5 +1,7 @@
 package model
 
+import "nlm/db"
+
 type Nep struct {
 	Base
 	Scope string `gorm:"index"`
@@ -10,12 +12,12 @@ type Nep struct {
 
 type Release struct {
 	Base
-	Version        string `gorm:"index"`
-	Flags          string
-	FileName       string
-	FileSize       int64
-	StorageKey     string
-	MetaStorageKey string
+	Version    string `gorm:"index"`
+	Flags      string
+	FileName   string
+	FileSize   int64
+	StorageKey string
+	Meta       db.JSON `gorm:"type:jsonb"`
 
 	NepId string `gorm:"index;not null"`
 	Nep   *Nep   `gorm:"foreignKey:NepId;references:ID;constraint:OnDelete:CASCADE"`

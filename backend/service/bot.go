@@ -13,6 +13,8 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"github.com/pelletier/go-toml/v2"
 )
 
 func BotGenerateDatabase() ([]model.Nep, error) {
@@ -79,20 +81,26 @@ func storeBuilds(ctx context.PipelineContext, nep model.Nep, fileNames []string)
 		if err != nil {
 			return nil, err
 		}
-		// 添加 meta 到 storage
-		metaStorageKey, err := AddStorage(filepath.Join(filesDir, fileName+".meta"), true, false)
+		// 读取 meta 内容
+		metaHandler, err := os.Open(filepath.Join(filesDir, fileName+".meta"))
 		if err != nil {
 			return nil, err
 		}
+		var metaToml db.JSON
+		err = toml.NewDecoder(metaHandler).Decode(&metaToml)
+		if err != nil {
+			return nil, err
+		}
+
 		b := model.Release{
-			NepId:          nep.ID.String(),
-			Version:        parsed.Version,
-			Flags:          parsed.Flags,
-			FileName:       fileName,
-			FileSize:       fileStat.Size(),
-			StorageKey:     storageKey,
-			MetaStorageKey: metaStorageKey,
-			PipelineId:     ctx.Id,
+			NepId:      nep.ID.String(),
+			Version:    parsed.Version,
+			Flags:      parsed.Flags,
+			FileName:   fileName,
+			FileSize:   fileStat.Size(),
+			StorageKey: storageKey,
+			Meta:       metaToml,
+			PipelineId: ctx.Id,
 		}
 		db.DB.Create(&b)
 		// 加载 Nep 外键
