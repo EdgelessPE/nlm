@@ -33,5 +33,5 @@ func MirrorHello() vo.MirrorHello {
 }
 
 func MirrorPkgSoftware() vo.MirrorPkgSoftware {
-	return mirrorPkgSoftwareCache
+	return GetMirrorPkgSoftware()
 }
