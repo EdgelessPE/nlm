@@ -43,10 +43,12 @@ func generateMirrorPkgSoftware() (vo.MirrorPkgSoftware, error) {
 		}
 
 		// 添加到 tree
-		tree[nep.Scope] = append(tree[nep.Scope], vo.MirrorPkgSoftwareTreeItem{
-			Name:     nep.Name,
-			Releases: r,
-		})
+		if len(r) > 0 {
+			tree[nep.Scope] = append(tree[nep.Scope], vo.MirrorPkgSoftwareTreeItem{
+				Name:     nep.Name,
+				Releases: r,
+			})
+		}
 	}
 
 	return vo.MirrorPkgSoftware{
