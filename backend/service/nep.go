@@ -53,7 +53,7 @@ func GetReleases(scope string, name string) ([]model.Release, error) {
 
 	// 获取 Releases
 	var releases []model.Release
-	db.DB.Where("nep_id = ?", n.ID.String()).Find(&releases)
+	db.DB.Where("nep_id = ? AND is_success = true", n.ID.String()).Find(&releases)
 	return releases, nil
 }
 
