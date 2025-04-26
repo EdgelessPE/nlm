@@ -9,6 +9,8 @@ import (
 )
 
 type Env struct {
+	ROOT_URL string
+
 	DB_HOST     string
 	DB_PORT     string
 	DB_USER     string
@@ -28,6 +30,12 @@ type Env struct {
 	QA_STORAGE_DIR string
 	QA_REPORTS_DIR string
 	QA_RUN_CMD     string
+
+	MIRROR_HELLO_NAME        string
+	MIRROR_HELLO_LOCALE      string
+	MIRROR_HELLO_DESCRIPTION string
+	MIRROR_HELLO_MAINTAINER  string
+	MIRROR_HELLO_PROPERTY    vo.MirrorHelloProperty
 }
 
 var ENV Env
