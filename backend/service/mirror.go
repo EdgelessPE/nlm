@@ -4,6 +4,7 @@ import (
 	"nlm/config"
 	"nlm/constant"
 	"nlm/vo"
+	"time"
 )
 
 func MirrorHello() vo.MirrorHello {
@@ -21,13 +22,21 @@ func MirrorHello() vo.MirrorHello {
 				Path: constant.API_PREFIX + constant.ServicePathHello,
 			},
 			{
-				Key:  constant.ServiceKeyEptToolchain,
-				Path: constant.API_PREFIX + constant.ServicePathEptToolchain,
-			},
-			{
 				Key:  constant.ServiceKeyPkgSoftware,
 				Path: constant.API_PREFIX + constant.ServicePathPkgSoftware,
 			},
+			// {
+			// 	Key:  constant.ServiceKeyEptToolchain,
+			// 	Path: constant.API_PREFIX + constant.ServicePathEptToolchain,
+			// },
 		},
+	}
+}
+
+func MirrorPkgSoftware() vo.MirrorPkgSoftware {
+	return vo.MirrorPkgSoftware{
+		Timestamp:   time.Now().Unix(),
+		URLTemplate: config.ENV.ROOT_URL + constant.API_PREFIX + constant.ServicePathRedirect + "/{scope}/{software}/{file_name}",
+		Tree:        make(map[string][]vo.MirrorPkgSoftwareTreeItem),
 	}
 }

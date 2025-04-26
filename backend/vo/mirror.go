@@ -24,3 +24,22 @@ type MirrorHello struct {
 	Property    MirrorHelloProperty  `json:"property"`
 	Service     []MirrorHelloService `json:"service"`
 }
+
+type MirrorPkgSoftware struct {
+	Timestamp   int64                                  `json:"timestamp"`
+	URLTemplate string                                 `json:"url_template"`
+	Tree        map[string][]MirrorPkgSoftwareTreeItem `json:"tree"`
+}
+
+type MirrorPkgSoftwareTreeItem struct {
+	Name     string                     `json:"name"`
+	Releases []MirrorPkgSoftwareRelease `json:"releases"`
+}
+
+type MirrorPkgSoftwareRelease struct {
+	FileName  string      `json:"file_name"`
+	Size      int64       `json:"size"`
+	Timestamp int64       `json:"timestamp"`
+	Version   string      `json:"version,omitempty"`
+	Meta      interface{} `json:"meta,omitempty"`
+}
