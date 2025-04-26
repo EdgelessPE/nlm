@@ -10,7 +10,7 @@ import (
 
 func RegisterLogRoutes(r *gin.RouterGroup) {
 	log := r.Group("/log")
-	log.GET("/stream/:pipelineId/:moduleName", StreamLog)
+	log.GET("/stream/:moduleName/:pipelineId", StreamLog)
 }
 
 func StreamLog(c *gin.Context) {
