@@ -35,3 +35,12 @@ func MirrorHello() vo.MirrorHello {
 func MirrorPkgSoftware() vo.MirrorPkgSoftware {
 	return GetMirrorPkgSoftware()
 }
+
+func MirrorRedirect(scope string, software string, fileName string) (string, error) {
+	release, err := GetRelease(scope, software, fileName)
+	if err != nil {
+		return "", err
+	}
+
+	return GetStorageUrl(release.StorageKey)
+}
