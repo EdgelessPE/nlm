@@ -11,6 +11,7 @@ import (
 	"nlm/service"
 	"nlm/vo"
 
+	"github.com/aurowora/compress"
 	"github.com/gin-gonic/gin"
 )
 
@@ -37,6 +38,7 @@ func main() {
 
 	// 启动服务器
 	server := gin.Default()
+	server.Use(compress.Compress())
 	r := server.Group(constant.API_PREFIX)
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, vo.BaseResponse[string]{

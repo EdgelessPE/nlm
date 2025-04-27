@@ -4,8 +4,11 @@ go 1.24.1
 
 require github.com/robfig/cron/v3 v3.0.0
 
+require github.com/andybalholm/brotli v1.0.4 // indirect
+
 require (
 	github.com/BurntSushi/toml v1.5.0
+	github.com/aurowora/compress v0.0.0-20230724224640-6512772d482f
 	github.com/bytedance/sonic v1.13.2 // indirect
 	github.com/bytedance/sonic/loader v0.2.4 // indirect
 	github.com/cespare/cp v1.1.1
