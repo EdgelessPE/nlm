@@ -2,6 +2,7 @@ package pipeline
 
 import (
 	"encoding/json"
+	"log"
 	"nlm/context"
 	"nlm/service"
 )
@@ -10,42 +11,42 @@ func RunBotPipeline(tasks []string, force bool) error {
 	ctx := context.NewPipelineContext()
 
 	// 生成 bot 数据库
-	println("Generating bot database...")
+	log.Println("Generating bot database...")
 	neps, err := service.BotGenerateDatabase()
 	if err != nil {
 		return err
 	}
-	println("Generated bot database with", len(neps), "records")
+	log.Println("Generated bot database with", len(neps), "records")
 
 	// 运行 bot
-	println("Running bot...")
+	log.Println("Running bot...")
 	botBuilds, err := service.BotRun(ctx, tasks, force)
 	if err != nil {
-		println("Bot run failed: ", err.Error())
+		log.Println("Bot run failed: ", err.Error())
 		return err
 	}
-	println("Bot run successfully")
+	log.Println("Bot run successfully")
 	botBuildsJson, err := json.Marshal(botBuilds)
 	if err != nil {
 		return err
 	}
-	println("Bot builds: ", string(botBuildsJson))
+	log.Println("Bot builds: ", string(botBuildsJson))
 
 	// 准备 qa
-	println("Preparing qa...")
+	log.Println("Preparing qa...")
 	err = service.QaPreparePackages(botBuilds)
 	if err != nil {
 		return err
 	}
-	println("Qa prepared successfully with", len(botBuilds), "packages")
+	log.Println("Qa prepared successfully with", len(botBuilds), "packages")
 
 	// 运行 qa
-	println("Running qa...")
+	log.Println("Running qa...")
 	_, err = service.QaRun(ctx, botBuilds)
 	if err != nil {
 		return err
 	}
-	println("Qa run successfully")
+	log.Println("Qa run successfully")
 
 	// 刷新软件包索引
 	service.RefreshMirrorPkgSoftware(true)

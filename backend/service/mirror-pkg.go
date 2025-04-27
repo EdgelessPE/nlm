@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"log"
 	"nlm/config"
 	"nlm/constant"
 	"nlm/vo"
@@ -63,13 +64,13 @@ var lastRefreshTime time.Time = time.Now()
 func RefreshMirrorPkgSoftware(async bool) {
 	lastRefreshTime = time.Now()
 	closure := func() {
-		println("Start refreshing mirror pkg software")
+		log.Println("Start refreshing mirror pkg software")
 		r, err := generateMirrorPkgSoftware()
 		if err != nil {
-			println("Failed to generate mirror pkg software", err)
+			log.Println("Failed to generate mirror pkg software", err)
 		}
 		mirrorPkgSoftwareCache = r
-		println("Refreshed mirror pkg software")
+		log.Println("Refreshed mirror pkg software")
 	}
 
 	if async {

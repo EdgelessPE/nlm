@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"log"
 	"nlm/config"
 	"nlm/db"
 	"nlm/driver"
@@ -75,14 +76,14 @@ func AddStorage(sourceFilePath string, compressWithZstd bool) (string, error) {
 
 	// 调度文件同步任务
 	go func() {
-		fmt.Println("start syncing file", uuid)
+		log.Println("start syncing file", uuid)
 		err := syncFile(uuid)
 		if err != nil {
-			fmt.Println("sync error: ", err)
+			log.Println("sync error: ", err)
 		}
 		// 更新同步状态
 		db.DB.Model(&s).Update("sync_finished_at", time.Now())
-		fmt.Println("sync finished", uuid)
+		log.Println("sync finished", uuid)
 	}()
 
 	return uuid, nil

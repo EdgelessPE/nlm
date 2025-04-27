@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"nlm/config"
 	"nlm/context"
 	"nlm/db"
@@ -147,7 +148,7 @@ func BotRun(ctx context.PipelineContext, tasks []string, force bool) ([]model.Re
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(string(result))
+	log.Println(string(result))
 	var botResult vo.BotResult
 	err = json.Unmarshal(result, &botResult)
 	if err != nil {

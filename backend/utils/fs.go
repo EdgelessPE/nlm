@@ -1,13 +1,14 @@
 package utils
 
 import (
+	"log"
 	"os"
 	"path/filepath"
 	"time"
 )
 
 func CleanOutdatedFiles(dir string) error {
-	println("Start cleaning outdated files in", dir)
+	log.Println("Start cleaning outdated files in", dir)
 	files, err := os.ReadDir(dir)
 	if err != nil {
 		return err
@@ -22,7 +23,7 @@ func CleanOutdatedFiles(dir string) error {
 		}
 		if info.ModTime().Before(time.Now().AddDate(0, 0, -30)) {
 			filePath := filepath.Join(dir, file.Name())
-			println("Cleaning outdated file:", filePath)
+			log.Println("Cleaning outdated file:", filePath)
 			os.Remove(filePath)
 		}
 	}

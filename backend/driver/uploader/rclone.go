@@ -1,7 +1,6 @@
 package uploader
 
 import (
-	"fmt"
 	"log"
 	"os/exec"
 	"path/filepath"
@@ -26,7 +25,7 @@ func (d *RcloneUploaderDriver) Init(targetBucketName string, rootDir string) err
 
 func (d *RcloneUploaderDriver) Upload(sourceFilePath string, subDir string, uuid string) error {
 	// 执行 rclone 命令
-	fmt.Println("Running rclone copyto", sourceFilePath, d.targetStorageName+":"+filepath.Join(d.targetDir, subDir, uuid))
+	log.Println("Running rclone copyto", sourceFilePath, d.targetStorageName+":"+filepath.Join(d.targetDir, subDir, uuid))
 	cmd := exec.Command("rclone", "copyto", sourceFilePath, d.targetStorageName+":"+filepath.Join(d.targetDir, subDir, uuid))
 	return cmd.Run()
 }

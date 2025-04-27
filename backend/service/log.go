@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"nlm/context"
 	"nlm/utils"
@@ -63,7 +64,7 @@ func StreamLog(c *gin.Context, pipelineId, moduleName string) {
 	// 创建缓冲区
 	buffer := make([]byte, 1024)
 	for {
-		println("Checking log file...")
+		log.Println("Checking log file...")
 		// 检查文件是否有新内容
 		newFileInfo, err := logFile.Stat()
 		if err != nil {

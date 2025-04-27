@@ -51,7 +51,7 @@ func InitNepsWithBotTask() {
 				// 创建数据库
 				d, err := service.AddNep(scope, name)
 				if err == nil {
-					println("Created nep: "+d.ID.String(), "scope: "+scope, "name: "+name)
+					log.Println("Created nep: "+d.ID.String(), "scope: "+scope, "name: "+name)
 				}
 			}
 		}
