@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"nlm/config"
 	"nlm/db"
+	"nlm/driver"
 	"nlm/model"
-	storage_drivers "nlm/service/storage-drivers"
 	"nlm/utils"
 	"os"
 	"path/filepath"
@@ -14,7 +14,7 @@ import (
 	"github.com/cespare/cp"
 )
 
-func syncFile(uuid string, syncToExpensiveStorage bool) error {
+func syncFile(uuid string) error {
 	sourceFilePath := filepath.Join(config.ENV.STORAGE_TEMP_DIR, uuid)
 	if _, err := os.Stat(sourceFilePath); os.IsNotExist(err) {
 		return fmt.Errorf("sync error: source file not found: %s", sourceFilePath)
@@ -22,17 +22,13 @@ func syncFile(uuid string, syncToExpensiveStorage bool) error {
 
 	storageConfig := config.ENV.STORAGE_CONFIG
 	for _, config := range storageConfig {
-		if !syncToExpensiveStorage && config.Expensive {
-			continue
-		}
-
-		driver := storage_drivers.Registry[config.Driver]
-		err := driver.Init(config.StorageName, config.BaseDir)
+		driver := driver.UploadDriverRegistry[config.UploaderDriver]
+		err := driver.Init(config.UploaderTargetBucketName, config.UploaderRootDir)
 		if err != nil {
 			return err
 		}
 
-		err = driver.Upload(uuid, sourceFilePath)
+		err = driver.Upload(sourceFilePath, utils.GetUUIDSubDir(uuid), uuid)
 		if err != nil {
 			return err
 		}
@@ -41,7 +37,7 @@ func syncFile(uuid string, syncToExpensiveStorage bool) error {
 	return nil
 }
 
-func AddStorage(sourceFilePath string, syncToExpensiveStorage bool, compressWithZstd bool) (string, error) {
+func AddStorage(sourceFilePath string, compressWithZstd bool) (string, error) {
 	// 获取文件大小
 	fileStat, err := os.Stat(sourceFilePath)
 	if err != nil {
@@ -80,7 +76,7 @@ func AddStorage(sourceFilePath string, syncToExpensiveStorage bool, compressWith
 	// 调度文件同步任务
 	go func() {
 		fmt.Println("start syncing file", uuid)
-		err := syncFile(uuid, syncToExpensiveStorage)
+		err := syncFile(uuid)
 		if err != nil {
 			fmt.Println("sync error: ", err)
 		}
@@ -130,17 +126,19 @@ func FetchStorage(uuid string, toDir string) (string, error) {
 func GetStorageUrl(uuid string) (string, error) {
 	storageConfig := config.ENV.STORAGE_CONFIG
 	for _, config := range storageConfig {
-		if config.PublicUrlBase == "" {
+		if config.DownloaderEntryUrl == "" {
 			continue
 		}
-		driver := storage_drivers.Registry[config.Driver]
-		exists, err := driver.Exists(uuid)
+		driver := driver.DownloadDriverRegistry[config.DownloaderDriver]
+		err := driver.Init(config.DownloaderEntryUrl, config.DownloaderMountPath)
 		if err != nil {
 			return "", err
 		}
-		if exists {
-			return filepath.Join(config.PublicUrlBase, uuid), nil
+		downloadUrl, err := driver.GetDownloadUrl(utils.GetUUIDSubDir(uuid), uuid)
+		if err != nil {
+			return "", err
 		}
+		return downloadUrl, nil
 	}
 	return "", fmt.Errorf("can't found storage for uuid: %s", uuid)
 }

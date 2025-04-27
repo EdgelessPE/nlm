@@ -67,7 +67,7 @@ func QaRun(ctx context.PipelineContext, builds []model.Release) ([]model.Release
 		reportDir := filepath.Join(config.ENV.QA_REPORTS_DIR, build.Nep.Scope, build.Nep.Name, fileName)
 		// 更新闭包
 		updateBuild := func(filePath string, isSuccess bool) error {
-			key, err := AddStorage(filePath, false, true)
+			key, err := AddStorage(filePath, true)
 			if err != nil {
 				return err
 			}

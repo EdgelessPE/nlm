@@ -1,19 +1,21 @@
 package vo
 
-import storage_drivers "nlm/service/storage-drivers"
-
 // 存储配置
 type StorageConfig struct {
 	// 存储唯一标识
 	Key string
-	// 昂贵存储
-	Expensive bool
-	// 存储驱动
-	Driver storage_drivers.StorageDriverEnum
-	// 存储名称
-	StorageName string
-	// 存储根目录
-	BaseDir string
-	// 公开可访问 URL 拼接前缀
-	PublicUrlBase string
+
+	// 上传驱动
+	UploaderDriver string
+	// 上传存储名称
+	UploaderTargetBucketName string
+	// 上传根目录
+	UploaderRootDir string
+
+	// 下载驱动
+	DownloaderDriver string
+	// 下载入口 URL
+	DownloaderEntryUrl string
+	// 下载挂载路径
+	DownloaderMountPath string
 }

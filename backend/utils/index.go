@@ -45,3 +45,7 @@ func ParseNepFileName(fileName string) (NepNameParsed, error) {
 		Flags:   flags,
 	}, nil
 }
+
+func GetUUIDSubDir(uuid string) string {
+	return uuid[:2]
+}

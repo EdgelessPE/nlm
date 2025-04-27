@@ -77,7 +77,7 @@ func storeBuilds(ctx context.PipelineContext, nep model.Nep, fileNames []string)
 			return nil, err
 		}
 		// 添加到 storage
-		storageKey, err := AddStorage(filepath.Join(filesDir, fileName), false, false)
+		storageKey, err := AddStorage(filepath.Join(filesDir, fileName), false)
 		if err != nil {
 			return nil, err
 		}
