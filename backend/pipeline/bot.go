@@ -47,5 +47,8 @@ func RunBotPipeline(tasks []string, force bool) error {
 	}
 	println("Qa run successfully")
 
+	// 刷新软件包索引
+	service.RefreshMirrorPkgSoftware(true)
+
 	return nil
 }
