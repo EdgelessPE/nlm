@@ -1,6 +1,8 @@
 package downloader
 
-import "fmt"
+import (
+	"path/filepath"
+)
 
 type NginxDownloaderDriver struct {
 	entryUrl  string
@@ -14,5 +16,5 @@ func (d *NginxDownloaderDriver) Init(entryUrl string, mountPath string) error {
 }
 
 func (d *NginxDownloaderDriver) GetDownloadUrl(subDir string, uuid string) (string, error) {
-	return fmt.Sprintf("%s/%s/%s/%s", d.entryUrl, d.mountPath, subDir, uuid), nil
+	return filepath.Join(d.entryUrl, d.mountPath, subDir, uuid), nil
 }
