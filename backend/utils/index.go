@@ -49,3 +49,27 @@ func ParseNepFileName(fileName string) (NepNameParsed, error) {
 func GetUUIDSubDir(uuid string) string {
 	return uuid[:2]
 }
+
+func JoinUrl(base string, paths ...string) string {
+	final := base
+	for _, component := range paths {
+		if len(component) == 0 {
+			continue
+		}
+
+		lastFinalChar := ""
+		if len(final) > 0 {
+			lastFinalChar = string(final[len(final)-1])
+		}
+
+		if lastFinalChar == "/" && string(component[0]) == "/" {
+			final = final[:len(final)-1] + component
+		} else if lastFinalChar == "/" || string(component[0]) == "/" {
+			final = final + component
+		} else {
+			final = final + "/" + component
+		}
+	}
+
+	return final
+}

@@ -1,8 +1,6 @@
 package downloader
 
-import (
-	"path/filepath"
-)
+import "nlm/utils"
 
 type NginxDownloaderDriver struct {
 	entryUrl  string
@@ -16,5 +14,5 @@ func (d *NginxDownloaderDriver) Init(entryUrl string, mountPath string) error {
 }
 
 func (d *NginxDownloaderDriver) GetDownloadUrl(subDir string, uuid string) (string, error) {
-	return filepath.Join(d.entryUrl, d.mountPath, subDir, uuid), nil
+	return utils.JoinUrl(d.entryUrl, d.mountPath, subDir, uuid), nil
 }
