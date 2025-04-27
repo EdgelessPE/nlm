@@ -7,6 +7,7 @@ import (
 	"nlm/db"
 	"nlm/domain"
 	"nlm/handler"
+	"nlm/middleware"
 	"nlm/model"
 	"nlm/service"
 	"nlm/vo"
@@ -36,9 +37,14 @@ func main() {
 	// 	log.Fatalf("Failed to run bot pipeline: %v", err)
 	// }
 
-	// 启动服务器
+	// 新建服务器实例
 	server := gin.Default()
+
+	// 注册中间件
 	server.Use(compress.Compress())
+	server.Use(middleware.MiddleWarePrintEncoding)
+
+	// 注册路由
 	r := server.Group(constant.API_PREFIX)
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, vo.BaseResponse[string]{
@@ -47,7 +53,8 @@ func main() {
 			Data: "pong",
 		})
 	})
-
 	handler.RegisterRoutes(r)
+
+	// 启动服务器
 	server.Run("0.0.0.0:3001")
 }
