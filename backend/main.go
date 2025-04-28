@@ -7,7 +7,6 @@ import (
 	"nlm/db"
 	"nlm/domain"
 	"nlm/handler"
-	"nlm/middleware"
 	"nlm/model"
 	"nlm/service"
 	"nlm/vo"
@@ -42,7 +41,7 @@ func main() {
 
 	// 注册中间件
 	server.Use(compress.Compress())
-	server.Use(middleware.MiddleWarePrintEncoding)
+	// server.Use(middleware.MiddleWarePrintEncoding)
 
 	// 注册路由
 	r := server.Group(constant.API_PREFIX)
