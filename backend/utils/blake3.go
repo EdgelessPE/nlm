@@ -10,7 +10,7 @@ import (
 
 // 获取某个文件的 blake3 hash 值
 func GetBlake3HashFromFile(filePath string) (string, error) {
-	hasher := blake3.New(0, nil)
+	hasher := blake3.New(32, nil)
 
 	file, err := os.Open(filePath)
 	if err != nil {
