@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"nlm/trigger"
+	"nlm/service"
 	"nlm/vo"
 
 	"github.com/gin-gonic/gin"
@@ -25,7 +25,7 @@ func TriggerWebhook(c *gin.Context) {
 		return
 	}
 
-	key, err := trigger.TriggerWebhook(req.Key)
+	key, err := service.TriggerWebhook(req.Key, req.Params, req.Token)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, vo.BaseResponse[any]{
 			Code: 500,

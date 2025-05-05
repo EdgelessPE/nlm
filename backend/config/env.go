@@ -36,6 +36,8 @@ type Env struct {
 	MIRROR_HELLO_DESCRIPTION string
 	MIRROR_HELLO_MAINTAINER  string
 	MIRROR_HELLO_PROPERTY    vo.MirrorHelloProperty
+
+	WEBHOOK_TOKEN string
 }
 
 var ENV Env
