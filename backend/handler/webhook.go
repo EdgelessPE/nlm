@@ -1,10 +1,12 @@
 package handler
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 
 	"nlm/config"
-	"nlm/service"
+	"nlm/pipeline"
 	"nlm/vo"
 
 	"github.com/gin-gonic/gin"
@@ -35,7 +37,7 @@ func TriggerWebhook(c *gin.Context) {
 		return
 	}
 
-	key, err := service.TriggerWebhook(req.Key, req.Params)
+	key, err := triggerWebhook(req.Key, req.Params)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, vo.BaseResponse[any]{
 			Code: 500,
@@ -50,4 +52,15 @@ func TriggerWebhook(c *gin.Context) {
 		Msg:  "Webhook triggered successfully",
 		Data: key,
 	})
+}
+
+func triggerWebhook(key string, _ any) (string, error) {
+	log.Println("Triggering webhook with key:", key)
+	switch key {
+	case "ept":
+		ctx := pipeline.RunEptPipeline()
+		return ctx.Id, nil
+	default:
+		return "", fmt.Errorf("invalid webhook key: %s", key)
+	}
 }
