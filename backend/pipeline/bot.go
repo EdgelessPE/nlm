@@ -55,10 +55,12 @@ func runner(ctx *context.PipelineContext, tasks []string, force bool) error {
 func RunBotPipeline(tasks []string, force bool) context.PipelineContext {
 	ctx := context.NewPipelineContext()
 	go func() {
+		log.Println("Running bot pipeline...")
 		err := runner(&ctx, tasks, force)
 		if err != nil {
 			log.Fatalf("Failed to run bot pipeline: %v", err)
 		}
+		log.Println("Bot pipeline run successfully")
 	}()
 	return ctx
 }
