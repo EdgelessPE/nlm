@@ -50,6 +50,7 @@ func RefreshMirrorEptToolchain(async bool) {
 		r, err := generateMirrorEptToolchain()
 		if err != nil {
 			log.Println("Failed to generate mirror ept toolchain", err)
+			return
 		}
 		mirrorEptToolchainCache = r
 		log.Println("Refreshed mirror ept toolchain")

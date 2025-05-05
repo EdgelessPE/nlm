@@ -68,6 +68,7 @@ func RefreshMirrorPkgSoftware(async bool) {
 		r, err := generateMirrorPkgSoftware()
 		if err != nil {
 			log.Println("Failed to generate mirror pkg software", err)
+			return
 		}
 		mirrorPkgSoftwareCache = r
 		log.Println("Refreshed mirror pkg software")
