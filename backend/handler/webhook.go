@@ -16,8 +16,7 @@ import (
 )
 
 func RegisterWebhookRoutes(r *gin.RouterGroup) {
-	webhook := r.Group("/webhook")
-	webhook.POST("/trigger", TriggerWebhook)
+	r.POST("/webhook", TriggerWebhook)
 }
 
 func TriggerWebhook(c *gin.Context) {
