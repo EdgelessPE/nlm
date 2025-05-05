@@ -2,14 +2,13 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"strings"
 
 	"nlm/config"
-	"nlm/pipeline"
+	"nlm/trigger"
 	"nlm/utils"
 	"nlm/vo"
 
@@ -65,7 +64,7 @@ func TriggerWebhook(c *gin.Context) {
 		return
 	}
 
-	key, err := triggerWebhook(req.Event)
+	key, err := trigger.TriggerWebhook(req.Event)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, vo.BaseResponse[any]{
 			Code: 500,
@@ -80,15 +79,4 @@ func TriggerWebhook(c *gin.Context) {
 		Msg:  "Webhook triggered successfully",
 		Data: key,
 	})
-}
-
-func triggerWebhook(event string) (string, error) {
-	log.Println("Triggering webhook with event:", event)
-	switch event {
-	case "release":
-		ctx := pipeline.RunEptPipeline()
-		return ctx.Id, nil
-	default:
-		return "", fmt.Errorf("invalid webhook event: %s", event)
-	}
 }

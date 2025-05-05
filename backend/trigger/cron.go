@@ -1,7 +1,8 @@
-package service
+package trigger
 
 import (
 	"nlm/pipeline"
+	"nlm/service"
 
 	"github.com/robfig/cron/v3"
 )
@@ -12,9 +13,9 @@ func InitCron() {
 	// 每天 0 点清理
 	c.AddFunc("0 0 * * *", func() {
 		// 清理过期日志
-		CleanLogs()
+		service.CleanLogs()
 		// 清理过期临时存储
-		CleanTempStorage()
+		service.CleanTempStorage()
 	})
 
 	// 每天凌晨 4 点执行 Bot 工作流

@@ -9,6 +9,7 @@ import (
 	"nlm/handler"
 	"nlm/model"
 	"nlm/service"
+	"nlm/trigger"
 	"nlm/vo"
 
 	"github.com/aurowora/compress"
@@ -30,7 +31,7 @@ func main() {
 	service.RefreshMirrorEptToolchain(false)
 
 	// 启动定时任务
-	service.InitCron()
+	trigger.InitCron()
 
 	// pipeline.RunBotPipeline([]string{"scoop/curl"}, true)
 
