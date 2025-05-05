@@ -52,7 +52,7 @@ func BotGenerateDatabase() ([]model.Nep, error) {
 	return neps, nil
 }
 
-func storeBuilds(ctx context.PipelineContext, nep model.Nep, fileNames []string) ([]model.Release, error) {
+func storeBuilds(ctx *context.PipelineContext, nep model.Nep, fileNames []string) ([]model.Release, error) {
 	filesDir := filepath.Join(config.ENV.BOT_BUILDS_DIR, nep.Scope, nep.Name)
 
 	// 检查 builds 目录中是否存在这些文件
@@ -115,7 +115,7 @@ func storeBuilds(ctx context.PipelineContext, nep model.Nep, fileNames []string)
 	return builds, nil
 }
 
-func BotRun(ctx context.PipelineContext, tasks []string, force bool) ([]model.Release, error) {
+func BotRun(ctx *context.PipelineContext, tasks []string, force bool) ([]model.Release, error) {
 	// 创建日志
 	logFile, err := CreateLog(ctx, "bot")
 	if err != nil {

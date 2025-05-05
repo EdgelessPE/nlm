@@ -8,6 +8,7 @@ import (
 	"nlm/domain"
 	"nlm/handler"
 	"nlm/model"
+	"nlm/pipeline"
 	"nlm/service"
 	"nlm/vo"
 
@@ -17,7 +18,7 @@ import (
 
 func main() {
 	// 初始化数据库
-	err := db.DB.AutoMigrate(&model.Nep{}, &model.Release{}, &model.Storage{})
+	err := db.DB.AutoMigrate(&model.Nep{}, &model.Release{}, &model.Storage{}, &model.Ept{})
 	if err != nil {
 		log.Fatalf("Failed to migrate nep table: %v", err)
 	}
@@ -31,10 +32,9 @@ func main() {
 	// 启动定时任务
 	service.InitCron()
 
-	// err = pipeline.RunBotPipeline([]string{"scoop/curl"}, true)
-	// if err != nil {
-	// 	log.Fatalf("Failed to run bot pipeline: %v", err)
-	// }
+	// pipeline.RunBotPipeline([]string{"scoop/curl"}, true)
+
+	pipeline.RunEptPipeline()
 
 	// 新建服务器实例
 	server := gin.Default()

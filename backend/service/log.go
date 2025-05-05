@@ -25,7 +25,7 @@ var upgrader = websocket.Upgrader{
 }
 
 // CreateLog 创建日志文件
-func CreateLog(ctx context.PipelineContext, moduleName string) (*os.File, error) {
+func CreateLog(ctx *context.PipelineContext, moduleName string) (*os.File, error) {
 	// 创建 log 目录
 	if _, err := os.Stat("logs"); os.IsNotExist(err) {
 		os.MkdirAll("logs", 0755)

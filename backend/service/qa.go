@@ -37,7 +37,7 @@ func QaPreparePackages(builds []model.Release) error {
 	return nil
 }
 
-func QaRun(ctx context.PipelineContext, builds []model.Release) ([]model.Release, error) {
+func QaRun(ctx *context.PipelineContext, builds []model.Release) ([]model.Release, error) {
 	// 创建日志
 	logFile, err := CreateLog(ctx, "qa")
 	if err != nil {

@@ -7,9 +7,7 @@ import (
 	"nlm/service"
 )
 
-func RunBotPipeline(tasks []string, force bool) error {
-	ctx := context.NewPipelineContext()
-
+func runner(ctx *context.PipelineContext, tasks []string, force bool) error {
 	// 生成 bot 数据库
 	log.Println("Generating bot database...")
 	neps, err := service.BotGenerateDatabase()
@@ -52,4 +50,15 @@ func RunBotPipeline(tasks []string, force bool) error {
 	service.RefreshMirrorPkgSoftware(true)
 
 	return nil
+}
+
+func RunBotPipeline(tasks []string, force bool) context.PipelineContext {
+	ctx := context.NewPipelineContext()
+	go func() {
+		err := runner(&ctx, tasks, force)
+		if err != nil {
+			log.Fatalf("Failed to run bot pipeline: %v", err)
+		}
+	}()
+	return ctx
 }
