@@ -18,6 +18,10 @@ func RegisterMirrorRoutes(r *gin.RouterGroup) {
 		c.JSON(http.StatusOK, service.MirrorPkgSoftware())
 	})
 
+	r.GET(constant.ServicePathEptToolchain, func(c *gin.Context) {
+		c.JSON(http.StatusOK, service.MirrorEptToolchain())
+	})
+
 	r.GET(constant.ServicePathRedirect, func(c *gin.Context) {
 		url, err := service.MirrorRedirect(c.Param("scope"), c.Param("software"), c.Param("file_name"))
 		if err != nil {

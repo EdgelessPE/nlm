@@ -59,10 +59,10 @@ func generateMirrorPkgSoftware() (vo.MirrorPkgSoftware, error) {
 	}, nil
 }
 
-var lastRefreshTime time.Time = time.Now()
+var lastRefreshTimePkg time.Time = time.Now()
 
 func RefreshMirrorPkgSoftware(async bool) {
-	lastRefreshTime = time.Now()
+	lastRefreshTimePkg = time.Now()
 	closure := func() {
 		log.Println("Start refreshing mirror pkg software")
 		r, err := generateMirrorPkgSoftware()
@@ -82,7 +82,7 @@ func RefreshMirrorPkgSoftware(async bool) {
 
 func GetMirrorPkgSoftware() vo.MirrorPkgSoftware {
 	// 如果超过 1 分钟则刷新
-	if time.Since(lastRefreshTime) > 1*time.Minute {
+	if time.Since(lastRefreshTimePkg) > 1*time.Minute {
 		RefreshMirrorPkgSoftware(true)
 	}
 	return mirrorPkgSoftwareCache

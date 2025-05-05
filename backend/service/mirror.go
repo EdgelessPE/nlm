@@ -36,6 +36,10 @@ func MirrorPkgSoftware() vo.MirrorPkgSoftware {
 	return GetMirrorPkgSoftware()
 }
 
+func MirrorEptToolchain() vo.MirrorEptToolchain {
+	return GetMirrorEptToolchain()
+}
+
 func MirrorRedirect(scope string, software string, fileName string) (string, error) {
 	release, err := GetRelease(scope, software, fileName)
 	if err != nil {

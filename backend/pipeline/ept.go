@@ -10,11 +10,15 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/google/uuid"
 )
 
 func runEpt(ctx *context.PipelineContext) error {
+	// 等待 10 秒
+	time.Sleep(10 * time.Second)
+
 	// 获取 GitHub Release
 	release, err := utils.GetGitHubLatestRelease("EdgelessPE", "ept")
 	if err != nil {
@@ -71,6 +75,9 @@ func runEpt(ctx *context.PipelineContext) error {
 		Integrity:  integrity,
 	}
 	db.DB.Create(&ept)
+
+	// 刷新镜像
+	service.RefreshMirrorEptToolchain(false)
 
 	return nil
 }
