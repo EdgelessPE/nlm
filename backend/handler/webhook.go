@@ -1,12 +1,16 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"strings"
 
 	"nlm/config"
 	"nlm/pipeline"
+	"nlm/utils"
 	"nlm/vo"
 
 	"github.com/gin-gonic/gin"
@@ -18,17 +22,30 @@ func RegisterWebhookRoutes(r *gin.RouterGroup) {
 }
 
 func TriggerWebhook(c *gin.Context) {
-	var req vo.WebhookRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, vo.BaseResponse[any]{
-			Code: 400,
-			Msg:  "Invalid request body",
+	// 读出 body
+	body, err := io.ReadAll(c.Request.Body)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, vo.BaseResponse[any]{
+			Code: 500,
+			Msg:  "Failed to read request body",
 			Data: nil,
 		})
 		return
 	}
 
-	if req.Token != config.ENV.WEBHOOK_TOKEN {
+	// 校验签名
+	signature := strings.TrimPrefix(c.Request.Header.Get("X-Hub-Signature-256"), "sha256=")
+	if signature == "" {
+		c.JSON(http.StatusBadRequest, vo.BaseResponse[any]{
+			Code: 400,
+			Msg:  "Failed to read signature from request header",
+			Data: nil,
+		})
+		return
+	}
+	log.Println("signature", signature)
+
+	if !utils.VerifySignature(config.ENV.WEBHOOK_TOKEN, string(body), signature) {
 		c.JSON(http.StatusUnauthorized, vo.BaseResponse[any]{
 			Code: 401,
 			Msg:  "Invalid token",
@@ -37,7 +54,18 @@ func TriggerWebhook(c *gin.Context) {
 		return
 	}
 
-	key, err := triggerWebhook(req.Key, req.Params)
+	// 触发 webhook
+	var req vo.GitHubWebhookRequest
+	if err := json.Unmarshal(body, &req); err != nil {
+		c.JSON(http.StatusBadRequest, vo.BaseResponse[any]{
+			Code: 400,
+			Msg:  "Invalid request body",
+			Data: nil,
+		})
+		return
+	}
+
+	key, err := triggerWebhook(req.Event)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, vo.BaseResponse[any]{
 			Code: 500,
@@ -54,13 +82,13 @@ func TriggerWebhook(c *gin.Context) {
 	})
 }
 
-func triggerWebhook(key string, _ any) (string, error) {
-	log.Println("Triggering webhook with key:", key)
-	switch key {
-	case "ept":
+func triggerWebhook(event string) (string, error) {
+	log.Println("Triggering webhook with event:", event)
+	switch event {
+	case "release":
 		ctx := pipeline.RunEptPipeline()
 		return ctx.Id, nil
 	default:
-		return "", fmt.Errorf("invalid webhook key: %s", key)
+		return "", fmt.Errorf("invalid webhook event: %s", event)
 	}
 }
