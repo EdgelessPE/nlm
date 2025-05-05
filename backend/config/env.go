@@ -38,8 +38,9 @@ type Env struct {
 	MIRROR_HELLO_PROPERTY    vo.MirrorHelloProperty
 
 	WEBHOOK_TOKEN string
+	GITHUB_TOKEN  string
 
-	GITHUB_TOKEN string
+	EPT_WILD_GAPS []string
 }
 
 var ENV Env

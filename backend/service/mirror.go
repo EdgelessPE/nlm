@@ -24,10 +24,10 @@ func MirrorHello() vo.MirrorHello {
 				Key:  constant.ServiceKeyPkgSoftware,
 				Path: constant.API_PREFIX + constant.ServicePathPkgSoftware,
 			},
-			// {
-			// 	Key:  constant.ServiceKeyEptToolchain,
-			// 	Path: constant.API_PREFIX + constant.ServicePathEptToolchain,
-			// },
+			{
+				Key:  constant.ServiceKeyEptToolchain,
+				Path: constant.API_PREFIX + constant.ServicePathEptToolchain,
+			},
 		},
 	}
 }

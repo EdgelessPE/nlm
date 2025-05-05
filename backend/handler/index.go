@@ -7,4 +7,5 @@ func RegisterRoutes(r *gin.RouterGroup) {
 	RegisterNepRoutes(r)
 	RegisterLogRoutes(r)
 	RegisterMirrorRoutes(r)
+	RegisterEptRoutes(r)
 }

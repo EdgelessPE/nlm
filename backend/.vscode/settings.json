@@ -1,6 +1,7 @@
 {
 	"cSpell.words": [
 		"copyto",
+		"epts",
 		"godotenv",
 		"gonic",
 		"gorm",
@@ -9,7 +10,8 @@
 		"Neps",
 		"Putaway",
 		"Rclone",
-		"upgrader"
+		"upgrader",
+		"epts"
 	],
 	"editor.formatOnSave": true
 }
