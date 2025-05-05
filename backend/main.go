@@ -8,7 +8,6 @@ import (
 	"nlm/domain"
 	"nlm/handler"
 	"nlm/model"
-	"nlm/pipeline"
 	"nlm/service"
 	"nlm/vo"
 
@@ -34,7 +33,7 @@ func main() {
 
 	// pipeline.RunBotPipeline([]string{"scoop/curl"}, true)
 
-	pipeline.RunEptPipeline()
+	// pipeline.RunEptPipeline()
 
 	// 新建服务器实例
 	server := gin.Default()
