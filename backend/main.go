@@ -33,10 +33,6 @@ func main() {
 	// 启动定时任务
 	trigger.InitCron()
 
-	// pipeline.RunBotPipeline([]string{"scoop/curl"}, true)
-
-	// pipeline.RunEptPipeline()
-
 	// 新建服务器实例
 	server := gin.Default()
 
