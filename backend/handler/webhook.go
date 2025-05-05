@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 
+	"nlm/config"
 	"nlm/service"
 	"nlm/vo"
 
@@ -25,7 +26,16 @@ func TriggerWebhook(c *gin.Context) {
 		return
 	}
 
-	key, err := service.TriggerWebhook(req.Key, req.Params, req.Token)
+	if req.Token != config.ENV.WEBHOOK_TOKEN {
+		c.JSON(http.StatusUnauthorized, vo.BaseResponse[any]{
+			Code: 401,
+			Msg:  "Invalid token",
+			Data: nil,
+		})
+		return
+	}
+
+	key, err := service.TriggerWebhook(req.Key, req.Params)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, vo.BaseResponse[any]{
 			Code: 500,
