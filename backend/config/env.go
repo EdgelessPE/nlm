@@ -38,6 +38,8 @@ type Env struct {
 	MIRROR_HELLO_PROPERTY    vo.MirrorHelloProperty
 
 	WEBHOOK_TOKEN string
+
+	GITHUB_TOKEN string
 }
 
 var ENV Env
