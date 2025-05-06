@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/alitto/pond/v2"
 	"github.com/cespare/cp"
 )
 
@@ -37,6 +38,8 @@ func syncFile(uuid string) error {
 
 	return nil
 }
+
+var pool = pond.NewPool(3)
 
 func AddStorage(sourceFilePath string, compressWithZstd bool) (string, error) {
 	// 获取文件大小
@@ -75,7 +78,7 @@ func AddStorage(sourceFilePath string, compressWithZstd bool) (string, error) {
 	}
 
 	// 调度文件同步任务
-	go func() {
+	pool.Submit(func() {
 		log.Println("start syncing file", uuid)
 		err := syncFile(uuid)
 		if err != nil {
@@ -84,7 +87,7 @@ func AddStorage(sourceFilePath string, compressWithZstd bool) (string, error) {
 		// 更新同步状态
 		db.DB.Model(&s).Update("sync_finished_at", time.Now())
 		log.Println("sync finished", uuid)
-	}()
+	})
 
 	return uuid, nil
 }

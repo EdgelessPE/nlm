@@ -6,6 +6,7 @@ require github.com/robfig/cron/v3 v3.0.0
 
 require (
 	github.com/Masterminds/semver/v3 v3.3.1 // indirect
+	github.com/alitto/pond/v2 v2.3.4 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
 )
 
