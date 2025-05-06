@@ -144,7 +144,7 @@ func GetStorageUrl(uuid string) (string, error) {
 	return "", fmt.Errorf("can't found storage for uuid: %s", uuid)
 }
 
-func DeleteStorage(uuid string) error {
+func DeleteStorage(uuid string) {
 	storageConfig := config.ENV.STORAGE_CONFIG
 	for _, config := range storageConfig {
 		driver := driver.UploadDriverRegistry[config.UploaderDriver]
@@ -153,7 +153,6 @@ func DeleteStorage(uuid string) error {
 			log.Println("Warning: failed to delete storage: ", err.Error())
 		}
 	}
-	return nil
 }
 
 // 清理 30天前的临时存储文件
