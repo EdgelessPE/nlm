@@ -83,3 +83,10 @@ func GetMajorVersion(version string) int {
 	}
 	return major
 }
+
+func CleanBotTaskName(name string) string {
+	if strings.Contains(name, "_") {
+		return strings.Split(name, "_")[0]
+	}
+	return name
+}

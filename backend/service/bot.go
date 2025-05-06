@@ -181,7 +181,7 @@ func BotRun(ctx *context.PipelineContext, tasks []string, force bool) ([]model.R
 		}
 
 		// 获取 NepId
-		nep, err := GetNep(node.Scope, node.TaskName)
+		nep, err := GetNep(node.Scope, utils.CleanBotTaskName(node.TaskName))
 		if err != nil {
 			return nil, err
 		}

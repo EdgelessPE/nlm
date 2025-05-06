@@ -4,6 +4,7 @@ import (
 	"log"
 	"nlm/config"
 	"nlm/service"
+	"nlm/utils"
 	"os"
 	"path/filepath"
 
@@ -45,7 +46,7 @@ func InitNepsWithBotTask() {
 				}
 
 				// 获取 name 和 scope
-				name := config["task"].(map[string]interface{})["name"].(string)
+				name := utils.CleanBotTaskName(config["task"].(map[string]interface{})["name"].(string))
 				scope := config["task"].(map[string]interface{})["scope"].(string)
 
 				// 创建数据库
