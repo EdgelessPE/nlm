@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"nlm/config"
@@ -58,10 +59,10 @@ func storeBuilds(ctx *context.PipelineContext, nep model.Nep, fileNames []string
 	// 检查 builds 目录中是否存在这些文件
 	for _, fileName := range fileNames {
 		if _, err := os.Stat(filepath.Join(filesDir, fileName)); os.IsNotExist(err) {
-			return nil, err
+			return nil, errors.New("file not found: " + err.Error())
 		}
 		if _, err := os.Stat(filepath.Join(filesDir, fileName+".meta")); os.IsNotExist(err) {
-			return nil, err
+			return nil, errors.New("meta file not found: " + err.Error())
 		}
 	}
 	// 依次保存并生成结果
