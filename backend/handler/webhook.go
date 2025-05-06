@@ -40,7 +40,7 @@ func TriggerWebhook(c *gin.Context) {
 		})
 		return
 	}
-	log.Println("signature", signature)
+	log.Println("Triggered by GitHub Webhook, delivery id:", c.Request.Header.Get("X-GitHub-Delivery"))
 
 	ok, err := utils.VerifySignature(config.ENV.WEBHOOK_TOKEN, string(body), signature)
 	if err != nil {
