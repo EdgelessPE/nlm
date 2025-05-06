@@ -3,6 +3,7 @@ package utils
 import (
 	"errors"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -72,4 +73,13 @@ func JoinUrl(base string, paths ...string) string {
 	}
 
 	return final
+}
+
+func GetMajorVersion(version string) int {
+	sp := strings.Split(version, ".")
+	major, err := strconv.Atoi(sp[0])
+	if err != nil {
+		return 0
+	}
+	return major
 }

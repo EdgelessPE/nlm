@@ -15,7 +15,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/Masterminds/semver/v3"
 	"github.com/pelletier/go-toml/v2"
 )
 
@@ -113,19 +112,13 @@ func storeBuilds(ctx *context.PipelineContext, nep model.Nep, fileNames []string
 		db.DB.Model(&b).Association("Nep").Find(&b.Nep)
 
 		// 判断上一个版本是否为新的大版本
-		prevVersion, err := semver.NewVersion(nep.LatestReleaseVersion)
-		if err != nil {
-			return nil, err
-		}
-		currVersion, err := semver.NewVersion(parsed.Version)
-		if err != nil {
-			return nil, err
-		}
-		if currVersion.Major() > prevVersion.Major() {
+		if utils.GetMajorVersion(nep.LatestReleaseVersion) != utils.GetMajorVersion(parsed.Version) {
+			log.Println("Marking ", parsed.Version, " as last major version for ", nep.Scope, "/", nep.Name)
 			// 找到所有版本号为 prevVersion 的 Release
 			var releases []model.Release
-			db.DB.Where("nep_id = ? AND version = ?", nep.ID.String(), prevVersion.String()).Find(&releases)
+			db.DB.Where("nep_id = ? AND version = ?", nep.ID.String(), nep.LatestReleaseVersion).Find(&releases)
 			for _, release := range releases {
+				log.Println("Marking release ", release.FileName)
 				release.IsLastMajor = true
 				db.DB.Save(&release)
 			}
