@@ -52,5 +52,5 @@ func main() {
 	handler.RegisterRoutes(r)
 
 	// 启动服务器
-	server.Run("0.0.0.0:3001")
+	server.Run("0.0.0.0:3031")
 }
