@@ -20,7 +20,7 @@ type Release struct {
 	Meta       db.JSON `gorm:"type:jsonb"`
 
 	// 是否是最后一个大版本
-	IsLastMajor bool
+	IsLastMajor bool `gorm:"default:false"`
 
 	NepId string `gorm:"index;not null"`
 	Nep   *Nep   `gorm:"foreignKey:NepId;references:ID;constraint:OnDelete:CASCADE"`
