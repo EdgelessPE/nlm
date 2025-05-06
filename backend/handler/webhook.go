@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"encoding/json"
 	"io"
 	"log"
 	"net/http"
@@ -43,31 +42,29 @@ func TriggerWebhook(c *gin.Context) {
 	}
 	log.Println("signature", signature)
 
-	if !utils.VerifySignature(config.ENV.WEBHOOK_TOKEN, string(body), signature) {
-		c.JSON(http.StatusUnauthorized, vo.BaseResponse[any]{
-			Code: 401,
-			Msg:  "Invalid token",
-			Data: nil,
-		})
-		return
-	}
-
-	// 触发 webhook
-	var req vo.GitHubWebhookRequest
-	if err := json.Unmarshal(body, &req); err != nil {
-		c.JSON(http.StatusBadRequest, vo.BaseResponse[any]{
-			Code: 400,
-			Msg:  "Invalid request body",
-			Data: nil,
-		})
-		return
-	}
-
-	key, err := trigger.TriggerWebhook(req.Event)
+	ok, err := utils.VerifySignature(config.ENV.WEBHOOK_TOKEN, string(body), signature)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, vo.BaseResponse[any]{
 			Code: 500,
-			Msg:  "Failed to trigger webhook",
+			Msg:  "Failed to verify signature",
+			Data: nil,
+		})
+		return
+	}
+	if !ok {
+		c.JSON(http.StatusUnauthorized, vo.BaseResponse[any]{
+			Code: 401,
+			Msg:  "Invalid signature",
+			Data: nil,
+		})
+		return
+	}
+
+	key, err := trigger.TriggerWebhook(c.Request.Header.Get("X-GitHub-Event"))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, vo.BaseResponse[any]{
+			Code: 500,
+			Msg:  "Failed to trigger webhook: " + err.Error(),
 			Data: nil,
 		})
 		return
