@@ -78,9 +78,9 @@ func GetRelease(scope string, name string, fileName string) (model.Release, erro
 
 func CleanOutdatedRelease() error {
 	log.Println("Cleaning outdated release..")
-	// 删除更新时间大于 30 天的 Release
+	// 删除更新时间大于 30 天且不是最后一个大版本的 Release
 	var releases []model.Release
-	db.DB.Where("updated_at < ?", time.Now().AddDate(0, 0, -30)).Find(&releases)
+	db.DB.Where("updated_at < ? AND is_last_major = false", time.Now().AddDate(0, 0, -30)).Find(&releases)
 	for _, release := range releases {
 		log.Printf("Cleaning outdated release: %s (%s)", release.ID.String(), release.FileName)
 		db.DB.Delete(&release)
