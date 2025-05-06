@@ -16,6 +16,8 @@ func InitCron() {
 		service.CleanLogs()
 		// 清理过期临时存储
 		service.CleanTempStorage()
+		// 清理过期 Release
+		service.CleanOutdatedRelease()
 	})
 
 	// 每天凌晨 4 点执行 Bot 工作流

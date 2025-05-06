@@ -2,8 +2,10 @@ package service
 
 import (
 	"errors"
+	"log"
 	"nlm/db"
 	"nlm/model"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -72,4 +74,18 @@ func GetRelease(scope string, name string, fileName string) (model.Release, erro
 		return release, errors.New("release not found")
 	}
 	return release, nil
+}
+
+func CleanOutdatedRelease() error {
+	log.Println("Cleaning outdated release..")
+	// 删除更新时间大于 30 天的 Release
+	var releases []model.Release
+	db.DB.Where("updated_at < ?", time.Now().AddDate(0, 0, -30)).Find(&releases)
+	for _, release := range releases {
+		log.Printf("Cleaning outdated release: %s (%s)", release.ID.String(), release.FileName)
+		db.DB.Delete(&release)
+		DeleteStorage(release.ID.String())
+	}
+	log.Println("Cleaned outdated release")
+	return nil
 }
