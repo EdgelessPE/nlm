@@ -76,36 +76,37 @@ func AddStorage(sourceFilePath string, compressWithZstd bool) (string, error) {
 			return "", err
 		}
 	}
+	log.Printf("Add storage %s(%s) to pool", uuid, s.FileName)
 
 	// 调度文件同步任务
 	pool.Submit(func() {
-		log.Println("start syncing file", uuid)
+		log.Println("Start syncing file", uuid)
 		err := syncFile(uuid)
 		if err != nil {
-			log.Println("sync error: ", err)
+			log.Println("Sync error: ", err)
 		}
 		// 更新同步状态
 		db.DB.Model(&s).Update("sync_finished_at", time.Now())
-		log.Println("sync finished", uuid)
+		log.Println("Sync finished", uuid)
 	})
 
 	return uuid, nil
 }
 
 func FetchStorage(uuid string, toDir string) (string, error) {
-	fmt.Printf("fetching storage %s to %s\n", uuid, toDir)
+	fmt.Printf("Fetching storage %s to %s\n", uuid, toDir)
 	// 查询文件名
 	var s model.Storage
 	db.DB.Where("id = ?", uuid).First(&s)
 	if s.FileName == "" {
-		return "", fmt.Errorf("can't found storage for uuid: %s", uuid)
+		return "", fmt.Errorf("Can't found storage for uuid: %s", uuid)
 	}
 
 	// 从临时存储中获取文件
 	tempDir := config.ENV.STORAGE_TEMP_DIR
 	tempFilePath := filepath.Join(tempDir, uuid)
 	if _, err := os.Stat(tempFilePath); os.IsNotExist(err) {
-		return "", fmt.Errorf("can't found temp file for uuid: %s", uuid)
+		return "", fmt.Errorf("Can't found temp file for uuid: %s", uuid)
 	}
 
 	// 复制文件到目标位置
