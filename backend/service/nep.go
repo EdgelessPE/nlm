@@ -84,7 +84,7 @@ func CleanOutdatedRelease() error {
 	for _, release := range releases {
 		log.Printf("Cleaning outdated release: %s (%s)", release.ID.String(), release.FileName)
 		db.DB.Delete(&release)
-		DeleteStorage(release.ID.String())
+		DeleteStorage(release.StorageKey)
 	}
 	log.Println("Cleaned outdated release")
 	return nil
