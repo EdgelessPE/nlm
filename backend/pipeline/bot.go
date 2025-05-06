@@ -30,21 +30,25 @@ func runner(ctx *context.PipelineContext, tasks []string, force bool) error {
 	}
 	log.Println("Bot builds: ", string(botBuildsJson))
 
-	// 准备 qa
-	log.Println("Preparing qa...")
-	err = service.QaPreparePackages(botBuilds)
-	if err != nil {
-		return err
-	}
-	log.Println("Qa prepared successfully with", len(botBuilds), "packages")
+	if len(botBuilds) > 0 {
+		// 准备 qa
+		log.Println("Preparing qa...")
+		err = service.QaPreparePackages(botBuilds)
+		if err != nil {
+			return err
+		}
+		log.Println("Qa prepared successfully with", len(botBuilds), "packages")
 
-	// 运行 qa
-	log.Println("Running qa...")
-	_, err = service.QaRun(ctx, botBuilds)
-	if err != nil {
-		return err
+		// 运行 qa
+		log.Println("Running qa...")
+		_, err = service.QaRun(ctx, botBuilds)
+		if err != nil {
+			return err
+		}
+		log.Println("Qa run successfully")
+	} else {
+		log.Println("No bot builds found")
 	}
-	log.Println("Qa run successfully")
 
 	// 刷新软件包索引
 	service.RefreshMirrorPkgSoftware(true)
