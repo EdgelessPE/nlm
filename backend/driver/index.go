@@ -8,6 +8,7 @@ import (
 type UploadDriver interface {
 	Init(targetBucketName string, rootDir string) error
 	Upload(sourceFilePath string, subDir string, uuid string) error
+	Delete(subDir string, uuid string) error
 }
 
 type DownloadDriver interface {
