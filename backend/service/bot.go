@@ -112,7 +112,7 @@ func storeBuilds(ctx *context.PipelineContext, nep model.Nep, fileNames []string
 		db.DB.Model(&b).Association("Nep").Find(&b.Nep)
 
 		// 判断上一个版本是否为新的大版本
-		if utils.GetMajorVersion(nep.LatestReleaseVersion) != utils.GetMajorVersion(parsed.Version) {
+		if nep.LatestReleaseVersion != "" && utils.GetMajorVersion(nep.LatestReleaseVersion) != utils.GetMajorVersion(parsed.Version) {
 			log.Println("Marking ", parsed.Version, " as last major version for ", nep.Scope, "/", nep.Name)
 			// 找到所有版本号为 prevVersion 的 Release
 			var releases []model.Release
