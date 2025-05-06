@@ -76,6 +76,16 @@ func GetRelease(scope string, name string, fileName string) (model.Release, erro
 	return release, nil
 }
 
+func GetReleaseByVersion(scope string, name string, version string) ([]model.Release, error) {
+	n, err := GetNep(scope, name)
+	if err != nil {
+		return nil, err
+	}
+	var releases []model.Release
+	db.DB.Where("nep_id = ? AND version = ?", n.ID.String(), version).Find(&releases)
+	return releases, nil
+}
+
 func CleanOutdatedRelease() error {
 	log.Println("Cleaning outdated release..")
 	// 删除更新时间大于 30 天且不是最后一个大版本的 Release

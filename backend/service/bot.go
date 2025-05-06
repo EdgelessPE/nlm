@@ -34,13 +34,22 @@ func BotGenerateDatabase() ([]model.Nep, error) {
 		if nep.LatestReleaseVersion == "" {
 			continue
 		}
-		record[nep.Scope+"_"+nep.Name] = vo.BotDatabaseNode{
+		node := vo.BotDatabaseNode{
 			Recent: vo.BotDatabaseNodeRecent{
 				Health:        3,
 				LatestVersion: nep.LatestReleaseVersion,
 				ErrorMessage:  "",
 				Builds:        []vo.BotBuildStatus{},
 			},
+		}
+		record[nep.Scope+"_"+nep.Name] = node
+		// 找出所有最新版的 release，用 flags 再赋值一次
+		releases, err := GetReleaseByVersion(nep.Scope, nep.Name, nep.LatestReleaseVersion)
+		if err != nil {
+			return nil, err
+		}
+		for _, release := range releases {
+			record[nep.Scope+"_"+nep.Name+"_"+release.Flags] = node
 		}
 	}
 
@@ -50,6 +59,7 @@ func BotGenerateDatabase() ([]model.Nep, error) {
 		return nil, err
 	}
 	os.WriteFile(config.ENV.BOT_DATABASE_FILE, text, 0644)
+	log.Println("Bot database generated:", string(text))
 	return neps, nil
 }
 
@@ -115,9 +125,10 @@ func storeBuilds(ctx *context.PipelineContext, nep model.Nep, fileNames []string
 		// 判断上一个版本是否为新的大版本
 		if nep.LatestReleaseVersion != "" && utils.GetMajorVersion(nep.LatestReleaseVersion) != utils.GetMajorVersion(parsed.Version) {
 			log.Println("Marking ", parsed.Version, " as last major version for ", nep.Scope, "/", nep.Name)
-			// 找到所有版本号为 prevVersion 的 Release
-			var releases []model.Release
-			db.DB.Where("nep_id = ? AND version = ?", nep.ID.String(), nep.LatestReleaseVersion).Find(&releases)
+			releases, err := GetReleaseByVersion(nep.Scope, nep.Name, nep.LatestReleaseVersion)
+			if err != nil {
+				return nil, err
+			}
 			for _, release := range releases {
 				log.Println("Marking release ", release.FileName)
 				release.IsLastMajor = true
