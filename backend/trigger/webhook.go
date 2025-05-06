@@ -9,6 +9,8 @@ import (
 func TriggerWebhook(event string) (string, error) {
 	log.Println("Triggering webhook with event:", event)
 	switch event {
+	case "ping":
+		return "pong", nil
 	case "release":
 		ctx := pipeline.RunEptPipeline()
 		return ctx.Id, nil
