@@ -62,7 +62,7 @@ func RunBotPipeline(tasks []string, force bool) context.PipelineContext {
 		log.Println("Running bot pipeline...")
 		err := runner(&ctx, tasks, force)
 		if err != nil {
-			log.Fatalf("Failed to run bot pipeline: %v", err)
+			log.Println("Failed to run bot pipeline: ", err.Error())
 		}
 		log.Println("Bot pipeline run successfully")
 	}()

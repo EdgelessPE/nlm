@@ -88,7 +88,7 @@ func RunEptPipeline() context.PipelineContext {
 		log.Println("Running ept pipeline...")
 		err := runEpt(&ctx)
 		if err != nil {
-			log.Fatalf("Failed to run ept pipeline: %v", err)
+			log.Println("Failed to run ept pipeline: ", err.Error())
 		}
 		log.Println("Ept pipeline run successfully")
 	}()
