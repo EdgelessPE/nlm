@@ -109,14 +109,15 @@ func storeBuilds(ctx *context.PipelineContext, nep model.Nep, fileNames []string
 		}
 
 		b := model.Release{
-			NepId:      nep.ID.String(),
-			Version:    parsed.Version,
-			Flags:      parsed.Flags,
-			FileName:   fileName,
-			FileSize:   fileStat.Size(),
-			StorageKey: storageKey,
-			Meta:       metaJson,
-			PipelineId: ctx.Id,
+			NepId:        nep.ID.String(),
+			Version:      parsed.Version,
+			Flags:        parsed.Flags,
+			FileName:     fileName,
+			FileSize:     fileStat.Size(),
+			StorageKey:   storageKey,
+			Meta:         metaJson,
+			PipelineId:   ctx.Id,
+			IsBotSuccess: true,
 		}
 		db.DB.Create(&b)
 		// 加载 Nep 外键
@@ -204,5 +205,18 @@ func BotRun(ctx *context.PipelineContext, tasks []string, force bool) ([]model.R
 		}
 		botBuilds = append(botBuilds, b...)
 	}
+	for _, node := range botResult.Failed {
+		nep, err := GetNep(node.Scope, utils.CleanBotTaskName(node.TaskName))
+		if err != nil {
+			return nil, err
+		}
+		// 写入失败的 release 记录
+		db.DB.Create(&model.Release{
+			NepId:        nep.ID.String(),
+			PipelineId:   ctx.Id,
+			IsBotSuccess: false,
+		})
+	}
+
 	return botBuilds, nil
 }

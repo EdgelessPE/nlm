@@ -72,10 +72,10 @@ func QaRun(ctx *context.PipelineContext, builds []model.Release) ([]model.Releas
 				return err
 			}
 			build.QaResultStorageKey = key
-			build.IsSuccess = isSuccess
+			build.IsQaSuccess = isSuccess
 			db.DB.Model(&build).Updates(map[string]interface{}{
 				"qa_result_storage_key": key,
-				"is_success":            isSuccess,
+				"is_qa_success":         isSuccess,
 			})
 			build.Nep.LatestReleaseVersion = build.Version
 			db.DB.Save(&build.Nep)
