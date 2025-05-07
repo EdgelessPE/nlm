@@ -84,13 +84,24 @@ func runEpt(ctx *context.PipelineContext) error {
 
 func RunEptPipeline() context.PipelineContext {
 	ctx := context.NewPipelineContext()
+	pipeline := model.Pipeline{
+		Base:      model.Base{ID: uuid.MustParse(ctx.Id)},
+		ModelName: "ept",
+		Status:    "running",
+	}
+	db.DB.Create(&pipeline)
 	go func() {
 		log.Println("Running ept pipeline...")
 		err := runEpt(&ctx)
 		if err != nil {
 			log.Println("Failed to run ept pipeline: ", err.Error())
+			pipeline.Status = "failed"
+			pipeline.ErrMsg = err.Error()
+		} else {
+			log.Println("Ept pipeline run successfully")
+			pipeline.Status = "success"
 		}
-		log.Println("Ept pipeline run successfully")
+		db.DB.Save(&pipeline)
 	}()
 	return ctx
 }

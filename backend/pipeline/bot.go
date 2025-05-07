@@ -4,7 +4,11 @@ import (
 	"encoding/json"
 	"log"
 	"nlm/context"
+	"nlm/db"
+	"nlm/model"
 	"nlm/service"
+
+	"github.com/google/uuid"
 )
 
 func runner(ctx *context.PipelineContext, tasks []string, force bool) error {
@@ -58,13 +62,24 @@ func runner(ctx *context.PipelineContext, tasks []string, force bool) error {
 
 func RunBotPipeline(tasks []string, force bool) context.PipelineContext {
 	ctx := context.NewPipelineContext()
+	pipeline := model.Pipeline{
+		Base:      model.Base{ID: uuid.MustParse(ctx.Id)},
+		ModelName: "bot",
+		Status:    "running",
+	}
+	db.DB.Create(&pipeline)
 	go func() {
 		log.Println("Running bot pipeline...")
 		err := runner(&ctx, tasks, force)
 		if err != nil {
 			log.Println("Failed to run bot pipeline: ", err.Error())
+			pipeline.Status = "failed"
+			pipeline.ErrMsg = err.Error()
+		} else {
+			log.Println("Bot pipeline run successfully")
+			pipeline.Status = "success"
 		}
-		log.Println("Bot pipeline run successfully")
+		db.DB.Save(&pipeline)
 	}()
 	return ctx
 }

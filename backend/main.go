@@ -18,7 +18,7 @@ import (
 
 func main() {
 	// 初始化数据库
-	err := db.DB.AutoMigrate(&model.Nep{}, &model.Release{}, &model.Storage{}, &model.Ept{})
+	err := db.DB.AutoMigrate(&model.Nep{}, &model.Release{}, &model.Storage{}, &model.Ept{}, &model.Pipeline{})
 	if err != nil {
 		log.Fatalf("Failed to migrate nep table: %v", err)
 	}
