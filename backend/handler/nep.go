@@ -43,7 +43,7 @@ func GetNeps(c *gin.Context) {
 func GetReleases(c *gin.Context) {
 	scope := c.Param("scope")
 	name := c.Param("name")
-	releases, err := service.GetReleases(scope, name)
+	releases, err := service.GetSuccessReleases(scope, name)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, vo.BaseResponse[any]{
 			Code: 500,
