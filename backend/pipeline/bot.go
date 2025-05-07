@@ -7,6 +7,7 @@ import (
 	"nlm/db"
 	"nlm/model"
 	"nlm/service"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -83,6 +84,7 @@ func RunBotPipeline(tasks []string, force bool) context.PipelineContext {
 			log.Println("Bot pipeline run successfully")
 			pipeline.Status = "success"
 		}
+		pipeline.FinishedAt = time.Now()
 		db.DB.Save(&pipeline)
 	}()
 	return ctx

@@ -101,6 +101,7 @@ func RunEptPipeline() context.PipelineContext {
 			log.Println("Ept pipeline run successfully")
 			pipeline.Status = "success"
 		}
+		pipeline.FinishedAt = time.Now()
 		db.DB.Save(&pipeline)
 	}()
 	return ctx
