@@ -43,6 +43,9 @@ func runner(ctx *context.PipelineContext, tasks []string, force bool) error {
 		}
 		log.Println("Qa prepared successfully with", len(botBuilds), "packages")
 
+		// 更新数据库的流水线状态
+		db.DB.Model(&model.Pipeline{}).Where("id = ?", ctx.Id).Update("stage", "qa")
+
 		// 运行 qa
 		log.Println("Running qa...")
 		_, err = service.QaRun(ctx, botBuilds)
@@ -66,6 +69,7 @@ func RunBotPipeline(tasks []string, force bool) context.PipelineContext {
 		Base:      model.Base{ID: uuid.MustParse(ctx.Id)},
 		ModelName: "bot",
 		Status:    "running",
+		Stage:     "bot",
 	}
 	db.DB.Create(&pipeline)
 	go func() {

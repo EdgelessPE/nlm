@@ -9,4 +9,5 @@ type Pipeline struct {
 	// running, success, failed
 	Status string
 	ErrMsg string
+	Stage  string
 }
