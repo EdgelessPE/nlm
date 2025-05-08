@@ -152,6 +152,8 @@ func BotRun(ctx *context.PipelineContext, tasks []string, force bool) ([]model.R
 
 	// 删除 builds 目录
 	os.RemoveAll(config.ENV.BOT_BUILDS_DIR)
+	// 删除结果文件
+	os.Remove(config.ENV.BOT_RESULT_FILE)
 
 	// 运行 bot
 	cmdSplit := strings.Split(config.ENV.BOT_RUN_CMD, " ")
