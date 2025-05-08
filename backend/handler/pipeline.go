@@ -49,3 +49,39 @@ func RunEptPipeline(c *gin.Context) {
 		Data: res,
 	})
 }
+
+func CancelBotPipeline(c *gin.Context) {
+	id := c.Param("id")
+	err := pipeline.CancelBotPipeline(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, vo.BaseResponse[any]{
+			Code: 400,
+			Msg:  "Failed to cancel bot pipeline: " + err.Error(),
+			Data: nil,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, vo.BaseResponse[any]{
+		Code: 0,
+		Msg:  "Bot pipeline canceled successfully",
+		Data: id,
+	})
+}
+
+func CancelEptPipeline(c *gin.Context) {
+	id := c.Param("id")
+	err := pipeline.CancelEptPipeline(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, vo.BaseResponse[any]{
+			Code: 400,
+			Msg:  "Failed to cancel ept pipeline: " + err.Error(),
+			Data: nil,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, vo.BaseResponse[any]{
+		Code: 0,
+		Msg:  "Ept pipeline canceled successfully",
+		Data: id,
+	})
+}

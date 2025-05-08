@@ -1,6 +1,7 @@
 package pipeline
 
 import (
+	"errors"
 	"log"
 	"nlm/context"
 	"nlm/db"
@@ -120,4 +121,17 @@ func RunEptPipeline() PipelineCreateResult {
 		PipelineContext: ctx,
 		IsNewPipeline:   true,
 	}
+}
+
+func CancelEptPipeline(id string) error {
+	if pipelineCtxEpt == nil {
+		return errors.New("no ept pipeline running")
+	}
+	if pipelineCtxEpt.Id != id {
+		return errors.New("pipeline id not match")
+	}
+	pipelineCtxEpt.Cancel()
+	pipelineCtxEpt = nil
+	db.DB.Model(&model.Pipeline{}).Where("id = ?", id).Update("status", "canceled")
+	return nil
 }

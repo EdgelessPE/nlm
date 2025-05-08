@@ -8,12 +8,15 @@ import (
 
 type PipelineContext struct {
 	context.Context
-	Id string
+	Id     string
+	Cancel context.CancelFunc
 }
 
 func NewPipelineContext() PipelineContext {
+	ctx, cancel := context.WithCancel(context.Background())
 	return PipelineContext{
-		Context: context.Background(),
+		Context: ctx,
 		Id:      uuid.New().String(),
+		Cancel:  cancel,
 	}
 }

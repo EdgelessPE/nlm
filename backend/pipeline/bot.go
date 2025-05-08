@@ -2,6 +2,7 @@ package pipeline
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"nlm/context"
 	"nlm/db"
@@ -103,4 +104,17 @@ func RunBotPipeline(tasks []string, force bool) PipelineCreateResult {
 		PipelineContext: ctx,
 		IsNewPipeline:   true,
 	}
+}
+
+func CancelBotPipeline(id string) error {
+	if pipelineCtxBot == nil {
+		return errors.New("no bot pipeline running")
+	}
+	if pipelineCtxBot.Id != id {
+		return errors.New("pipeline id not match")
+	}
+	pipelineCtxBot.Cancel()
+	pipelineCtxBot = nil
+	db.DB.Model(&model.Pipeline{}).Where("id = ?", id).Update("status", "canceled")
+	return nil
 }
