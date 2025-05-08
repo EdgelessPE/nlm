@@ -12,6 +12,8 @@ import (
 	"github.com/google/uuid"
 )
 
+var pipelineCtxBot *context.PipelineContext
+
 func runner(ctx *context.PipelineContext, tasks []string, force bool) error {
 	// 生成 bot 数据库
 	log.Println("Generating bot database...")
@@ -64,8 +66,17 @@ func runner(ctx *context.PipelineContext, tasks []string, force bool) error {
 	return nil
 }
 
-func RunBotPipeline(tasks []string, force bool) context.PipelineContext {
+func RunBotPipeline(tasks []string, force bool) PipelineCreateResult {
+	if pipelineCtxBot != nil {
+		log.Printf("Pipeline %s already running", pipelineCtxBot.Id)
+		return PipelineCreateResult{
+			PipelineContext: *pipelineCtxBot,
+			IsNewPipeline:   false,
+		}
+	}
+
 	ctx := context.NewPipelineContext()
+	pipelineCtxBot = &ctx
 	pipeline := model.Pipeline{
 		Base:      model.Base{ID: uuid.MustParse(ctx.Id)},
 		ModelName: "bot",
@@ -86,6 +97,10 @@ func RunBotPipeline(tasks []string, force bool) context.PipelineContext {
 		}
 		pipeline.FinishedAt = time.Now()
 		db.DB.Save(&pipeline)
+		pipelineCtxBot = nil
 	}()
-	return ctx
+	return PipelineCreateResult{
+		PipelineContext: ctx,
+		IsNewPipeline:   true,
+	}
 }

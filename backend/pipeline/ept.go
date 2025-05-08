@@ -15,6 +15,8 @@ import (
 	"github.com/google/uuid"
 )
 
+var pipelineCtxEpt *context.PipelineContext
+
 func runEpt(ctx *context.PipelineContext) error {
 	// 等待 10 秒
 	time.Sleep(10 * time.Second)
@@ -82,8 +84,17 @@ func runEpt(ctx *context.PipelineContext) error {
 	return nil
 }
 
-func RunEptPipeline() context.PipelineContext {
+func RunEptPipeline() PipelineCreateResult {
+	if pipelineCtxEpt != nil {
+		log.Printf("Pipeline %s already running", pipelineCtxEpt.Id)
+		return PipelineCreateResult{
+			PipelineContext: *pipelineCtxEpt,
+			IsNewPipeline:   false,
+		}
+	}
+
 	ctx := context.NewPipelineContext()
+	pipelineCtxEpt = &ctx
 	pipeline := model.Pipeline{
 		Base:      model.Base{ID: uuid.MustParse(ctx.Id)},
 		ModelName: "ept",
@@ -103,6 +114,10 @@ func RunEptPipeline() context.PipelineContext {
 		}
 		pipeline.FinishedAt = time.Now()
 		db.DB.Save(&pipeline)
+		pipelineCtxEpt = nil
 	}()
-	return ctx
+	return PipelineCreateResult{
+		PipelineContext: ctx,
+		IsNewPipeline:   true,
+	}
 }

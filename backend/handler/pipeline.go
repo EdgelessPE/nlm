@@ -27,25 +27,25 @@ func RunBotPipeline(c *gin.Context) {
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, vo.BaseResponse[any]{
 			Code: 400,
-			Msg:  "Invalid request",
+			Msg:  "Invalid request: " + err.Error(),
 			Data: nil,
 		})
 		return
 	}
 
-	ctx := pipeline.RunBotPipeline(req.Tasks, req.Force)
+	res := pipeline.RunBotPipeline(req.Tasks, req.Force)
 	c.JSON(http.StatusOK, vo.BaseResponse[any]{
 		Code: 0,
 		Msg:  "Bot pipeline run successfully",
-		Data: ctx.Id,
+		Data: res,
 	})
 }
 
 func RunEptPipeline(c *gin.Context) {
-	ctx := pipeline.RunEptPipeline()
+	res := pipeline.RunEptPipeline()
 	c.JSON(http.StatusOK, vo.BaseResponse[any]{
 		Code: 0,
 		Msg:  "Ept pipeline run successfully",
-		Data: ctx.Id,
+		Data: res,
 	})
 }
