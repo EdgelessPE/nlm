@@ -20,6 +20,11 @@ func RegisterPipelineRoutes(r *gin.RouterGroup) {
 	run := pipeline.Group("/run")
 	run.POST("/bot", RunBotPipeline)
 	run.POST("/ept", RunEptPipeline)
+
+	// 取消 pipeline
+	cancel := pipeline.Group("/cancel")
+	cancel.DELETE("/bot/:id", CancelBotPipeline)
+	cancel.DELETE("/ept/:id", CancelEptPipeline)
 }
 
 func RunBotPipeline(c *gin.Context) {
@@ -37,7 +42,10 @@ func RunBotPipeline(c *gin.Context) {
 	c.JSON(http.StatusOK, vo.BaseResponse[any]{
 		Code: 0,
 		Msg:  "Bot pipeline run successfully",
-		Data: res,
+		Data: map[string]any{
+			"id":            res.PipelineContext.Id,
+			"isNewPipeline": res.IsNewPipeline,
+		},
 	})
 }
 
@@ -46,7 +54,10 @@ func RunEptPipeline(c *gin.Context) {
 	c.JSON(http.StatusOK, vo.BaseResponse[any]{
 		Code: 0,
 		Msg:  "Ept pipeline run successfully",
-		Data: res,
+		Data: map[string]any{
+			"id":            res.PipelineContext.Id,
+			"isNewPipeline": res.IsNewPipeline,
+		},
 	})
 }
 
