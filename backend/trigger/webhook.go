@@ -12,8 +12,8 @@ func TriggerWebhook(event string) (string, error) {
 	case "ping":
 		return "pong", nil
 	case "release":
-		ctx := pipeline.RunEptPipeline()
-		return ctx.Id, nil
+		res := pipeline.RunEptPipeline()
+		return res.PipelineContext.Id, nil
 	default:
 		return "", fmt.Errorf("invalid webhook event: %s", event)
 	}
