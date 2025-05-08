@@ -39,26 +39,35 @@ func RunBotPipeline(c *gin.Context) {
 	}
 
 	res := pipeline.RunBotPipeline(req.Tasks, req.Force)
-	c.JSON(http.StatusOK, vo.BaseResponse[any]{
-		Code: 0,
-		Msg:  "Bot pipeline run successfully",
-		Data: map[string]any{
-			"id":            res.PipelineContext.Id,
-			"isNewPipeline": res.IsNewPipeline,
-		},
-	})
+	if res.IsNewPipeline {
+		c.JSON(http.StatusOK, vo.BaseResponse[any]{
+			Code: 0,
+			Msg:  "Bot pipeline run successfully",
+			Data: res.PipelineContext.Id,
+		})
+	} else {
+		c.JSON(http.StatusOK, vo.BaseResponse[any]{
+			Code: 400,
+			Msg:  "Bot pipeline already running",
+			Data: res.PipelineContext.Id,
+		})
+	}
 }
-
 func RunEptPipeline(c *gin.Context) {
 	res := pipeline.RunEptPipeline()
-	c.JSON(http.StatusOK, vo.BaseResponse[any]{
-		Code: 0,
-		Msg:  "Ept pipeline run successfully",
-		Data: map[string]any{
-			"id":            res.PipelineContext.Id,
-			"isNewPipeline": res.IsNewPipeline,
-		},
-	})
+	if res.IsNewPipeline {
+		c.JSON(http.StatusOK, vo.BaseResponse[any]{
+			Code: 0,
+			Msg:  "Ept pipeline run successfully",
+			Data: res.PipelineContext.Id,
+		})
+	} else {
+		c.JSON(http.StatusOK, vo.BaseResponse[any]{
+			Code: 400,
+			Msg:  "Ept pipeline already running",
+			Data: res.PipelineContext.Id,
+		})
+	}
 }
 
 func CancelBotPipeline(c *gin.Context) {
