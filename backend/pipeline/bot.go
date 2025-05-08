@@ -115,6 +115,9 @@ func CancelBotPipeline(id string) error {
 	}
 	pipelineCtxBot.Cancel()
 	pipelineCtxBot = nil
-	db.DB.Model(&model.Pipeline{}).Where("id = ?", id).Update("status", "canceled")
+	go func() {
+		time.Sleep(3 * time.Second)
+		db.DB.Model(&model.Pipeline{}).Where("id = ?", id).Update("status", "canceled")
+	}()
 	return nil
 }

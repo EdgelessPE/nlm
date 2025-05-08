@@ -132,6 +132,9 @@ func CancelEptPipeline(id string) error {
 	}
 	pipelineCtxEpt.Cancel()
 	pipelineCtxEpt = nil
-	db.DB.Model(&model.Pipeline{}).Where("id = ?", id).Update("status", "canceled")
+	go func() {
+		time.Sleep(3 * time.Second)
+		db.DB.Model(&model.Pipeline{}).Where("id = ?", id).Update("status", "canceled")
+	}()
 	return nil
 }
