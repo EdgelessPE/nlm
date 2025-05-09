@@ -217,6 +217,7 @@ func BotRun(ctx *context.PipelineContext, tasks []string, force bool) ([]model.R
 			NepId:        nep.ID.String(),
 			PipelineId:   ctx.Id,
 			IsBotSuccess: false,
+			BotErrMsg:    node.ErrorMessage,
 		})
 	}
 

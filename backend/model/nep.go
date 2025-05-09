@@ -28,7 +28,8 @@ type Release struct {
 	PipelineId string `gorm:"index"`
 
 	IsBotSuccess bool `gorm:"default:false"`
-	IsQaSuccess  bool `gorm:"default:false"`
+	BotErrMsg    string
 
+	IsQaSuccess        bool `gorm:"default:false"`
 	QaResultStorageKey string
 }
