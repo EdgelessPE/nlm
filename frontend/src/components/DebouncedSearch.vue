@@ -2,6 +2,11 @@
   <IconField>
     <InputIcon :class="icon" />
     <InputText v-model="innerModel" :placeholder="placeholder" class="w-full" />
+    <InputIcon
+      v-if="innerModel"
+      class="pi pi-times-circle"
+      @click="outerModel = undefined"
+    />
   </IconField>
 </template>
 
