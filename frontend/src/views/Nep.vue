@@ -4,12 +4,13 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { GetNeps } from "@/api/nep";
+<script setup lang="tsx">
+import { GetNeps, Nep } from "@/api/nep";
 import Table from "@/components/table/index.vue";
 import { useTableData } from "@/components/table/useTableData.tsx";
 import { renderDate } from "@/components/table/renders";
-const bindProps = useTableData({
+import Button from "primevue/button";
+const bindProps = useTableData<Nep>({
   fetch: GetNeps,
   getColumns: () => [
     {
@@ -28,6 +29,20 @@ const bindProps = useTableData({
       label: "Updated At",
       field: "UpdatedAt",
       render: renderDate,
+    },
+    {
+      label: "Actions",
+      field: "actions",
+      render: ({ data }) => (
+        <div>
+          <Button
+            label="View Builds"
+            variant="text"
+            size="small"
+            onClick={() => console.log(data)}
+          />
+        </div>
+      ),
     },
   ],
 });

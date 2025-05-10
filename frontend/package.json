@@ -46,7 +46,7 @@
     "pre-commit": "npx lint-staged"
   },
   "lint-staged": {
-    "*.{js,ts,vue}": "eslint --fix"
+    "*.{json,ts,tsx,vue}": "eslint --fix"
   },
   "packageManager": "pnpm@10.10.0"
 }

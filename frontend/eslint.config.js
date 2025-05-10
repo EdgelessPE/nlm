@@ -8,12 +8,12 @@ import eslintConfigPrettier from "eslint-config-prettier/flat";
 
 export default defineConfig([
   {
-    files: ["**/*.{js,mjs,cjs,ts,vue}"],
+    files: ["**/*.{js,mjs,cjs,ts,tsx,vue}"],
     plugins: { js },
     extends: ["js/recommended"],
   },
   {
-    files: ["**/*.{js,mjs,cjs,ts,vue}"],
+    files: ["**/*.{js,mjs,cjs,ts,tsx,vue}"],
     languageOptions: { globals: globals.browser },
   },
   tseslint.configs.recommended,

@@ -9,7 +9,7 @@ export type TableColumnRenderContext<IData = any> = {
 
 export type TableColumn<IData = any> = {
   label: string;
-  field: Exclude<keyof IData, symbol | number>;
+  field: Exclude<keyof IData, symbol | number> | "actions";
   render?: (ctx: TableColumnRenderContext<IData>) => VNodeChild;
 };
 
