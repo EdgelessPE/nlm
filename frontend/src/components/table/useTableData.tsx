@@ -13,7 +13,7 @@ export function useTableData<T>(
   const total = ref(1);
   const pagination = ref<TablePaginationParams>({
     offset: 0,
-    limit: 10,
+    limit: 20,
   });
   const onPageChange = (val: { page: number; rows: number }) => {
     pagination.value.offset = val.page * val.rows;

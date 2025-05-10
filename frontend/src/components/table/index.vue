@@ -11,7 +11,7 @@
       v-bind="tableProps"
       scrollable
       :scrollHeight="tableHeight"
-      paginatorTemplate="CurrentPageReport PrevPageLink PageLinks NextPageLink RowsPerPageDropdown"
+      paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink JumpToPageInput RowsPerPageDropdown"
       currentPageReportTemplate="Total {totalRecords}"
       @page="onPageChange"
     >
