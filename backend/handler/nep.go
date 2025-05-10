@@ -24,7 +24,7 @@ func GetNeps(c *gin.Context) {
 		})
 		return
 	}
-	neps, err := service.GetNepsWithPagination(offset, limit, c.Query("q"))
+	neps, total, err := service.GetNepsWithPagination(offset, limit, c.Query("q"))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, vo.BaseResponse[any]{
 			Code: 500,
@@ -34,9 +34,10 @@ func GetNeps(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, vo.BaseResponse[any]{
-		Code: 0,
-		Msg:  "Success",
-		Data: neps,
+		Code:  0,
+		Msg:   "Success",
+		Data:  neps,
+		Total: total,
 	})
 }
 

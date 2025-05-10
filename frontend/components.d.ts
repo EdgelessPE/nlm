@@ -10,6 +10,8 @@ declare module 'vue' {
   export interface GlobalComponents {
     Avatar: typeof import('primevue/avatar')['default']
     Button: typeof import('primevue/button')['default']
+    Column: typeof import('primevue/column')['default']
+    DataTable: typeof import('primevue/datatable')['default']
     DebouncedSearch: typeof import('./src/components/DebouncedSearch.vue')['default']
     IconField: typeof import('primevue/iconfield')['default']
     InputIcon: typeof import('primevue/inputicon')['default']
@@ -17,6 +19,7 @@ declare module 'vue' {
     Menu: typeof import('primevue/menu')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Table: typeof import('./src/components/table/index.vue')['default']
     TieredMenu: typeof import('primevue/tieredmenu')['default']
   }
 }

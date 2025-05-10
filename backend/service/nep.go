@@ -40,14 +40,16 @@ func GetNeps() ([]model.Nep, error) {
 	return neps, nil
 }
 
-func GetNepsWithPagination(offset int, limit int, q string) ([]model.Nep, error) {
+func GetNepsWithPagination(offset int, limit int, q string) ([]model.Nep, int64, error) {
 	var neps []model.Nep
+	var total int64
 	tx := db.DB.Offset(offset).Limit(limit)
 	if q != "" {
 		tx = tx.Where("scope LIKE ? OR name LIKE ?", "%"+q+"%", "%"+q+"%")
 	}
 	tx.Find(&neps)
-	return neps, nil
+	db.DB.Model(&model.Nep{}).Count(&total)
+	return neps, total, nil
 }
 
 func GetSuccessReleases(scope string, name string) ([]model.Release, error) {
