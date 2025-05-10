@@ -6,7 +6,10 @@
       <img :src="Logo" class="w-32px h-32px" alt="logo" />
       <span>Nep Lifetime Management</span>
     </div>
-    <Button icon="pi pi-sun" size="small" @click="toggleDark()"> </Button>
+    <div class="flex items-center gap-8px">
+      <Button icon="pi pi-sun" size="small" @click="toggleDark()"> </Button>
+      <Button icon="pi pi-user" label="Login" size="small" />
+    </div>
   </div>
 </template>
 
