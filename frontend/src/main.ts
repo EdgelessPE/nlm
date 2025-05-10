@@ -4,6 +4,7 @@ import App from "./App.vue";
 import PrimeVue from "primevue/config";
 import Aura from "@primeuix/themes/aura";
 import { definePreset } from "@primeuix/themes";
+import "virtual:uno.css";
 
 const Noir = definePreset(Aura, {
   semantic: {
