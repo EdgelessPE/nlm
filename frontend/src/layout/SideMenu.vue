@@ -8,7 +8,13 @@
           :to="item.route"
           custom
         >
-          <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+          <a
+            v-ripple
+            :href="href"
+            v-bind="props.action"
+            @click="navigate"
+            :class="curPath === item.route ? 'menu-item__active' : ''"
+          >
             <span :class="item.icon" />
             <span class="ml-2">{{ item.label }}</span>
           </a>
@@ -19,8 +25,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import type { MenuItem } from "primevue/menuitem";
+import { useRoute } from "vue-router";
 
 const items = ref<MenuItem[]>([
   {
@@ -49,4 +56,13 @@ const items = ref<MenuItem[]>([
     route: "/storage",
   },
 ]);
+const route = useRoute();
+const curPath = computed(() => route.path);
 </script>
+
+<style scoped lang="less">
+.menu-item__active {
+  @apply rounded-4px;
+  background: var(--p-menu-item-focus-background);
+}
+</style>
