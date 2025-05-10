@@ -1,3 +1,3 @@
 <template>
-  <router-view />
+  <router-view class="p-8px" />
 </template>

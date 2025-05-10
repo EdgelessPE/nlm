@@ -1,7 +1,7 @@
 import type { BaseResponse } from "@/api/type";
 import type { AxiosResponse } from "axios";
 import type { Ref, VNodeChild } from "vue";
-
+import type { DataTableProps } from "primevue/datatable";
 export type TableColumnRenderContext<IData = any> = {
   val: any;
   data: IData;
@@ -24,6 +24,7 @@ export interface UseTableDataProps<IData = any, IFilter = any> {
     params: TablePaginationParams & IFilter,
   ) => Promise<AxiosResponse<BaseResponse<IData[]>>>;
   getColumns: (ctx: { refresh: () => void }) => TableColumn<IData>[];
+  tableProps?: DataTableProps;
 }
 
 export interface UseTableDataReturn<IData = any> {
@@ -33,4 +34,5 @@ export interface UseTableDataReturn<IData = any> {
   pagination: Ref<TablePaginationParams>;
   total: Ref<number>;
   onPageChange: (val: { page: number; rows: number }) => void;
+  tableProps?: DataTableProps;
 }

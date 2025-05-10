@@ -14,7 +14,7 @@ import Content from "./layout/Content.vue";
 
 <style scoped lang="less">
 .layout {
-  @apply h-full grid gap-x-8px gap-y-4px;
+  @apply w-full h-full grid gap-x-8px gap-y-4px;
 
   grid-template-columns: 280px 1fr;
   grid-template-rows: 64px 1fr;
@@ -30,6 +30,7 @@ import Content from "./layout/Content.vue";
   }
   .content {
     grid-area: content;
+    overflow-y: auto;
   }
 }
 </style>
