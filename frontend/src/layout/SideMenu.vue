@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col p-8px">
-    <Menu :model="items">
+    <Menu :model="items" class="h-full">
       <template #item="{ item, props }">
         <router-link
           v-if="item.route"
