@@ -20,14 +20,9 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import type { MenuItem } from "primevue/menuitem";
 
-const items = ref<
-  {
-    label: string;
-    icon: string;
-    route: string;
-  }[]
->([
+const items = ref<MenuItem[]>([
   {
     label: "Home",
     icon: "pi pi-home",

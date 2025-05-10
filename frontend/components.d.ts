@@ -8,9 +8,11 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Avatar: typeof import('primevue/avatar')['default']
     Button: typeof import('primevue/button')['default']
     Menu: typeof import('primevue/menu')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TieredMenu: typeof import('primevue/tieredmenu')['default']
   }
 }
