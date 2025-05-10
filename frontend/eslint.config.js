@@ -20,7 +20,15 @@ export default defineConfig([
   pluginVue.configs["flat/essential"],
   {
     files: ["**/*.vue"],
-    languageOptions: { parserOptions: { parser: tseslint.parser } },
+    languageOptions: {
+      parserOptions: {
+        parser: tseslint.parser,
+        ecmaVersion: 2020,
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
   },
   eslintConfigPrettier,
   eslintPluginPrettierRecommended,

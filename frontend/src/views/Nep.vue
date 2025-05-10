@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="tsx">
-import { GetNeps, Nep } from "@/api/nep";
+import { GetNeps, type Nep } from "@/api/nep";
 import Table from "@/components/table/index.vue";
 import { useTableData } from "@/components/table/useTableData.tsx";
 import { renderDate } from "@/components/table/renders";
