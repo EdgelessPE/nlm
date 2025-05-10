@@ -62,7 +62,7 @@ createApp(App)
     theme: {
       preset: Noir,
       options: {
-        darkModeSelector: "system",
+        darkModeSelector: ".dark",
       },
     },
   })
