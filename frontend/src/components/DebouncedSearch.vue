@@ -10,7 +10,7 @@ import { ref, watch } from "vue";
 import { useDebounceFn } from "@vueuse/core";
 
 const outerModel = defineModel<string>();
-const innerModel = ref("");
+const innerModel = ref<string>();
 const props = withDefaults(
   defineProps<{
     placeholder?: string;
@@ -24,9 +24,12 @@ const props = withDefaults(
   },
 );
 
-const debouncedInput = useDebounceFn((value: string) => {
+const debouncedInput = useDebounceFn((value?: string) => {
   outerModel.value = value;
 }, props.debounce);
 
 watch(innerModel, debouncedInput);
+watch(outerModel, (val) => {
+  innerModel.value = val;
+});
 </script>

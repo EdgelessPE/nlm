@@ -27,6 +27,9 @@ const bindProps = useTableData<Nep>({
     {
       label: "Scope",
       field: "Scope",
+      render: ({ val }) => (
+        <Button variant="link" label={val} onClick={() => (q.value = val)} />
+      ),
     },
     {
       label: "Name",
@@ -45,7 +48,13 @@ const bindProps = useTableData<Nep>({
       label: "Actions",
       field: "actions",
       render: ({ data }) => (
-        <div>
+        <div class="flex gap-4px">
+          <Button
+            label="Install"
+            variant="text"
+            size="small"
+            onClick={() => console.log(data)}
+          />
           <Button
             label="View Builds"
             variant="text"
