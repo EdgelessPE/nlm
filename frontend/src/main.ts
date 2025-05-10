@@ -3,6 +3,8 @@ import App from "./App.vue";
 import PrimeVue from "primevue/config";
 import Aura from "@primeuix/themes/aura";
 import { definePreset } from "@primeuix/themes";
+import "primeicons/primeicons.css";
+import "./global.less";
 import "virtual:uno.css";
 import router from "./router";
 
