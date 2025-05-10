@@ -30,7 +30,7 @@ import Content from "./layout/Content.vue";
   }
   .content {
     grid-area: content;
-    overflow-y: auto;
+    overflow-y: hidden;
   }
 }
 </style>
