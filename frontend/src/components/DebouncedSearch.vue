@@ -1,9 +1,9 @@
 <template>
-  <IconField>
+  <IconField ref="inputRef">
     <InputIcon :class="icon" />
     <InputText v-model="innerModel" :placeholder="placeholder" class="w-full" />
     <InputIcon
-      v-if="innerModel"
+      v-if="innerModel && isHoverInput"
       class="pi pi-times-circle"
       @click="outerModel = undefined"
     />
@@ -11,11 +11,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { useDebounceFn } from "@vueuse/core";
+import { ref, useTemplateRef, watch } from "vue";
+import { useDebounceFn, useElementHover } from "@vueuse/core";
 
 const outerModel = defineModel<string>();
 const innerModel = ref<string>();
+
 const props = withDefaults(
   defineProps<{
     placeholder?: string;
@@ -37,4 +38,7 @@ watch(innerModel, debouncedInput);
 watch(outerModel, (val) => {
   innerModel.value = val;
 });
+
+const inputRef = useTemplateRef<HTMLInputElement>("inputRef");
+const isHoverInput = useElementHover(inputRef);
 </script>
