@@ -18,13 +18,16 @@ export interface TablePaginationParams {
   limit: number;
 }
 
+type TablePropsEnhanced = DataTableProps & {
+  slotHeight?: number;
+};
 export interface UseTableDataProps<IData = any, IFilter = any> {
   query?: Ref<IFilter>;
   fetch: (
     params: TablePaginationParams & IFilter,
   ) => Promise<AxiosResponse<BaseResponse<IData[]>>>;
   getColumns: (ctx: { refresh: () => void }) => TableColumn<IData>[];
-  tableProps?: DataTableProps;
+  tableProps?: TablePropsEnhanced;
 }
 
 export interface UseTableDataReturn<IData = any> {
@@ -34,5 +37,5 @@ export interface UseTableDataReturn<IData = any> {
   pagination: Ref<TablePaginationParams>;
   total: Ref<number>;
   onPageChange: (val: { page: number; rows: number }) => void;
-  tableProps?: DataTableProps;
+  tableProps?: TablePropsEnhanced;
 }

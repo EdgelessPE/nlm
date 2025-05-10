@@ -29,6 +29,10 @@
           />
         </template>
       </Column>
+      <!-- vue-ignore -->
+      <template v-for="(_, name) in $slots" :key="name" #[name]="data">
+        <slot :name="name" v-bind="data ?? {}" />
+      </template>
     </DataTable>
   </div>
 </template>
@@ -38,13 +42,13 @@ import { computed, ref } from "vue";
 import { useElementSize } from "@vueuse/core";
 import type { UseTableDataReturn } from "./type";
 
-defineProps<UseTableDataReturn>();
+const props = defineProps<UseTableDataReturn>();
 
 const container = ref<HTMLDivElement>();
 
 const { height } = useElementSize(container);
 const tableHeight = computed(() => {
-  const n = height.value - 58;
+  const n = height.value - (props.tableProps?.slotHeight ?? 0) - 58;
   return `${n}px`;
 });
 </script>

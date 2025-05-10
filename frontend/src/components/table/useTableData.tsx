@@ -57,6 +57,7 @@ export function useTableData<T>(
     data,
     columns,
     pagination,
+    tableProps: props.tableProps,
 
     onPageChange,
   };

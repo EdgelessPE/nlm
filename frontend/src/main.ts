@@ -6,6 +6,7 @@ import { definePreset } from "@primeuix/themes";
 import "primeicons/primeicons.css";
 import "./global.less";
 import "virtual:uno.css";
+import Ripple from "primevue/ripple";
 import router from "./router";
 
 const Noir = definePreset(Aura, {
@@ -66,5 +67,6 @@ createApp(App)
       },
     },
   })
+  .directive("ripple", Ripple)
   .use(router)
   .mount("#app");
