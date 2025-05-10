@@ -4,6 +4,7 @@ import PrimeVue from "primevue/config";
 import Aura from "@primeuix/themes/aura";
 import { definePreset } from "@primeuix/themes";
 import "virtual:uno.css";
+import router from "./router";
 
 const Noir = definePreset(Aura, {
   semantic: {
@@ -63,4 +64,5 @@ createApp(App)
       },
     },
   })
+  .use(router)
   .mount("#app");

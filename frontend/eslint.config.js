@@ -24,4 +24,9 @@ export default defineConfig([
   },
   eslintConfigPrettier,
   eslintPluginPrettierRecommended,
+  {
+    rules: {
+      "vue/multi-word-component-names": "off",
+    },
+  },
 ]);
