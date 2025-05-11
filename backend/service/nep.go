@@ -56,19 +56,6 @@ func GetNeps(params vo.NepParams) ([]model.Nep, int64, error) {
 	return neps, total, nil
 }
 
-func GetSuccessReleases(scope string, name string) ([]model.Release, error) {
-	// 获取 Nep
-	n, err := GetNep(scope, name)
-	if err != nil {
-		return nil, err
-	}
-
-	// 获取 Releases
-	var releases []model.Release
-	db.DB.Where("nep_id = ? AND is_bot_success = true AND is_qa_success = true", n.ID.String()).Find(&releases)
-	return releases, nil
-}
-
 func GetRelease(scope string, name string, fileName string) (model.Release, error) {
 	n, err := GetNep(scope, name)
 	if err != nil {
@@ -82,14 +69,35 @@ func GetRelease(scope string, name string, fileName string) (model.Release, erro
 	return release, nil
 }
 
-func GetReleaseByVersion(scope string, name string, version string) ([]model.Release, error) {
-	n, err := GetNep(scope, name)
-	if err != nil {
-		return nil, err
-	}
+func GetReleases(params vo.ReleaseParams) ([]model.Release, int64, error) {
 	var releases []model.Release
-	db.DB.Where("nep_id = ? AND version = ?", n.ID.String(), version).Find(&releases)
-	return releases, nil
+	var total int64
+
+	tx := db.DB.Model(&model.Release{})
+	if params.Q != "" {
+		tx = tx.Where("file_name LIKE ?", "%"+params.Q+"%")
+	}
+	if params.Scope != "" && params.Name != "" {
+		n, err := GetNep(params.Scope, params.Name)
+		if err != nil {
+			return nil, 0, err
+		}
+		tx = tx.Where("nep_id = ?", n.ID.String())
+	}
+	if params.IsSuccess {
+		tx = tx.Where("is_bot_success = true AND is_qa_success = true")
+	}
+	if params.Version != "" {
+		tx = tx.Where("version = ?", params.Version)
+	}
+
+	tx.Count(&total)
+	if params.Offset >= 0 && params.Limit > 0 {
+		tx = tx.Offset(params.Offset).Limit(params.Limit)
+	}
+	tx.Find(&releases)
+
+	return releases, total, nil
 }
 
 func CleanOutdatedRelease() error {

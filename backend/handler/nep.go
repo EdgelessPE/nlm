@@ -11,7 +11,7 @@ import (
 func RegisterNepRoutes(r *gin.RouterGroup) {
 	nep := r.Group("/nep")
 	nep.GET("/neps", GetNeps)
-	nep.GET("/:scope/:name/releases", GetReleases)
+	nep.GET("/releases", GetReleases)
 }
 
 func GetNeps(c *gin.Context) {
@@ -42,9 +42,16 @@ func GetNeps(c *gin.Context) {
 }
 
 func GetReleases(c *gin.Context) {
-	scope := c.Param("scope")
-	name := c.Param("name")
-	releases, err := service.GetSuccessReleases(scope, name)
+	var params vo.ReleaseParams
+	if err := c.ShouldBindQuery(&params); err != nil {
+		c.JSON(http.StatusBadRequest, vo.BaseResponse[any]{
+			Code: 400,
+			Msg:  "Failed to bind query : " + err.Error(),
+			Data: nil,
+		})
+		return
+	}
+	releases, total, err := service.GetReleases(params)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, vo.BaseResponse[any]{
 			Code: 500,
@@ -54,8 +61,9 @@ func GetReleases(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, vo.BaseResponse[any]{
-		Code: 0,
-		Msg:  "Success",
-		Data: releases,
+		Code:  0,
+		Msg:   "Success",
+		Data:  releases,
+		Total: total,
 	})
 }

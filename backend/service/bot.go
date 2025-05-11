@@ -44,7 +44,12 @@ func BotGenerateDatabase() ([]model.Nep, error) {
 		}
 		record[nep.Scope+"_"+nep.Name] = node
 		// 找出所有最新版的 release，用 flags 再赋值一次
-		releases, err := GetReleaseByVersion(nep.Scope, nep.Name, nep.LatestReleaseVersion)
+		releases, _, err := GetReleases(vo.ReleaseParams{
+			Scope:     nep.Scope,
+			Name:      nep.Name,
+			Version:   nep.LatestReleaseVersion,
+			IsSuccess: true,
+		})
 		if err != nil {
 			return nil, err
 		}
@@ -126,7 +131,12 @@ func storeBuilds(ctx *context.PipelineContext, nep model.Nep, fileNames []string
 		// 判断上一个版本是否为新的大版本
 		if nep.LatestReleaseVersion != "" && utils.GetMajorVersion(nep.LatestReleaseVersion) != utils.GetMajorVersion(parsed.Version) {
 			log.Println("Marking ", parsed.Version, " as last major version for ", nep.Scope, "/", nep.Name)
-			releases, err := GetReleaseByVersion(nep.Scope, nep.Name, nep.LatestReleaseVersion)
+			releases, _, err := GetReleases(vo.ReleaseParams{
+				Scope:     nep.Scope,
+				Name:      nep.Name,
+				Version:   nep.LatestReleaseVersion,
+				IsSuccess: true,
+			})
 			if err != nil {
 				return nil, err
 			}
