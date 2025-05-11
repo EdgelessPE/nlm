@@ -5,7 +5,7 @@
         v-tooltip.top="action.label"
         variant="text"
         size="small"
-        @click="action.onClick(ctx.data)"
+        @click="action.onClick(ctx.data, $event)"
       >
         <template #icon>
           <component :is="action.icon" />

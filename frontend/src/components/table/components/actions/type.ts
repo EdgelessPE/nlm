@@ -4,5 +4,5 @@ export interface ActionNode<T = any> {
   key: string;
   label: string;
   icon: () => VNodeChild;
-  onClick: (data: T) => void;
+  onClick: (data: T, event: Event) => void;
 }

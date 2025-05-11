@@ -5,6 +5,22 @@
         <DebouncedSearch placeholder="Search scope or name" v-model="q" />
       </template>
     </Table>
+    <Popover ref="op">
+      <div class="flex items-center gap-2">
+        <code
+          class="bg-gray-100 dark:bg-gray-800 rounded px-2 py-1 font-mono text-sm"
+        >
+          {{ installCommand }}
+        </code>
+        <Button
+          :label="copied ? 'Copied!' : 'Copy'"
+          icon="pi pi-copy"
+          variant="text"
+          size="small"
+          @click="onCopy"
+        />
+      </div>
+    </Popover>
   </div>
 </template>
 
@@ -16,6 +32,8 @@ import { renderDate, renderActions } from "@/components/table/renders";
 import Button from "primevue/button";
 import DebouncedSearch from "@/components/DebouncedSearch.vue";
 import { computed, ref } from "vue";
+import Popover from "primevue/popover";
+import { useClipboard } from "@vueuse/core";
 
 const q = ref<string>();
 const bindProps = useTableData<Nep>({
@@ -52,7 +70,10 @@ const bindProps = useTableData<Nep>({
           key: "install",
           label: "Install",
           icon: () => <div class="pi pi-cloud-download" />,
-          onClick: (data) => console.log(data),
+          onClick: (data, event) => {
+            installData.value = data;
+            togglePopover(event);
+          },
         },
         {
           key: "view-builds",
@@ -67,4 +88,18 @@ const bindProps = useTableData<Nep>({
     slotHeight: 67,
   },
 });
+
+const op = ref<InstanceType<typeof Popover>>();
+const installData = ref<Nep>();
+const togglePopover = (event: Event) => {
+  op.value?.toggle(event);
+};
+
+const installCommand = computed(
+  () => `ept i "${installData.value?.Scope}/${installData.value?.Name}"`,
+);
+const { copy, copied } = useClipboard();
+const onCopy = () => {
+  copy(installCommand.value);
+};
 </script>
