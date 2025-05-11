@@ -7,18 +7,19 @@
     </Table>
     <Popover ref="op">
       <div class="flex items-center gap-2">
+        <Button
+          :label="copied ? 'Copied!' : 'Copy'"
+          variant="text"
+          size="small"
+          class="!py-1px"
+          @click="onCopy"
+        />
         <code
           class="bg-gray-100 dark:bg-gray-800 rounded px-2 py-1 font-mono text-sm"
         >
           {{ installCommand }}
         </code>
-        <Button
-          :label="copied ? 'Copied!' : 'Copy'"
-          icon="pi pi-copy"
-          variant="text"
-          size="small"
-          @click="onCopy"
-        />
+        <span>and run!</span>
       </div>
     </Popover>
   </div>
@@ -31,7 +32,7 @@ import { useTableData } from "@/components/table/useTableData.tsx";
 import { renderDate, renderActions } from "@/components/table/renders";
 import Button from "primevue/button";
 import DebouncedSearch from "@/components/DebouncedSearch.vue";
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 import Popover from "primevue/popover";
 import { useClipboard } from "@vueuse/core";
 
@@ -91,8 +92,10 @@ const bindProps = useTableData<Nep>({
 
 const op = ref<InstanceType<typeof Popover>>();
 const installData = ref<Nep>();
-const togglePopover = (event: Event) => {
-  op.value?.toggle(event);
+const togglePopover = async (event: Event) => {
+  op.value?.hide();
+  await nextTick();
+  op.value?.show(event);
 };
 
 const installCommand = computed(
