@@ -15,16 +15,16 @@ func RegisterNepRoutes(r *gin.RouterGroup) {
 }
 
 func GetNeps(c *gin.Context) {
-	offset, limit, err := GetOffsetAndLimit(c)
-	if err != nil {
+	var params vo.NepParams
+	if err := c.ShouldBindQuery(&params); err != nil {
 		c.JSON(http.StatusBadRequest, vo.BaseResponse[any]{
 			Code: 400,
-			Msg:  "Failed to get offset and limit : " + err.Error(),
+			Msg:  "Failed to bind query : " + err.Error(),
 			Data: nil,
 		})
 		return
 	}
-	neps, total, err := service.GetNepsWithPagination(offset, limit, c.Query("q"))
+	neps, total, err := service.GetNeps(params)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, vo.BaseResponse[any]{
 			Code: 500,

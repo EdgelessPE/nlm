@@ -14,7 +14,7 @@ var mirrorPkgSoftwareCache vo.MirrorPkgSoftware
 func generateMirrorPkgSoftware() (vo.MirrorPkgSoftware, error) {
 	tree := make(map[string][]vo.MirrorPkgSoftwareTreeItem)
 
-	neps, err := GetNeps()
+	neps, _, err := GetNeps(vo.NepParams{})
 	if err != nil {
 		return vo.MirrorPkgSoftware{}, err
 	}

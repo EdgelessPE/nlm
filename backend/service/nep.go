@@ -5,6 +5,7 @@ import (
 	"log"
 	"nlm/db"
 	"nlm/model"
+	"nlm/vo"
 	"time"
 
 	"github.com/google/uuid"
@@ -34,23 +35,22 @@ func GetNep(scope string, name string) (model.Nep, error) {
 	return nep, nil
 }
 
-func GetNeps() ([]model.Nep, error) {
-	var neps []model.Nep
-	db.DB.Find(&neps)
-	return neps, nil
-}
-
-func GetNepsWithPagination(offset int, limit int, q string) ([]model.Nep, int64, error) {
+func GetNeps(params vo.NepParams) ([]model.Nep, int64, error) {
 	var neps []model.Nep
 	var total int64
 
 	tx := db.DB.Model(&model.Nep{})
-	if q != "" {
-		tx = tx.Where("scope LIKE ? OR name LIKE ?", "%"+q+"%", "%"+q+"%")
+	if params.Q != "" {
+		tx = tx.Where("scope LIKE ? OR name LIKE ?", "%"+params.Q+"%", "%"+params.Q+"%")
 	}
-	tx.Count(&total)
+	if params.Scope != "" {
+		tx = tx.Where("scope = ?", params.Scope)
+	}
 
-	tx = tx.Offset(offset).Limit(limit)
+	tx.Count(&total)
+	if params.Offset >= 0 && params.Limit > 0 {
+		tx = tx.Offset(params.Offset).Limit(params.Limit)
+	}
 	tx.Find(&neps)
 
 	return neps, total, nil

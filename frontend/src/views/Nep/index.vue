@@ -22,6 +22,14 @@
         <span>and run!</span>
       </div>
     </Popover>
+    <ReleasesDrawer
+      :data="buildsData"
+      @update:visible="
+        (v:boolean) => {
+          if (!v) buildsData = null;
+        }
+      "
+    />
   </div>
 </template>
 
@@ -35,7 +43,7 @@ import DebouncedSearch from "@/components/DebouncedSearch.vue";
 import { computed, nextTick, ref } from "vue";
 import Popover from "primevue/popover";
 import { useClipboard } from "@vueuse/core";
-
+import ReleasesDrawer from "./ReleasesDrawer.vue";
 const q = ref<string>();
 const bindProps = useTableData<Nep>({
   fetch: GetNeps,
@@ -77,10 +85,12 @@ const bindProps = useTableData<Nep>({
           },
         },
         {
-          key: "view-builds",
-          label: "View Builds",
+          key: "view-releases",
+          label: "View Releases",
           icon: () => <div class="pi pi-eye" />,
-          onClick: (data) => console.log(data),
+          onClick: (data) => {
+            buildsData.value = data;
+          },
         },
       ]),
     },
@@ -92,6 +102,7 @@ const bindProps = useTableData<Nep>({
 
 const op = ref<InstanceType<typeof Popover>>();
 const installData = ref<Nep>();
+const buildsData = ref<Nep | null>(null);
 const togglePopover = async (event: Event) => {
   op.value?.hide();
   await nextTick();

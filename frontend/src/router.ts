@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "./views/Home.vue";
-import Nep from "./views/Nep.vue";
+import Nep from "./views/Nep/index.vue";
 import Ept from "./views/Ept.vue";
 import Pipeline from "./views/Pipeline.vue";
 import Storage from "./views/Storage.vue";
