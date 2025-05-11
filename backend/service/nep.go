@@ -84,8 +84,11 @@ func GetReleases(params vo.ReleaseParams) ([]model.Release, int64, error) {
 		}
 		tx = tx.Where("nep_id = ?", n.ID.String())
 	}
-	if params.IsSuccess {
-		tx = tx.Where("is_bot_success = true AND is_qa_success = true")
+	if params.IsBotSuccess {
+		tx = tx.Where("is_bot_success = true")
+	}
+	if params.IsQaSuccess {
+		tx = tx.Where("is_qa_success = true")
 	}
 	if params.Version != "" {
 		tx = tx.Where("version = ?", params.Version)

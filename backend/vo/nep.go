@@ -17,8 +17,9 @@ type ReleaseParams struct {
 	Sort   string `form:"sort"`
 	Order  string `form:"order"`
 
-	Scope     string `form:"scope"`
-	Name      string `form:"name"`
-	IsSuccess bool   `form:"is_success"`
-	Version   string `form:"version"`
+	Scope        string `form:"scope"`
+	Name         string `form:"name"`
+	IsBotSuccess bool   `form:"is_bot_success"`
+	IsQaSuccess  bool   `form:"is_qa_success"`
+	Version      string `form:"version"`
 }
