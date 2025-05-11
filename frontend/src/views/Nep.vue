@@ -12,7 +12,7 @@
 import { GetNeps, type Nep } from "@/api/nep";
 import Table from "@/components/table/index.vue";
 import { useTableData } from "@/components/table/useTableData.tsx";
-import { renderDate } from "@/components/table/renders";
+import { renderDate, renderActions } from "@/components/table/renders";
 import Button from "primevue/button";
 import DebouncedSearch from "@/components/DebouncedSearch.vue";
 import { computed, ref } from "vue";
@@ -42,27 +42,25 @@ const bindProps = useTableData<Nep>({
     {
       label: "Updated At",
       field: "UpdatedAt",
-      render: renderDate,
+      render: renderDate(),
     },
     {
       label: "Actions",
       field: "actions",
-      render: ({ data }) => (
-        <div class="flex gap-4px">
-          <Button
-            label="Install"
-            variant="text"
-            size="small"
-            onClick={() => console.log(data)}
-          />
-          <Button
-            label="View Builds"
-            variant="text"
-            size="small"
-            onClick={() => console.log(data)}
-          />
-        </div>
-      ),
+      render: renderActions([
+        {
+          key: "install",
+          label: "Install",
+          icon: () => <div class="pi pi-cloud-download" />,
+          onClick: (data) => console.log(data),
+        },
+        {
+          key: "view-builds",
+          label: "View Builds",
+          icon: () => <div class="pi pi-eye" />,
+          onClick: (data) => console.log(data),
+        },
+      ]),
     },
   ],
   tableProps: {

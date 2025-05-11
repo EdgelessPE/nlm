@@ -8,6 +8,7 @@ import "./global.less";
 import "virtual:uno.css";
 import Ripple from "primevue/ripple";
 import router from "./router";
+import Tooltip from "primevue/tooltip";
 
 const Noir = definePreset(Aura, {
   semantic: {
@@ -68,5 +69,6 @@ createApp(App)
     },
   })
   .directive("ripple", Ripple)
+  .directive("tooltip", Tooltip)
   .use(router)
   .mount("#app");
