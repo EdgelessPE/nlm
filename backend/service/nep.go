@@ -77,12 +77,8 @@ func GetReleases(params vo.ReleaseParams) ([]model.Release, int64, error) {
 	if params.Q != "" {
 		tx = tx.Where("file_name LIKE ?", "%"+params.Q+"%")
 	}
-	if params.Scope != "" && params.Name != "" {
-		n, err := GetNep(params.Scope, params.Name)
-		if err != nil {
-			return nil, 0, err
-		}
-		tx = tx.Where("nep_id = ?", n.ID.String())
+	if params.NepID != "" {
+		tx = tx.Where("nep_id = ?", params.NepID)
 	}
 	if params.IsBotSuccess {
 		tx = tx.Where("is_bot_success = true")

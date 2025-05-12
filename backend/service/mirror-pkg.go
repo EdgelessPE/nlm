@@ -22,8 +22,7 @@ func generateMirrorPkgSoftware() (vo.MirrorPkgSoftware, error) {
 	for _, nep := range neps {
 		// 获取 releases
 		releases, _, err := GetReleases(vo.ReleaseParams{
-			Scope:        nep.Scope,
-			Name:         nep.Name,
+			NepID:        nep.ID.String(),
 			IsBotSuccess: true,
 			IsQaSuccess:  true,
 		})

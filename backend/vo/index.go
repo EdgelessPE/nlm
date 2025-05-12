@@ -9,13 +9,13 @@ type BaseResponse[T any] struct {
 
 type BasicTableParams struct {
 	// 分页
-	Offset int `json:"offset"`
-	Limit  int `json:"limit"`
+	Offset int `form:"offset"`
+	Limit  int `form:"limit"`
 
 	// 搜索
-	Q string `json:"q"`
+	Q string `form:"q"`
 
 	// 排序
-	Sort  string `json:"sort"`
-	Order string `json:"order"`
+	Sort  string `form:"sort"`
+	Order string `form:"order"`
 }
