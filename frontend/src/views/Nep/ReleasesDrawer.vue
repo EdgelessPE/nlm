@@ -20,7 +20,6 @@
   </Drawer>
   <MetaViewDialog
     :release="metaDialogRelease"
-    :nep="data"
     @close="metaDialogRelease = null"
   />
 </template>
