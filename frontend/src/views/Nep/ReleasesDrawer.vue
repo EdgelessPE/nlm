@@ -19,7 +19,7 @@
     </Table>
   </Drawer>
   <MetaViewDialog
-    :data="metaDialogRelease"
+    :release="metaDialogRelease"
     :nep="data"
     @close="metaDialogRelease = null"
   />
@@ -86,14 +86,16 @@ const bindProps = useTableData({
     {
       label: "Meta",
       field: "Meta",
-      render: ({ val }) => {
-        return (
+      render: ({ val, data }) => {
+        return val ? (
           <Button
             label="View"
             variant="outlined"
             size="small"
-            onClick={() => (metaDialogRelease.value = val)}
+            onClick={() => (metaDialogRelease.value = data)}
           />
+        ) : (
+          "--"
         );
       },
     },
