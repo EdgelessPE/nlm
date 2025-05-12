@@ -41,7 +41,7 @@ func GetNeps(params vo.NepParams) ([]model.Nep, int64, error) {
 
 	tx := db.DB.Model(&model.Nep{})
 	if params.Q != "" {
-		tx = tx.Where("scope LIKE ? OR name LIKE ?", "%"+params.Q+"%", "%"+params.Q+"%")
+		tx = tx.Where("LOWER(scope) LIKE LOWER(?) OR LOWER(name) LIKE LOWER(?)", "%"+params.Q+"%", "%"+params.Q+"%")
 	}
 	if params.Scope != "" {
 		tx = tx.Where("scope = ?", params.Scope)

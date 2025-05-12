@@ -4,3 +4,11 @@ export interface BaseResponse<T> {
   data: T;
   total?: number;
 }
+
+export interface BasicTableParams {
+  offset?: number;
+  limit?: number;
+  q?: string;
+  sort?: string;
+  order?: string;
+}

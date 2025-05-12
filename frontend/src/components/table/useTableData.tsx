@@ -1,6 +1,6 @@
 import { computedAsync } from "@vueuse/core";
 import type {
-  TablePaginationParams,
+  TablePagination,
   UseTableDataProps,
   UseTableDataReturn,
 } from "./type";
@@ -11,7 +11,7 @@ export function useTableData<T>(
 ): UseTableDataReturn {
   const loading = ref(false);
   const total = ref(1);
-  const pagination = ref<TablePaginationParams>({
+  const pagination = ref<TablePagination>({
     offset: 0,
     limit: 20,
   });
@@ -27,10 +27,15 @@ export function useTableData<T>(
       refreshKey.value;
       const {
         data: { data, total: t },
-      } = await props.fetch({
+      } = (await props.fetch({
         ...pagination.value,
         ...props.query?.value,
-      });
+      })) ?? {
+        data: {
+          data: [],
+          total: 0,
+        },
+      };
       total.value = t ?? 1;
       return data;
     },

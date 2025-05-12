@@ -22,14 +22,7 @@
         <span>and run!</span>
       </div>
     </Popover>
-    <ReleasesDrawer
-      :data="buildsData"
-      @update:visible="
-        (v:boolean) => {
-          if (!v) buildsData = null;
-        }
-      "
-    />
+    <ReleasesDrawer :data="buildsData" @close="buildsData = null" />
   </div>
 </template>
 
