@@ -39,7 +39,7 @@ const md = computedAsync<string>(
     // 下载 zstd 压缩的 md 内容
     const response = await fetch(url, {
       method: "GET",
-      mode: "no-cors",
+      // mode: "no-cors",
     });
     const data = await response.arrayBuffer();
 
@@ -51,7 +51,9 @@ const md = computedAsync<string>(
     // 转换为字符串
     const str = new TextDecoder().decode(decompressed);
     // 转换为 markdown
-    return markdownIt().render(str);
+    return markdownIt({
+      html: true,
+    }).render(str);
   },
   "",
   { evaluating: loading },
