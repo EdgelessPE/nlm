@@ -43,6 +43,7 @@ import Badge from "primevue/badge";
 import { Button } from "primevue";
 import MetaViewDialog from "@/components/MetaViewDialog.vue";
 import QaReportViewDialog from "@/components/QaReportViewDialog.vue";
+import { GetStorageUrl } from "@/api/storage";
 const props = defineProps<{
   data: Nep | null;
 }>();
@@ -148,7 +149,13 @@ const bindProps = useTableData<Release>({
           key: "download",
           label: "Download",
           icon: () => <div class="pi pi-cloud-download" />,
-          onClick: () => {},
+          disabled: (data) => !data.StorageKey,
+          onClick: async (data) => {
+            const {
+              data: { data: url },
+            } = await GetStorageUrl(data.StorageKey);
+            window.open(url, "_blank");
+          },
         },
       ]),
     },
