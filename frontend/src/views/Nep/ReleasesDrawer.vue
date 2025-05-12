@@ -157,6 +157,14 @@ const bindProps = useTableData<Release>({
             window.open(url, "_blank");
           },
         },
+        {
+          key: "view-pipeline",
+          label: "View Pipeline",
+          icon: () => <div class="pi pi-truck" />,
+          onClick: async (data) => {
+            window.open(`/pipeline?id=${data.PipelineId}`, "_blank");
+          },
+        },
       ]),
     },
   ],

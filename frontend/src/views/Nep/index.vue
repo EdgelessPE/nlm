@@ -71,7 +71,7 @@ const bindProps = useTableData<Nep>({
         {
           key: "install",
           label: "Install",
-          icon: () => <div class="pi pi-cloud-download" />,
+          icon: () => <div class="pi pi-download" />,
           onClick: (data, event) => {
             installData.value = data;
             togglePopover(event);
