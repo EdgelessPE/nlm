@@ -22,6 +22,10 @@
     :release="metaDialogRelease"
     @close="metaDialogRelease = null"
   />
+  <QaReportViewDialog
+    :release="qaReportDialogRelease"
+    @close="qaReportDialogRelease = null"
+  />
 </template>
 
 <script setup lang="tsx">
@@ -30,6 +34,7 @@ import { GetReleases, type Nep, type Release } from "@/api/nep";
 import Drawer from "primevue/drawer";
 import { useTableData } from "@/components/table/useTableData";
 import {
+  renderActions,
   renderDate,
   renderFileSize,
   renderSuccess,
@@ -37,6 +42,7 @@ import {
 import Badge from "primevue/badge";
 import { Button } from "primevue";
 import MetaViewDialog from "@/components/MetaViewDialog.vue";
+import QaReportViewDialog from "@/components/QaReportViewDialog.vue";
 const props = defineProps<{
   data: Nep | null;
 }>();
@@ -45,7 +51,8 @@ defineEmits(["close"]);
 const visible = computed(() => props.data !== null);
 const q = ref("");
 const metaDialogRelease = ref<Release | null>(null);
-const bindProps = useTableData({
+const qaReportDialogRelease = ref<Release | null>(null);
+const bindProps = useTableData<Release>({
   query: computed(() => ({
     nep_id: props.data?.ID,
     q: q.value,
@@ -99,7 +106,7 @@ const bindProps = useTableData({
       },
     },
     {
-      label: "Is Bot Success",
+      label: "Bot Success",
       field: "IsBotSuccess",
       render: (ctx) => {
         return renderSuccess({
@@ -108,14 +115,42 @@ const bindProps = useTableData({
       },
     },
     {
-      label: "Is QA Success",
+      label: "QA Success",
       field: "IsQaSuccess",
       render: renderSuccess(),
+    },
+    {
+      label: "QA Report",
+      field: "QaResultStorageKey",
+      render: ({ val, data }) => {
+        return val ? (
+          <Button
+            label="View"
+            variant="outlined"
+            size="small"
+            onClick={() => (qaReportDialogRelease.value = data)}
+          />
+        ) : (
+          "--"
+        );
+      },
     },
     {
       label: "Created At",
       field: "CreatedAt",
       render: renderDate(),
+    },
+    {
+      label: "Actions",
+      field: "actions",
+      render: renderActions([
+        {
+          key: "download",
+          label: "Download",
+          icon: () => <div class="pi pi-cloud-download" />,
+          onClick: () => {},
+        },
+      ]),
     },
   ],
   fetch: async (params) => {

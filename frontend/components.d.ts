@@ -22,6 +22,7 @@ declare module 'vue' {
     InputText: typeof import('primevue/inputtext')['default']
     Menu: typeof import('primevue/menu')['default']
     MetaViewDialog: typeof import('./src/components/MetaViewDialog.vue')['default']
+    QaReportViewDialog: typeof import('./src/components/QaReportViewDialog.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Table: typeof import('./src/components/table/index.vue')['default']
