@@ -36,6 +36,7 @@ export default defineConfig([
     rules: {
       "vue/multi-word-component-names": "off",
       "@typescript-eslint/no-explicit-any": "warn",
+      "no-console": "warn",
     },
   },
 ]);

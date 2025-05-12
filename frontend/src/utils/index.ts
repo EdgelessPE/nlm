@@ -1,3 +1,5 @@
+import { ZSTDDecoder } from "zstddec";
+
 export function formatFileSize(size: number) {
   if (size < 1024) {
     return `${size} B`;
@@ -21,4 +23,10 @@ export function base64Decode(str: string) {
 
   const decoder = new TextDecoder("utf-8");
   return decoder.decode(byteArray);
+}
+
+export async function decodeZstd(raw: Uint8Array, size: number) {
+  const decoder = new ZSTDDecoder();
+  await decoder.init();
+  return decoder.decode(raw, size);
 }
