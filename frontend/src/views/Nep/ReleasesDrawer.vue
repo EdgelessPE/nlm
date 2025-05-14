@@ -63,6 +63,10 @@ const query = ref<IFilter>({});
 const metaDialogRelease = ref<Release | null>(null);
 const qaReportDialogRelease = ref<Release | null>(null);
 
+const versionQuery = computed(() => ({
+  id: props.data?.ID,
+}));
+
 const bindFilterProps = defineFilterProps<IFilter>({
   model: query,
   getConfig: (form) => [
@@ -82,11 +86,7 @@ const bindFilterProps = defineFilterProps<IFilter>({
           v-model={form.value.version}
           fetch={GetReleaseVersions}
           placeholder="Version"
-          query={computed(() => {
-            return {
-              id: props.data?.ID,
-            };
-          })}
+          query={versionQuery}
         />
       ),
     },
