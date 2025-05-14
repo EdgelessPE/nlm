@@ -80,6 +80,7 @@ const bindTableProps = defineTableProps<Nep>({
           onClick={() => (query.value.scope = val)}
         />
       ),
+      sortable: true,
     },
     {
       label: "Name",
@@ -93,6 +94,7 @@ const bindTableProps = defineTableProps<Nep>({
       label: "Updated At",
       field: "UpdatedAt",
       render: renderDate(),
+      sortable: true,
     },
     {
       label: "Actions",

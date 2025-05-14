@@ -1,23 +1,24 @@
 import { computedAsync } from "@vueuse/core";
 import type {
-  TablePagination,
+  TableRuntimeParams,
   UseTableDataProps,
   UseTableDataReturn,
 } from "./type";
 import { ref } from "vue";
+import type { DataTableSortEvent } from "primevue/datatable";
 
 export function defineTableProps<T>(
   props: UseTableDataProps<T>,
 ): UseTableDataReturn {
   const loading = ref(false);
   const total = ref(1);
-  const pagination = ref<TablePagination>({
+  const runtimeParams = ref<TableRuntimeParams>({
     offset: 0,
     limit: 20,
   });
   const onPageChange = (val: { page: number; rows: number }) => {
-    pagination.value.offset = val.page * val.rows;
-    pagination.value.limit = val.rows;
+    runtimeParams.value.offset = val.page * val.rows;
+    runtimeParams.value.limit = val.rows;
   };
 
   const refreshKey = ref(0);
@@ -28,7 +29,7 @@ export function defineTableProps<T>(
       const {
         data: { data, total: t },
       } = (await props.fetch({
-        ...pagination.value,
+        ...runtimeParams.value,
         ...props.query?.value,
       })) ?? {
         data: {
@@ -56,14 +57,25 @@ export function defineTableProps<T>(
       render: column.render ?? (({ val }) => <span>{val || "--"}</span>),
     }));
 
+  const onSort = (e: DataTableSortEvent) => {
+    runtimeParams.value.offset = 0;
+    if (e.sortField) {
+      runtimeParams.value.sort = e.sortOrder || undefined;
+      runtimeParams.value.sortBy = e.sortField as string;
+    } else {
+      runtimeParams.value.sort = undefined;
+      runtimeParams.value.sortBy = undefined;
+    }
+  };
+
   return {
     total,
     loading,
     data,
     columns,
-    pagination,
+    runtimeParams,
     tableProps: props.tableProps,
-
+    onSort,
     onPageChange,
   };
 }

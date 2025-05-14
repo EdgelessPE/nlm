@@ -9,6 +9,6 @@ export interface BasicTableParams {
   offset?: number;
   limit?: number;
   q?: string;
-  sort?: string;
-  order?: string;
+  sort?: number;
+  sortBy?: string;
 }

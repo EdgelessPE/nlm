@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"nlm/db"
 	"nlm/model"
@@ -9,6 +10,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/stoewer/go-strcase"
 )
 
 func HasNep(scope string, name string) bool {
@@ -47,6 +49,15 @@ func GetNeps(params vo.NepParams) ([]model.Nep, int64, error) {
 		tx = tx.Where("scope = ?", params.Scope)
 	}
 
+	if params.Sort != 0 {
+		var order string
+		if params.Sort == 1 {
+			order = "ASC"
+		} else {
+			order = "DESC"
+		}
+		tx = tx.Order(fmt.Sprintf("%s %s", strcase.SnakeCase(params.SortBy), order))
+	}
 	tx.Count(&total)
 	if params.Offset >= 0 && params.Limit > 0 {
 		tx = tx.Offset(params.Offset).Limit(params.Limit)

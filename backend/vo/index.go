@@ -16,6 +16,6 @@ type BasicTableParams struct {
 	Q string `form:"q"`
 
 	// 排序
-	Sort  string `form:"sort"`
-	Order string `form:"order"`
+	Sort   int    `form:"sort"`
+	SortBy string `form:"sortBy"`
 }

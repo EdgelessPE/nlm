@@ -4,7 +4,7 @@
       :value="data.value"
       paginator
       :loading="loading.value"
-      :rows="pagination.value.limit"
+      :rows="runtimeParams.value.limit"
       :rowsPerPageOptions="[10, 20, 50, 100]"
       lazy
       :totalRecords="total.value"
@@ -13,13 +13,16 @@
       :scrollHeight="tableHeight"
       paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink JumpToPageInput RowsPerPageDropdown"
       currentPageReportTemplate="Total {totalRecords}"
+      removableSort
       @page="onPageChange"
+      @sort="onSort"
     >
       <Column
         v-for="column in columns"
         :key="column.field"
         :field="column.field"
         :header="column.label"
+        :sortable="column.sortable"
       >
         <template #body="{ data }">
           <component

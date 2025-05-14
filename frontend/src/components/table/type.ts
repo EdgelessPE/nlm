@@ -1,7 +1,7 @@
 import type { BaseResponse, BasicTableParams } from "@/api/type";
 import type { AxiosResponse } from "axios";
 import type { Ref, VNodeChild } from "vue";
-import type { DataTableProps } from "primevue/datatable";
+import type { DataTableProps, DataTableSortEvent } from "primevue/datatable";
 export type TableColumnRenderContext<IData = any> = {
   val: any;
   data: IData;
@@ -11,11 +11,14 @@ export type TableColumn<IData = any> = {
   label: string;
   field: Exclude<keyof IData, symbol | number> | "actions";
   render?: (ctx: TableColumnRenderContext<IData>) => VNodeChild;
+  sortable?: boolean;
 };
 
-export interface TablePagination {
+export interface TableRuntimeParams {
   offset: number;
   limit: number;
+  sort?: number;
+  sortBy?: string;
 }
 
 type TablePropsEnhanced = DataTableProps & {
@@ -34,8 +37,9 @@ export interface UseTableDataReturn<IData = any> {
   loading: Ref<boolean>;
   data: Ref<IData[]>;
   columns: TableColumn<IData>[];
-  pagination: Ref<TablePagination>;
+  runtimeParams: Ref<TableRuntimeParams>;
   total: Ref<number>;
+  onSort: (e: DataTableSortEvent) => void;
   onPageChange: (val: { page: number; rows: number }) => void;
   tableProps?: TablePropsEnhanced;
 }

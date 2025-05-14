@@ -10,8 +10,8 @@
 		"Neps",
 		"Putaway",
 		"Rclone",
-		"upgrader",
-		"epts"
+		"strcase",
+		"upgrader"
 	],
 	"editor.formatOnSave": true
 }
