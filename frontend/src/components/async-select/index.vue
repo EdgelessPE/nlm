@@ -1,5 +1,6 @@
 <template>
   <Select
+    class="min-w-120px"
     v-bind="props"
     :options="options"
     v-model="model"

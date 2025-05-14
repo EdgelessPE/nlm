@@ -4,7 +4,7 @@
     :options="FLAGS"
     :showToggleAll="false"
     placeholder="Flags"
-    class="w-96px"
+    class="w-120px"
     showClear
   />
 </template>
@@ -19,7 +19,8 @@ const innerModel = ref<string[]>(
 );
 
 watch(innerModel, (val) => {
-  const newVal = val?.join("");
+  const arr = val?.join("");
+  const newVal = arr?.length ? arr : undefined;
   if (newVal !== outerModel.value) {
     outerModel.value = newVal;
   }
