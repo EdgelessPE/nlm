@@ -17,6 +17,7 @@ declare module 'vue' {
     DataTable: typeof import('primevue/datatable')['default']
     DebouncedSearch: typeof import('./src/components/DebouncedSearch.vue')['default']
     Dialog: typeof import('primevue/dialog')['default']
+    Filter: typeof import('./src/components/filter/index.vue')['default']
     IconField: typeof import('primevue/iconfield')['default']
     InputIcon: typeof import('primevue/inputicon')['default']
     InputText: typeof import('primevue/inputtext')['default']

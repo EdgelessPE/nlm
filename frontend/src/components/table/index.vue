@@ -1,5 +1,5 @@
 <template>
-  <div ref="container">
+  <div ref="container" class="max-h-full overflow-hidden">
     <DataTable
       :value="data.value"
       paginator

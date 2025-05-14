@@ -6,7 +6,7 @@ import type {
 } from "./type";
 import { ref } from "vue";
 
-export function useTableData<T>(
+export function defineTableProps<T>(
   props: UseTableDataProps<T>,
 ): UseTableDataReturn {
   const loading = ref(false);

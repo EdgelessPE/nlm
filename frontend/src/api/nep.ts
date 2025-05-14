@@ -2,7 +2,7 @@ import instance from "./index";
 import type { BaseResponse, BasicTableParams } from "./type";
 
 export interface GetNepsParams extends BasicTableParams {
-  scope: string;
+  scope?: string;
 }
 export interface Nep {
   ID: string;

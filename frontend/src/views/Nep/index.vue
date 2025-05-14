@@ -1,10 +1,7 @@
 <template>
-  <div class="flex flex-col items-center justify-center h-full">
-    <Table v-bind="bindProps" class="h-full w-full">
-      <template #header>
-        <DebouncedSearch placeholder="Search scope or name" v-model="q" />
-      </template>
-    </Table>
+  <div class="flex flex-col items-center h-full overflow-hidden">
+    <Filter v-bind="bindFilterProps" class="flex-none" />
+    <Table v-bind="bindTableProps" class="flex-auto w-full mt-8px" />
     <Popover ref="op">
       <div class="flex items-center gap-2">
         <Button
@@ -27,9 +24,9 @@
 </template>
 
 <script setup lang="tsx">
-import { GetNeps, type Nep } from "@/api/nep";
+import { GetNeps, type GetNepsParams, type Nep } from "@/api/nep";
 import Table from "@/components/table/index.vue";
-import { useTableData } from "@/components/table/useTableData.tsx";
+import { defineTableProps } from "@/components/table/utils";
 import { renderDate, renderActions } from "@/components/table/renders";
 import Button from "primevue/button";
 import DebouncedSearch from "@/components/DebouncedSearch.vue";
@@ -37,18 +34,39 @@ import { computed, nextTick, ref } from "vue";
 import Popover from "primevue/popover";
 import { useClipboard } from "@vueuse/core";
 import ReleasesDrawer from "./ReleasesDrawer.vue";
-const q = ref<string>();
-const bindProps = useTableData<Nep>({
+import { defineFilterProps } from "@/components/filter/utils";
+import Filter from "@/components/filter/index.vue";
+
+type IFilter = GetNepsParams;
+const query = ref<IFilter>({});
+
+const bindFilterProps = defineFilterProps<IFilter>({
+  model: query,
+  getConfig: (form) => [
+    {
+      field: "q",
+      component: () => (
+        <DebouncedSearch
+          placeholder="Search scope or name"
+          v-model={form.value.q}
+        />
+      ),
+    },
+  ],
+});
+const bindTableProps = defineTableProps<Nep>({
   fetch: GetNeps,
-  query: computed(() => ({
-    q: q.value || undefined,
-  })),
+  query,
   getColumns: () => [
     {
       label: "Scope",
       field: "Scope",
       render: ({ val }) => (
-        <Button variant="link" label={val} onClick={() => (q.value = val)} />
+        <Button
+          variant="link"
+          label={val}
+          onClick={() => (query.value.scope = val)}
+        />
       ),
     },
     {
@@ -88,9 +106,6 @@ const bindProps = useTableData<Nep>({
       ]),
     },
   ],
-  tableProps: {
-    slotHeight: 67,
-  },
 });
 
 const op = ref<InstanceType<typeof Popover>>();

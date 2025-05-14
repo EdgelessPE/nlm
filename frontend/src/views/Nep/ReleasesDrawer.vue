@@ -32,7 +32,7 @@
 import { computed, ref } from "vue";
 import { GetReleases, type Nep, type Release } from "@/api/nep";
 import Drawer from "primevue/drawer";
-import { useTableData } from "@/components/table/useTableData";
+import { defineTableProps } from "@/components/table/utils";
 import {
   renderActions,
   renderDate,
@@ -53,7 +53,7 @@ const visible = computed(() => props.data !== null);
 const q = ref("");
 const metaDialogRelease = ref<Release | null>(null);
 const qaReportDialogRelease = ref<Release | null>(null);
-const bindProps = useTableData<Release>({
+const bindProps = defineTableProps<Release>({
   query: computed(() => ({
     nep_id: props.data?.ID,
     q: q.value,
