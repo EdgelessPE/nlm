@@ -10,6 +10,7 @@
     filterPlaceholder="Search"
     resetFilterOnClear
     showClear
+    @show="working = true"
   />
 </template>
 
@@ -21,17 +22,29 @@ import type { SelectProps } from "primevue/select";
 import type { AxiosResponse } from "axios";
 import { ref } from "vue";
 const model = defineModel<SelectProps["modelValue"]>();
-const props = defineProps<
-  Omit<SelectProps, "options" | "modelValue"> & {
-    fetch: () => Promise<
-      AxiosResponse<BaseResponse<string[] | { label: string; value: string }[]>>
-    >;
-  }
->();
+const props = withDefaults(
+  defineProps<
+    Omit<SelectProps, "options" | "modelValue"> & {
+      fetch: () => Promise<
+        AxiosResponse<
+          BaseResponse<string[] | { label: string; value: string }[]>
+        >
+      >;
+      lazy?: boolean;
+    }
+  >(),
+  {
+    lazy: () => true,
+  },
+);
 
 const loading = ref(false);
+const working = ref(!props.lazy);
 const options = computedAsync<SelectProps["options"]>(
   async () => {
+    if (!working.value) {
+      return [];
+    }
     const res = await props.fetch();
     return res.data.data
       .map((item) => {
