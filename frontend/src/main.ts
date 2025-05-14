@@ -6,6 +6,7 @@ import { definePreset } from "@primeuix/themes";
 import "primeicons/primeicons.css";
 import "./global.less";
 import "virtual:uno.css";
+import "github-markdown-css/github-markdown.css";
 import Ripple from "primevue/ripple";
 import router from "./router";
 import Tooltip from "primevue/tooltip";

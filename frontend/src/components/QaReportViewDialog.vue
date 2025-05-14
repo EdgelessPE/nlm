@@ -11,7 +11,7 @@
       }
     "
   >
-    <div v-html="md" />
+    <div v-html="md" class="markdown-body" />
   </Dialog>
 </template>
 
