@@ -52,6 +52,7 @@ import LastMajorTag from "@/components/LastMajorTag.vue";
 import FlagsSelect from "@/components/flags-select/index.vue";
 import AsyncSelect from "@/components/async-select/index.vue";
 import BooleanSelect from "@/components/boolean-select.vue";
+import DateRangePicker from "@/components/date-range-picker.vue";
 
 type IFilter = Omit<GetReleasesParams, "nep_id">;
 
@@ -111,6 +112,16 @@ const bindFilterProps = defineFilterProps<IFilter>({
         <BooleanSelect
           v-model={form.value.is_qa_success}
           placeholder="QA Success"
+        />
+      ),
+    },
+    {
+      field: "created_at_start",
+      component: () => (
+        <DateRangePicker
+          v-model:start={form.value.created_at_start}
+          v-model:end={form.value.created_at_end}
+          placeholder="Created At Range"
         />
       ),
     },
