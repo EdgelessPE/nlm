@@ -13,6 +13,7 @@ func RegisterNepRoutes(r *gin.RouterGroup) {
 	nep.GET("/neps", GetNeps)
 	nep.GET("/releases", GetReleases)
 	nep.GET("/scopes", GetScopes)
+	nep.GET("/release_versions", GetReleaseVersions)
 }
 
 func GetNeps(c *gin.Context) {
@@ -83,5 +84,23 @@ func GetScopes(c *gin.Context) {
 		Code: 0,
 		Msg:  "Success",
 		Data: scopes,
+	})
+}
+
+func GetReleaseVersions(c *gin.Context) {
+	nepId := c.Query("id")
+	versions, err := service.GetReleaseVersions(nepId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, vo.BaseResponse[any]{
+			Code: 500,
+			Msg:  "Failed to get release versions : " + err.Error(),
+			Data: nil,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, vo.BaseResponse[any]{
+		Code: 0,
+		Msg:  "Success",
+		Data: versions,
 	})
 }

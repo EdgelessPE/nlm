@@ -120,6 +120,12 @@ func GetScopes() ([]string, error) {
 	return scopes, nil
 }
 
+func GetReleaseVersions(nepId string) ([]string, error) {
+	var versions []string
+	db.DB.Model(&model.Release{}).Where("nep_id = ?", nepId).Distinct("version").Find(&versions)
+	return versions, nil
+}
+
 func CleanOutdatedRelease() error {
 	log.Println("Cleaning outdated release..")
 	// 删除更新时间大于 30 天且不是最后一个大版本的 Release

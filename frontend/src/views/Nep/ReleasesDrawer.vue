@@ -29,6 +29,7 @@
 import { computed, ref } from "vue";
 import {
   GetReleases,
+  GetReleaseVersions,
   type GetReleasesParams,
   type Nep,
   type Release,
@@ -49,7 +50,7 @@ import { defineFilterProps } from "@/components/filter/utils";
 import DebouncedSearch from "@/components/DebouncedSearch.vue";
 import LastMajorTag from "@/components/LastMajorTag.vue";
 import FlagsSelect from "@/components/flags-select/index.vue";
-
+import AsyncSelect from "@/components/async-select/index.vue";
 type IFilter = Omit<GetReleasesParams, "nep_id">;
 
 const props = defineProps<{
@@ -71,6 +72,21 @@ const bindFilterProps = defineFilterProps<IFilter>({
         <DebouncedSearch
           placeholder="Search file name"
           v-model={form.value.q}
+        />
+      ),
+    },
+    {
+      field: "version",
+      component: () => (
+        <AsyncSelect
+          v-model={form.value.version}
+          fetch={GetReleaseVersions}
+          placeholder="Version"
+          query={computed(() => {
+            return {
+              id: props.data?.ID,
+            };
+          })}
         />
       ),
     },

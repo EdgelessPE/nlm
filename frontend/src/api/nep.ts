@@ -55,3 +55,12 @@ export async function GetReleases(params: GetReleasesParams) {
 export async function GetScopes() {
   return instance.get<BaseResponse<string[]>>("/api/nep/scopes");
 }
+
+export interface GetReleaseVersionsParams extends BasicTableParams {
+  id: string;
+}
+export async function GetReleaseVersions(params: GetReleaseVersionsParams) {
+  return instance.get<BaseResponse<string[]>>("/api/nep/release_versions", {
+    params,
+  });
+}

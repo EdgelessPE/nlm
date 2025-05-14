@@ -15,24 +15,15 @@
 </template>
 
 <script setup lang="ts">
-import type { BaseResponse } from "@/api/type";
 import { computedAsync } from "@vueuse/core";
 import Select from "primevue/select";
 import type { SelectProps } from "primevue/select";
-import type { AxiosResponse } from "axios";
 import { ref } from "vue";
+import type { AsyncSelectProps } from "./type";
+
 const model = defineModel<SelectProps["modelValue"]>();
 const props = withDefaults(
-  defineProps<
-    Omit<SelectProps, "options" | "modelValue"> & {
-      fetch: () => Promise<
-        AxiosResponse<
-          BaseResponse<string[] | { label: string; value: string }[]>
-        >
-      >;
-      lazy?: boolean;
-    }
-  >(),
+  defineProps<Omit<SelectProps, "options" | "modelValue"> & AsyncSelectProps>(),
   {
     lazy: () => true,
   },
@@ -45,7 +36,11 @@ const options = computedAsync<SelectProps["options"]>(
     if (!working.value) {
       return [];
     }
-    const res = await props.fetch();
+    const params = props.query?.value;
+    if (params === false) {
+      return [];
+    }
+    const res = await props.fetch(params);
     return res.data.data
       .map((item) => {
         if (typeof item === "string") {
