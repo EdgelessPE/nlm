@@ -23,6 +23,8 @@
         :field="column.field"
         :header="column.label"
         :sortable="column.sortable"
+        :frozen="column.field === 'actions'"
+        :alignFrozen="column.field === 'actions' ? 'right' : undefined"
       >
         <template #body="{ data }">
           <component
