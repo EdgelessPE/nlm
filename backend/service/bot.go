@@ -47,8 +47,8 @@ func BotGenerateDatabase() ([]model.Nep, error) {
 		releases, _, err := GetReleases(vo.ReleaseParams{
 			NepID:        nep.ID.String(),
 			Version:      nep.LatestReleaseVersion,
-			IsBotSuccess: &[]bool{true}[0],
-			IsQaSuccess:  &[]bool{true}[0],
+			IsBotSuccess: utils.PointerBool(true),
+			IsQaSuccess:  utils.PointerBool(true),
 		})
 		if err != nil {
 			return nil, err
@@ -134,8 +134,8 @@ func storeBuilds(ctx *context.PipelineContext, nep model.Nep, fileNames []string
 			releases, _, err := GetReleases(vo.ReleaseParams{
 				NepID:        nep.ID.String(),
 				Version:      nep.LatestReleaseVersion,
-				IsBotSuccess: &[]bool{true}[0],
-				IsQaSuccess:  &[]bool{true}[0],
+				IsBotSuccess: utils.PointerBool(true),
+				IsQaSuccess:  utils.PointerBool(true),
 			})
 			if err != nil {
 				return nil, err

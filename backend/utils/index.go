@@ -99,3 +99,7 @@ func SortFlags(flags string) string {
 	})
 	return strings.Join(sp, "")
 }
+
+func PointerBool(b bool) *bool {
+	return &b
+}

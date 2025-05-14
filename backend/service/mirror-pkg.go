@@ -5,6 +5,7 @@ import (
 	"log"
 	"nlm/config"
 	"nlm/constant"
+	"nlm/utils"
 	"nlm/vo"
 	"time"
 )
@@ -23,8 +24,8 @@ func generateMirrorPkgSoftware() (vo.MirrorPkgSoftware, error) {
 		// 获取 releases
 		releases, _, err := GetReleases(vo.ReleaseParams{
 			NepID:        nep.ID.String(),
-			IsBotSuccess: &[]bool{true}[0],
-			IsQaSuccess:  &[]bool{true}[0],
+			IsBotSuccess: utils.PointerBool(true),
+			IsQaSuccess:  utils.PointerBool(true),
 		})
 		if err != nil {
 			return vo.MirrorPkgSoftware{}, err
