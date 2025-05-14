@@ -8,8 +8,8 @@ type NepParams struct {
 type ReleaseParams struct {
 	BasicTableParams
 	NepID        string `form:"nep_id" binding:"required"`
-	IsBotSuccess bool   `form:"is_bot_success"`
-	IsQaSuccess  bool   `form:"is_qa_success"`
+	IsBotSuccess *bool  `form:"is_bot_success"`
+	IsQaSuccess  *bool  `form:"is_qa_success"`
 	Version      string `form:"version"`
 	Flags        string `form:"flags"`
 }

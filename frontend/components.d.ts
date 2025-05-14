@@ -13,6 +13,7 @@ declare module 'vue' {
     Avatar: typeof import('primevue/avatar')['default']
     Badge: typeof import('primevue/badge')['default']
     BadgeWithTooltip: typeof import('./src/components/BadgeWithTooltip.vue')['default']
+    BooleanSelect: typeof import('./src/components/boolean-select.vue')['default']
     Button: typeof import('primevue/button')['default']
     Column: typeof import('primevue/column')['default']
     DataTable: typeof import('primevue/datatable')['default']

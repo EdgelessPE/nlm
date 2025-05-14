@@ -51,6 +51,8 @@ import DebouncedSearch from "@/components/DebouncedSearch.vue";
 import LastMajorTag from "@/components/LastMajorTag.vue";
 import FlagsSelect from "@/components/flags-select/index.vue";
 import AsyncSelect from "@/components/async-select/index.vue";
+import BooleanSelect from "@/components/boolean-select.vue";
+
 type IFilter = Omit<GetReleasesParams, "nep_id">;
 
 const props = defineProps<{
@@ -93,6 +95,24 @@ const bindFilterProps = defineFilterProps<IFilter>({
     {
       field: "flags",
       component: () => <FlagsSelect v-model={form.value.flags} />,
+    },
+    {
+      field: "is_bot_success",
+      component: () => (
+        <BooleanSelect
+          v-model={form.value.is_bot_success}
+          placeholder="Bot Success"
+        />
+      ),
+    },
+    {
+      field: "is_qa_success",
+      component: () => (
+        <BooleanSelect
+          v-model={form.value.is_qa_success}
+          placeholder="QA Success"
+        />
+      ),
     },
   ],
 });
