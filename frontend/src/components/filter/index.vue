@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex items-center gap-4px">
+  <div class="w-full flex items-center gap-4px flex-none">
     <div v-for="node in nodes" :key="node.field">
       <component :is="node.component" />
     </div>

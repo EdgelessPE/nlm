@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col items-center h-full overflow-hidden">
-    <Filter v-bind="bindFilterProps" class="flex-none" />
-    <Table v-bind="bindTableProps" class="flex-auto w-full mt-8px" />
+    <Filter v-bind="bindFilterProps" />
+    <Table v-bind="bindTableProps" class="w-full mt-8px" />
     <Popover ref="op">
       <div class="flex items-center gap-2">
         <Button
