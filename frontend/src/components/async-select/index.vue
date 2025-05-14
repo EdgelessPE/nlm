@@ -8,6 +8,7 @@
     optionValue="value"
     filter
     filterPlaceholder="Search"
+    resetFilterOnClear
     showClear
   />
 </template>
