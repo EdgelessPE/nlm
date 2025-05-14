@@ -24,6 +24,7 @@ export interface GetReleasesParams extends BasicTableParams {
   is_bot_success?: boolean;
   is_qa_success?: boolean;
   version?: string;
+  flags?: string;
 }
 export interface Release {
   ID: string;

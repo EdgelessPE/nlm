@@ -12,11 +12,8 @@
       }
     "
   >
-    <Table v-bind="bindProps" class="h-full w-full">
-      <template #header>
-        <DebouncedSearch placeholder="Search file name" v-model="q" />
-      </template>
-    </Table>
+    <Filter v-bind="bindFilterProps" />
+    <Table v-bind="bindTableProps" class="h-full w-full mt-8px" />
   </Drawer>
   <MetaViewDialog
     :release="metaDialogRelease"
@@ -30,7 +27,12 @@
 
 <script setup lang="tsx">
 import { computed, ref } from "vue";
-import { GetReleases, type Nep, type Release } from "@/api/nep";
+import {
+  GetReleases,
+  type GetReleasesParams,
+  type Nep,
+  type Release,
+} from "@/api/nep";
 import Drawer from "primevue/drawer";
 import { defineTableProps } from "@/components/table/utils";
 import {
@@ -39,24 +41,49 @@ import {
   renderFileSize,
   renderSuccess,
 } from "@/components/table/renders";
-import Badge from "primevue/badge";
 import { Button } from "primevue";
 import MetaViewDialog from "@/components/MetaViewDialog.vue";
 import QaReportViewDialog from "@/components/QaReportViewDialog.vue";
 import { GetStorageUrl } from "@/api/storage";
+import { defineFilterProps } from "@/components/filter/utils";
+import DebouncedSearch from "@/components/DebouncedSearch.vue";
+import LastMajorTag from "@/components/LastMajorTag.vue";
+import FlagsSelect from "@/components/flags-select/index.vue";
+
+type IFilter = Omit<GetReleasesParams, "nep_id">;
+
 const props = defineProps<{
   data: Nep | null;
 }>();
 defineEmits(["close"]);
 
 const visible = computed(() => props.data !== null);
-const q = ref("");
+const query = ref<IFilter>({});
 const metaDialogRelease = ref<Release | null>(null);
 const qaReportDialogRelease = ref<Release | null>(null);
-const bindProps = defineTableProps<Release>({
+
+const bindFilterProps = defineFilterProps<IFilter>({
+  model: query,
+  getConfig: (form) => [
+    {
+      field: "q",
+      component: () => (
+        <DebouncedSearch
+          placeholder="Search file name"
+          v-model={form.value.q}
+        />
+      ),
+    },
+    {
+      field: "flags",
+      component: () => <FlagsSelect v-model={form.value.flags} />,
+    },
+  ],
+});
+const bindTableProps = defineTableProps<Release>({
   query: computed(() => ({
     nep_id: props.data?.ID,
-    q: q.value,
+    ...query.value,
   })),
   getColumns: () => [
     {
@@ -70,7 +97,7 @@ const bindProps = defineTableProps<Release>({
         return (
           <div class="flex items-center gap-2">
             <span>{data.Version}</span>
-            {data.IsLastMajor && <Badge value="LastMajor" severity="success" />}
+            {data.IsLastMajor && <LastMajorTag />}
           </div>
         );
       },
@@ -78,11 +105,17 @@ const bindProps = defineTableProps<Release>({
     {
       label: "Flags",
       field: "Flags",
-      render: ({ val }) => {
-        const flags = (val as string).split("").map((flag) => {
-          return <Button variant="outlined" size="small" label={flag.trim()} />;
-        });
-        return <div class="flex gap-2">{flags}</div>;
+      render: ({ val }: { val: string }) => {
+        return (
+          <Button
+            variant="outlined"
+            size="small"
+            label={val.trim()}
+            onClick={() => {
+              query.value.flags = val;
+            }}
+          />
+        );
       },
     },
     {

@@ -6,6 +6,7 @@ import (
 	"log"
 	"nlm/db"
 	"nlm/model"
+	"nlm/utils"
 	"nlm/vo"
 	"time"
 
@@ -99,6 +100,9 @@ func GetReleases(params vo.ReleaseParams) ([]model.Release, int64, error) {
 	}
 	if params.Version != "" {
 		tx = tx.Where("version = ?", params.Version)
+	}
+	if params.Flags != "" {
+		tx = tx.Where("flags = ?", utils.SortFlags(params.Flags))
 	}
 
 	tx.Count(&total)

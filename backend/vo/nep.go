@@ -11,4 +11,5 @@ type ReleaseParams struct {
 	IsBotSuccess bool   `form:"is_bot_success"`
 	IsQaSuccess  bool   `form:"is_qa_success"`
 	Version      string `form:"version"`
+	Flags        string `form:"flags"`
 }

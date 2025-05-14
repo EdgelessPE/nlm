@@ -116,7 +116,7 @@ func storeBuilds(ctx *context.PipelineContext, nep model.Nep, fileNames []string
 		b := model.Release{
 			NepId:        nep.ID.String(),
 			Version:      parsed.Version,
-			Flags:        parsed.Flags,
+			Flags:        utils.SortFlags(parsed.Flags),
 			FileName:     fileName,
 			FileSize:     fileStat.Size(),
 			StorageKey:   storageKey,

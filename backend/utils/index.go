@@ -3,6 +3,7 @@ package utils
 import (
 	"errors"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -89,4 +90,12 @@ func CleanBotTaskName(name string) string {
 		return strings.Split(name, "_")[0]
 	}
 	return name
+}
+
+func SortFlags(flags string) string {
+	sp := strings.Split(flags, "")
+	sort.Slice(sp, func(i, j int) bool {
+		return sp[i] > sp[j]
+	})
+	return strings.Join(sp, "")
 }

@@ -26,6 +26,10 @@ export function defineTableProps<T>(
     async () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       refreshKey.value;
+      if (props.query?.value === false) {
+        return [];
+      }
+
       const {
         data: { data, total: t },
       } = (await props.fetch({

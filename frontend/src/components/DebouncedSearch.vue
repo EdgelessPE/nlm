@@ -1,5 +1,5 @@
 <template>
-  <IconField ref="inputRef">
+  <IconField ref="inputRef" class="w-320px">
     <InputIcon :class="icon" />
     <InputText v-model="innerModel" :placeholder="placeholder" class="w-full" />
     <InputIcon

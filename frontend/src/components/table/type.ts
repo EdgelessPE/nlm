@@ -25,7 +25,8 @@ type TablePropsEnhanced = DataTableProps & {
   slotHeight?: number;
 };
 export interface UseTableDataProps<IData = any, IFilter = any> {
-  query?: Ref<IFilter>;
+  // 返回 false 时，不进行查询
+  query?: Ref<IFilter | false>;
   fetch: (
     params: Omit<BasicTableParams, "q"> & IFilter,
   ) => Promise<AxiosResponse<BaseResponse<IData[]>> | undefined>;
