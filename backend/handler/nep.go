@@ -12,6 +12,7 @@ func RegisterNepRoutes(r *gin.RouterGroup) {
 	nep := r.Group("/nep")
 	nep.GET("/neps", GetNeps)
 	nep.GET("/releases", GetReleases)
+	nep.GET("/scopes", GetScopes)
 }
 
 func GetNeps(c *gin.Context) {
@@ -65,5 +66,22 @@ func GetReleases(c *gin.Context) {
 		Msg:   "Success",
 		Data:  releases,
 		Total: total,
+	})
+}
+
+func GetScopes(c *gin.Context) {
+	scopes, err := service.GetScopes()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, vo.BaseResponse[any]{
+			Code: 500,
+			Msg:  "Failed to get scopes : " + err.Error(),
+			Data: nil,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, vo.BaseResponse[any]{
+		Code: 0,
+		Msg:  "Success",
+		Data: scopes,
 	})
 }

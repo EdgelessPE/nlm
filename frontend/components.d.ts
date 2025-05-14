@@ -9,6 +9,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Actions: typeof import('./src/components/table/components/actions/index.vue')['default']
+    AsyncSelect: typeof import('./src/components/async-select/index.vue')['default']
     Avatar: typeof import('primevue/avatar')['default']
     Badge: typeof import('primevue/badge')['default']
     BadgeWithTooltip: typeof import('./src/components/BadgeWithTooltip.vue')['default']

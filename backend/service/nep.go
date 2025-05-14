@@ -99,6 +99,12 @@ func GetReleases(params vo.ReleaseParams) ([]model.Release, int64, error) {
 	return releases, total, nil
 }
 
+func GetScopes() ([]string, error) {
+	var scopes []string
+	db.DB.Model(&model.Nep{}).Distinct("scope").Find(&scopes)
+	return scopes, nil
+}
+
 func CleanOutdatedRelease() error {
 	log.Println("Cleaning outdated release..")
 	// 删除更新时间大于 30 天且不是最后一个大版本的 Release

@@ -50,3 +50,7 @@ export async function GetReleases(params: GetReleasesParams) {
     params,
   });
 }
+
+export async function GetScopes() {
+  return instance.get<BaseResponse<string[]>>("/api/nep/scopes");
+}

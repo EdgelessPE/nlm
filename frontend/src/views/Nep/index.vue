@@ -36,6 +36,8 @@ import { useClipboard } from "@vueuse/core";
 import ReleasesDrawer from "./ReleasesDrawer.vue";
 import { defineFilterProps } from "@/components/filter/utils";
 import Filter from "@/components/filter/index.vue";
+import AsyncSelect from "@/components/async-select/index.vue";
+import { GetScopes } from "@/api/nep";
 
 type IFilter = GetNepsParams;
 const query = ref<IFilter>({});
@@ -49,6 +51,16 @@ const bindFilterProps = defineFilterProps<IFilter>({
         <DebouncedSearch
           placeholder="Search scope or name"
           v-model={form.value.q}
+        />
+      ),
+    },
+    {
+      field: "scope",
+      component: () => (
+        <AsyncSelect
+          v-model={form.value.scope}
+          fetch={GetScopes}
+          placeholder="Scope"
         />
       ),
     },
