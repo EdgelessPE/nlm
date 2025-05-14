@@ -1,5 +1,10 @@
 <template>
-  <Badge v-tooltip.top="tooltip" :value="value" :severity="severity" />
+  <Badge v-tooltip.top="tooltip" :severity="severity">
+    <div class="flex gap-4px items-center">
+      {{ value }}
+      <div v-if="tooltip" class="pi pi-info-circle" />
+    </div>
+  </Badge>
 </template>
 
 <script setup lang="ts">

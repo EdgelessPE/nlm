@@ -32,15 +32,17 @@ const loading = ref(false);
 const options = computedAsync<SelectProps["options"]>(
   async () => {
     const res = await props.fetch();
-    return res.data.data.map((item) => {
-      if (typeof item === "string") {
-        return {
-          label: item,
-          value: item,
-        };
-      }
-      return item;
-    });
+    return res.data.data
+      .map((item) => {
+        if (typeof item === "string") {
+          return {
+            label: item,
+            value: item,
+          };
+        }
+        return item;
+      })
+      .sort((a, b) => a.label.localeCompare(b.label));
   },
   [],
   {
