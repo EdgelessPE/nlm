@@ -49,6 +49,9 @@ func GetNeps(params vo.NepParams) ([]model.Nep, int64, error) {
 	if params.Scope != "" {
 		tx = tx.Where("scope = ?", params.Scope)
 	}
+	if params.UpdatedAtStart > 0 && params.UpdatedAtEnd > 0 {
+		tx = tx.Where("updated_at BETWEEN ? AND ?", time.Unix(params.UpdatedAtStart, 0), time.Unix(params.UpdatedAtEnd, 0))
+	}
 
 	if params.Sort != 0 {
 		var order string

@@ -3,6 +3,8 @@ import type { BaseResponse, BasicTableParams } from "./type";
 
 export interface GetNepsParams extends BasicTableParams {
   scope?: string;
+  updated_at_start?: number;
+  updated_at_end?: number;
 }
 export interface Nep {
   ID: string;

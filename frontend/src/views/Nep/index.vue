@@ -38,6 +38,7 @@ import { defineFilterProps } from "@/components/filter/utils";
 import Filter from "@/components/filter/index.vue";
 import AsyncSelect from "@/components/async-select/index.vue";
 import { GetScopes } from "@/api/nep";
+import DateRangePicker from "@/components/date-range-picker.vue";
 
 type IFilter = GetNepsParams;
 const query = ref<IFilter>({});
@@ -61,6 +62,16 @@ const bindFilterProps = defineFilterProps<IFilter>({
           v-model={form.value.scope}
           fetch={GetScopes}
           placeholder="Scope"
+        />
+      ),
+    },
+    {
+      field: "updated_at_start",
+      component: () => (
+        <DateRangePicker
+          v-model:start={form.value.updated_at_start}
+          v-model:end={form.value.updated_at_end}
+          placeholder="Updated At Range"
         />
       ),
     },

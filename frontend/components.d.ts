@@ -17,6 +17,7 @@ declare module 'vue' {
     Button: typeof import('primevue/button')['default']
     Column: typeof import('primevue/column')['default']
     DataTable: typeof import('primevue/datatable')['default']
+    DateRangePicker: typeof import('./src/components/date-range-picker.vue')['default']
     DebouncedSearch: typeof import('./src/components/DebouncedSearch.vue')['default']
     Dialog: typeof import('primevue/dialog')['default']
     Filter: typeof import('./src/components/filter/index.vue')['default']

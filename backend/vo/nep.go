@@ -2,7 +2,9 @@ package vo
 
 type NepParams struct {
 	BasicTableParams
-	Scope string `form:"scope"`
+	Scope          string `form:"scope"`
+	UpdatedAtStart int64  `form:"updated_at_start"`
+	UpdatedAtEnd   int64  `form:"updated_at_end"`
 }
 
 type ReleaseParams struct {
