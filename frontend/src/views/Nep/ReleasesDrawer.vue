@@ -148,6 +148,7 @@ const bindTableProps = defineTableProps<Release>({
           </div>
         );
       },
+      sortable: true,
     },
     {
       label: "Flags",
@@ -169,6 +170,7 @@ const bindTableProps = defineTableProps<Release>({
       label: "File Size",
       field: "FileSize",
       render: renderFileSize(),
+      sortable: true,
     },
     {
       label: "Meta",
@@ -220,6 +222,7 @@ const bindTableProps = defineTableProps<Release>({
       label: "Created At",
       field: "CreatedAt",
       render: renderDate(),
+      sortable: true,
     },
     {
       label: "Actions",

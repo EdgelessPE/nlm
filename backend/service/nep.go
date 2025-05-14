@@ -110,6 +110,15 @@ func GetReleases(params vo.ReleaseParams) ([]model.Release, int64, error) {
 	if params.CreatedAtStart > 0 && params.CreatedAtEnd > 0 {
 		tx = tx.Where("created_at BETWEEN ? AND ?", time.Unix(params.CreatedAtStart, 0), time.Unix(params.CreatedAtEnd, 0))
 	}
+	if params.Sort != 0 {
+		var order string
+		if params.Sort == 1 {
+			order = "ASC"
+		} else {
+			order = "DESC"
+		}
+		tx = tx.Order(fmt.Sprintf("%s %s", strcase.SnakeCase(params.SortBy), order))
+	}
 
 	tx.Count(&total)
 	if params.Offset >= 0 && params.Limit > 0 {
