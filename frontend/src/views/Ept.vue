@@ -20,7 +20,7 @@ import {
 import { GetStorageUrl } from "@/api/storage";
 
 type IFilter = GetEptsParams;
-const query = ref<IFilter>({ q: "" });
+const query = ref<IFilter>({});
 
 const bindFilterProps = defineFilterProps<IFilter>({
   model: query,

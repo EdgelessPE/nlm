@@ -10,7 +10,7 @@ import (
 
 func RegisterNepRoutes(r *gin.RouterGroup) {
 	nep := r.Group("/nep")
-	nep.GET("/neps", GetNeps)
+	nep.GET("/list", GetNeps)
 	nep.GET("/releases", GetReleases)
 	nep.GET("/scopes", GetScopes)
 	nep.GET("/release_versions", GetReleaseVersions)

@@ -27,7 +27,7 @@ export function renderFileSize() {
   };
 }
 
-export function renderSuccess({ tooltip }: { tooltip?: string } = {}) {
+export function renderBoolean({ tooltip }: { tooltip?: string } = {}) {
   return ({ val }: TableColumnRenderContext) => {
     return (
       <BadgeWithTooltip

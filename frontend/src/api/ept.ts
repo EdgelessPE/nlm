@@ -17,7 +17,7 @@ export interface Ept {
 }
 
 export async function GetEpts(params: GetEptsParams) {
-  return instance.get<BaseResponse<Ept[]>>("/api/ept/epts", {
+  return instance.get<BaseResponse<Ept[]>>("/api/ept/list", {
     params,
   });
 }

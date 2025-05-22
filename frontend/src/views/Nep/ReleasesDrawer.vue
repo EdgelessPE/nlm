@@ -40,7 +40,7 @@ import {
   renderActions,
   renderDate,
   renderFileSize,
-  renderSuccess,
+  renderBoolean,
 } from "@/components/table/renders";
 import { Button } from "primevue";
 import MetaViewDialog from "@/components/MetaViewDialog.vue";
@@ -192,7 +192,7 @@ const bindTableProps = defineTableProps<Release>({
       label: "Bot Success",
       field: "IsBotSuccess",
       render: (ctx) => {
-        return renderSuccess({
+        return renderBoolean({
           tooltip: ctx.val ? undefined : ctx.data.BotErrMsg || undefined,
         })(ctx);
       },
@@ -200,7 +200,7 @@ const bindTableProps = defineTableProps<Release>({
     {
       label: "QA Success",
       field: "IsQaSuccess",
-      render: renderSuccess(),
+      render: renderBoolean(),
     },
     {
       label: "QA Report",

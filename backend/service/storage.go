@@ -8,12 +8,14 @@ import (
 	"nlm/driver"
 	"nlm/model"
 	"nlm/utils"
+	"nlm/vo"
 	"os"
 	"path/filepath"
 	"time"
 
 	"github.com/alitto/pond/v2"
 	"github.com/cespare/cp"
+	"github.com/stoewer/go-strcase"
 )
 
 func syncFile(uuid string) error {
@@ -157,6 +159,33 @@ func DeleteStorage(uuid string) {
 			log.Println("Warning: failed to delete storage: ", err.Error())
 		}
 	}
+}
+
+func GetStorages(params vo.GetStoragesParams) ([]model.Storage, int64, error) {
+	var storages []model.Storage
+	var total int64
+
+	tx := db.DB.Model(&model.Storage{})
+
+	if params.Q != "" {
+		tx = tx.Where("LOWER(file_name) LIKE LOWER(?)", "%"+params.Q+"%")
+	}
+
+	if params.Sort != 0 {
+		var order string
+		if params.Sort == 1 {
+			order = "ASC"
+		} else {
+			order = "DESC"
+		}
+		tx = tx.Order(fmt.Sprintf("%s %s", strcase.SnakeCase(params.SortBy), order))
+	}
+	tx.Count(&total)
+	if params.Offset >= 0 && params.Limit > 0 {
+		tx = tx.Offset(params.Offset).Limit(params.Limit)
+	}
+	tx.Find(&storages)
+	return storages, total, nil
 }
 
 // 清理 30天前的临时存储文件

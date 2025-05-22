@@ -19,3 +19,8 @@ type StorageConfig struct {
 	// 下载挂载路径
 	DownloaderMountPath string
 }
+
+type GetStoragesParams struct {
+	BasicTableParams
+	IsCompressed bool
+}

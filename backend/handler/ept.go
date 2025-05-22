@@ -10,7 +10,7 @@ import (
 
 func RegisterEptRoutes(r *gin.RouterGroup) {
 	ept := r.Group("/ept")
-	ept.GET("/epts", GetEpts)
+	ept.GET("/list", GetEpts)
 }
 
 func GetEpts(c *gin.Context) {

@@ -16,7 +16,7 @@ export interface Nep {
   LatestReleaseVersion: string;
 }
 export async function GetNeps(params: GetNepsParams) {
-  return instance.get<BaseResponse<Nep[]>>("/api/nep/neps", {
+  return instance.get<BaseResponse<Nep[]>>("/api/nep/list", {
     params,
   });
 }
