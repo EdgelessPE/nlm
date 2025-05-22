@@ -17,3 +17,7 @@ type MirrorEptToolchainRelease struct {
 	Timestamp int64  `json:"timestamp"`
 	Integrity string `json:"integrity"`
 }
+
+type GetEptsParams struct {
+	BasicTableParams
+}

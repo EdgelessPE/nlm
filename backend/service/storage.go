@@ -99,14 +99,14 @@ func FetchStorage(uuid string, toDir string) (string, error) {
 	var s model.Storage
 	db.DB.Where("id = ?", uuid).First(&s)
 	if s.FileName == "" {
-		return "", fmt.Errorf("Can't found storage for uuid: %s", uuid)
+		return "", fmt.Errorf("can't found storage for uuid: %s", uuid)
 	}
 
 	// 从临时存储中获取文件
 	tempDir := config.ENV.STORAGE_TEMP_DIR
 	tempFilePath := filepath.Join(tempDir, uuid)
 	if _, err := os.Stat(tempFilePath); os.IsNotExist(err) {
-		return "", fmt.Errorf("Can't found temp file for uuid: %s", uuid)
+		return "", fmt.Errorf("can't found temp file for uuid: %s", uuid)
 	}
 
 	// 复制文件到目标位置

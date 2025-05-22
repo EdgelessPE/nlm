@@ -9,4 +9,5 @@ func RegisterRoutes(r *gin.RouterGroup) {
 	RegisterMirrorRoutes(r)
 	RegisterPipelineRoutes(r)
 	RegisterStorageRoutes(r)
+	RegisterEptRoutes(r)
 }
