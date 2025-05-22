@@ -22,5 +22,5 @@ type StorageConfig struct {
 
 type GetStoragesParams struct {
 	BasicTableParams
-	IsCompressed bool
+	IsCompressed bool `form:"is_compressed"`
 }

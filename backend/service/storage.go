@@ -170,6 +170,9 @@ func GetStorages(params vo.GetStoragesParams) ([]model.Storage, int64, error) {
 	if params.Q != "" {
 		tx = tx.Where("LOWER(file_name) LIKE LOWER(?)", "%"+params.Q+"%")
 	}
+	if params.IsCompressed {
+		tx = tx.Where("compressed = ?", params.IsCompressed)
+	}
 
 	if params.Sort != 0 {
 		var order string
