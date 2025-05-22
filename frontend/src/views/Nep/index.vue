@@ -62,6 +62,7 @@ const bindFilterProps = defineFilterProps<IFilter>({
           v-model={form.value.scope}
           fetch={GetScopes}
           placeholder="Scope"
+          lazy={false}
         />
       ),
     },
