@@ -33,6 +33,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Table: typeof import('./src/components/table/index.vue')['default']
+    TabPanel: typeof import('primevue/tabpanel')['default']
     Tag: typeof import('primevue/tag')['default']
     TieredMenu: typeof import('primevue/tieredmenu')['default']
   }
