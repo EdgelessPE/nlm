@@ -3,7 +3,11 @@
     <div class="mb-15vh flex flex-col gap-16px items-center w-60%">
       <h1 class="text-4xl font-bold">Get Some Real Packages</h1>
       <IconField class="w-full">
-        <DebouncedSearch v-model="q" placeholder="Search Nep Packages" />
+        <DebouncedSearch
+          v-model="q"
+          placeholder="Search Nep Packages"
+          style="width: 100%"
+        />
       </IconField>
       {{ q }}
     </div>
