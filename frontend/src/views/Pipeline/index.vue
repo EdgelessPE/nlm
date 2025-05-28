@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" style="background: var(--p-tabs-tablist-background)">
     <Tabs class="w-full h-full" :value="tab">
       <TabList>
         <Tab value="nep">Nep</Tab>
@@ -30,6 +30,7 @@ const tab = ref("nep");
 
 <style lang="less">
 .panel {
-  @apply flex flex-col overflow-hidden h-full;
+  @apply flex flex-col overflow-hidden;
+  height: calc(100% - 32px);
 }
 </style>

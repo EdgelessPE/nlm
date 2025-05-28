@@ -3,6 +3,7 @@ import type { BaseResponse, BasicTableParams } from "./type";
 
 export type PipelineParams = BasicTableParams & {
   model_name?: string;
+  status?: "running" | "success" | "failed";
 };
 export interface Pipeline {
   ID: string;
