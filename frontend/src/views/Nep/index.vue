@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center h-full overflow-hidden">
+  <div class="container">
     <Filter v-bind="bindFilterProps" />
     <Table v-bind="bindTableProps" class="w-full mt-8px" />
     <Popover ref="op">

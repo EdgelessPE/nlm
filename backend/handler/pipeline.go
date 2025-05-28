@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 	"nlm/pipeline"
+	"nlm/service"
 	"nlm/vo"
 
 	"github.com/gin-gonic/gin"
@@ -25,6 +26,9 @@ func RegisterPipelineRoutes(r *gin.RouterGroup) {
 	cancel := pipeline.Group("/cancel")
 	cancel.DELETE("/bot/:id", CancelBotPipeline)
 	cancel.DELETE("/ept/:id", CancelEptPipeline)
+
+	// 获取 pipeline
+	pipeline.GET("/list", GetPipelines)
 }
 
 func RunBotPipeline(c *gin.Context) {
@@ -103,5 +107,35 @@ func CancelEptPipeline(c *gin.Context) {
 		Code: 0,
 		Msg:  "Ept pipeline canceled successfully",
 		Data: id,
+	})
+}
+
+func GetPipelines(c *gin.Context) {
+	var params vo.PipelineParams
+	if err := c.ShouldBindQuery(&params); err != nil {
+		c.JSON(http.StatusBadRequest, vo.BaseResponse[any]{
+			Code: 400,
+			Msg:  "Invalid request: " + err.Error(),
+			Data: nil,
+		})
+		return
+	}
+
+	pipelines, total, err := service.GetPipelines(params)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, vo.BaseResponse[any]{
+			Code:  500,
+			Msg:   "Failed to get pipelines: " + err.Error(),
+			Data:  nil,
+			Total: total,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, vo.BaseResponse[any]{
+		Code:  0,
+		Msg:   "Pipelines fetched successfully",
+		Data:  pipelines,
+		Total: total,
 	})
 }

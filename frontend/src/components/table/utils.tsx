@@ -7,9 +7,9 @@ import type {
 import { ref } from "vue";
 import type { DataTableSortEvent } from "primevue/datatable";
 
-export function defineTableProps<T>(
-  props: UseTableDataProps<T>,
-): UseTableDataReturn {
+export function defineTableProps<IData = any, IFilter = any>(
+  props: UseTableDataProps<IData, IFilter>,
+): UseTableDataReturn<IData> {
   const loading = ref(false);
   const total = ref(1);
   const runtimeParams = ref<TableRuntimeParams>({
@@ -34,7 +34,7 @@ export function defineTableProps<T>(
         data: { data, total: t },
       } = (await props.fetch({
         ...runtimeParams.value,
-        ...props.query?.value,
+        ...(props.query?.value as any),
       })) ?? {
         data: {
           data: [],

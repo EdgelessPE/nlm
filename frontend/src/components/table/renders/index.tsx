@@ -38,3 +38,24 @@ export function renderBoolean({ tooltip }: { tooltip?: string } = {}) {
     );
   };
 }
+
+export function renderTag(config: {
+  map: Record<
+    string,
+    {
+      label: string;
+      severity: "success" | "danger" | "warning" | "info" | "help" | "none";
+    }
+  >;
+  tooltip?: string;
+}) {
+  return ({ val }: TableColumnRenderContext) => {
+    return (
+      <BadgeWithTooltip
+        value={config.map[val]?.label || "--"}
+        severity={config.map[val]?.severity || "primary"}
+        tooltip={config.tooltip}
+      />
+    );
+  };
+}

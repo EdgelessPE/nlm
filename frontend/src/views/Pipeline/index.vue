@@ -1,16 +1,18 @@
 <template>
-  <Tabs :value="tab">
-    <TabList>
-      <Tab value="nep">Nep</Tab>
-      <Tab value="ept">Ept</Tab>
-    </TabList>
-    <TabPanel value="nep">
-      <Nep />
-    </TabPanel>
-    <TabPanel value="ept">
-      <Ept />
-    </TabPanel>
-  </Tabs>
+  <div class="container">
+    <Tabs class="w-full h-full" :value="tab">
+      <TabList>
+        <Tab value="nep">Nep</Tab>
+        <Tab value="ept">Ept</Tab>
+      </TabList>
+      <TabPanel class="panel" value="nep">
+        <Nep />
+      </TabPanel>
+      <TabPanel class="panel" value="ept">
+        <Ept />
+      </TabPanel>
+    </Tabs>
+  </div>
 </template>
 
 <script setup lang="tsx">
@@ -25,3 +27,9 @@ import TabPanel from "primevue/tabpanel";
 
 const tab = ref("nep");
 </script>
+
+<style lang="less">
+.panel {
+  @apply flex flex-col overflow-hidden h-full;
+}
+</style>
